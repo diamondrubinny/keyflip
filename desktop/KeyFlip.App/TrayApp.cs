@@ -53,6 +53,7 @@ internal sealed class TrayApp : ApplicationContext
         {
             _settings.IncludeBrowsers = _browsersItem.Checked;
             _settings.Save();
+            _monitor.InvalidateWindow();
             if (_browsersItem.Checked)
             {
                 Notify("מופעל גם בדפדפנים. כבו את התוסף של KeyFlip בכרום כדי למנוע תיקון כפול, ושימו לב: אין זיהוי של שדות סיסמה בדפדפן.");
@@ -92,6 +93,7 @@ internal sealed class TrayApp : ApplicationContext
             Notify("הקיצור Ctrl+Alt+Space תפוס ע\"י תוכנה אחרת. ההמרה הידנית זמינה מתפריט המגש.");
         }
 
+        _monitor.ShouldTrackWindow = hwnd => !_settings.IsProcessIgnored(WindowInfo.ProcessName(hwnd));
         _monitor.WordCompleted += OnWordCompleted;
         _monitor.Start();
     }
@@ -113,7 +115,9 @@ internal sealed class TrayApp : ApplicationContext
             "• שום דבר לא נכתב לדיסק, לא נרשם ביומן ולא נשלח לרשת.\n" +
             "• כברירת מחדל התוכנה לא פועלת בדפדפנים (התוסף מטפל בהם; אפשר להפעיל מתפריט המגש), ולעולם לא במנהלי סיסמאות, בטרמינלים ובשדות סיסמה קלאסיים.\n" +
             "• ההגדרות נשמרות ב-%APPDATA%\\KeyFlip\\settings.json.\n\n" +
-            "ביטול תיקון אוטומטי: Ctrl+Alt+Space מיד אחריו.",
+            "ביטול תיקון אוטומטי: Ctrl+Alt+Space מיד אחריו.\n\n" +
+            $"גרסה {Application.ProductVersion}. קוד פתוח ברישיון Apache-2.0: https://github.com/diamondrubinny/keyflip\n" +
+            "מילוני הזיהוי נגזרים מ-FrequencyWords (hermitdave, נתוני OpenSubtitles 2018) ברישיון CC BY-SA 4.0.",
             "KeyFlip",
             MessageBoxButtons.OK,
             MessageBoxIcon.Information,
@@ -147,7 +151,9 @@ internal sealed class TrayApp : ApplicationContext
             if (fix is null) return;
 
             if (_settings.IsProcessIgnored(WindowInfo.ProcessName(e.Window))) return;
-            if (WindowInfo.IsPasswordFieldFocused()) return;
+            if (WindowInfo.IsPasswordFieldFocused() || FocusInspector.IsPasswordFocused()) return;
+            // The checks above can take a moment; give up if the user typed meanwhile.
+            if (_monitor.Epoch != e.Epoch || WindowInfo.Foreground != e.Window) return;
 
             string original = e.Word + " ";
             string retyped = fix.Replacement + e.Word[fix.Consumed..] + " ";
@@ -195,7 +201,8 @@ internal sealed class TrayApp : ApplicationContext
             }
             _lastFix = null;
 
-            if (WindowInfo.IsPasswordFieldFocused()) return;
+            if (AppSettings.IsPasswordManager(WindowInfo.ProcessName(window))) return;
+            if (WindowInfo.IsPasswordFieldFocused() || FocusInspector.IsPasswordFocused()) return;
 
             // 2. The current selection (copied through the clipboard, which is restored afterwards).
             bool isConsole = AppSettings.ConsoleWindowClasses.Contains(WindowInfo.ClassName(window));
@@ -258,10 +265,11 @@ internal sealed class TrayApp : ApplicationContext
         bool hasText = existing is not null && existing.GetDataPresent(DataFormats.UnicodeText);
         // Non-text clipboard content (images, files) cannot be restored faithfully, so the selection path is skipped.
         if (hasData && !hasText) return null;
-        string? backup = hasText ? existing!.GetData(DataFormats.UnicodeText) as string : null;
+        string? backup = null;
+        if (hasText && !await RetryAsync(() => backup = Clipboard.GetText(TextDataFormat.UnicodeText))) return null;
 
         string sentinel = "keyflip-" + Guid.NewGuid().ToString("N");
-        if (!await RetryAsync(() => Clipboard.SetText(sentinel))) return null;
+        if (!await RetryAsync(() => ClipboardPrivacy.SetPrivateText(sentinel))) return null;
 
         TextInjector.CtrlC();
         string? copied = null;
@@ -282,7 +290,7 @@ internal sealed class TrayApp : ApplicationContext
 
         await RetryAsync(() =>
         {
-            if (!string.IsNullOrEmpty(backup)) Clipboard.SetText(backup);
+            if (!string.IsNullOrEmpty(backup)) ClipboardPrivacy.SetPrivateText(backup);
             else Clipboard.Clear();
         });
         return copied;

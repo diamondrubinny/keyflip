@@ -10,6 +10,7 @@ internal readonly record struct WordEvent(string Word, long Epoch, IntPtr Window
 /// Low-level keyboard hook that keeps a bounded in-memory record of the current line so that a
 /// finished word can be checked. Nothing is logged, persisted or sent anywhere; the record is
 /// cleared on Enter/Tab/navigation keys, mouse clicks, window changes and after 30 s of inactivity.
+/// Nothing is recorded while an ignored application or a classic password box has the focus.
 /// </summary>
 internal sealed class KeyboardMonitor : IDisposable
 {
@@ -24,7 +25,14 @@ internal sealed class KeyboardMonitor : IDisposable
     private IntPtr _keyboardHook;
     private IntPtr _mouseHook;
     private IntPtr _lastWindow;
+    private bool _lastWindowTracked;
     private long _lastKeyTick = Environment.TickCount64;
+
+    /// <summary>
+    /// Decides per foreground window whether typing there may be recorded at all (false for ignored
+    /// processes such as password managers and terminals). Evaluated once per window change.
+    /// </summary>
+    public Func<IntPtr, bool> ShouldTrackWindow { get; set; } = _ => true;
 
     public LineBuffer Line { get; } = new();
 
@@ -109,10 +117,18 @@ internal sealed class KeyboardMonitor : IDisposable
         if (window != _lastWindow || now - _lastKeyTick > IdleResetMs)
         {
             Line.Reset();
+            if (window != _lastWindow) _lastWindowTracked = ShouldTrackWindow(window);
             _lastWindow = window;
         }
         _lastKeyTick = now;
         Epoch++;
+
+        // Never keep keystrokes typed into ignored applications or classic password boxes, not even in memory.
+        if (!_lastWindowTracked || WindowInfo.IsPasswordFieldFocused())
+        {
+            Line.Reset();
+            return;
+        }
 
         bool altGr = ctrl && alt; // AltGr reports as Ctrl+Alt and produces characters
         if ((ctrl || alt) && !altGr)
@@ -173,6 +189,13 @@ internal sealed class KeyboardMonitor : IDisposable
         // Flag 0x4: do not change the keyboard state (dead keys keep working for the application).
         int result = NativeMethods.ToUnicodeEx(vk, scan, state, buffer, buffer.Capacity, 0x4, layout);
         return result > 0 ? buffer.ToString(0, result) : null;
+    }
+
+    /// <summary>Forgets the current line and re-evaluates <see cref="ShouldTrackWindow"/> on the next key (settings changed).</summary>
+    public void InvalidateWindow()
+    {
+        _lastWindow = IntPtr.Zero;
+        Line.Reset();
     }
 
     public void Dispose()
