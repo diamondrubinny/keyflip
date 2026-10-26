@@ -1,31 +1,31 @@
 # SignPath Foundation – setup guide
 
-Status: **not applied yet.** Facts below come from https://signpath.org/terms (checked 2026-10-26); re-verify before applying.
+Status (2026-10-26): **not applied yet.** Facts below come from https://signpath.org/terms (checked 2026-10-26); re-verify before applying.
 
 ## Eligibility vs. KeyFlip today
 | Requirement | Status |
 |---|---|
-| OSI-approved license, no proprietary parts | ✅ Apache-2.0 (`LICENSE`) |
-| Project owns its repository, builds from source | ⬜ create the empty public repo `diamondrubinny/keyflip` and push the project (see README, "העברה לריפו עצמאי"); `.github/workflows/ci.yml` is ready for the new root |
-| Actively maintained, already released | ✅ pre-release exists; ⬜ publish a proper release |
-| Functionality documented on download page | ✅ README (Hebrew); ⬜ add an English README section |
-| Not a hacking tool | ✅ the keyboard hook only detects word boundaries; no exploitation or evasion |
-| Privacy statement, no undisclosed data sending | ✅ no network access at all |
-| System changes warned, uninstall offered | ⚠ portable app only; add an installer with uninstaller |
-| MFA for all members on GitHub and SignPath | ⬜ the owner enables it |
-| "Code signing policy" on home and download page | ✅ `docs/CODE_SIGNING_POLICY.md`; ⬜ link it from the README |
+| OSI-approved license, no proprietary parts | ✅ Apache-2.0 (`LICENSE`). 🔎 Word lists are CC BY-SA 4.0 data (not proprietary, not OSI) – confirm acceptance with SignPath |
+| Project owns its repository, builds from source | ✅ `diamondrubinny/keyflip`, binaries built only by `.github/workflows/ci.yml` |
+| Actively maintained, already released | ⬜ publish the first preview pre-release in this repository (run CI manually with *release = true*), then a stable release |
+| Functionality documented on download page | ✅ README in English and Hebrew |
+| Not a hacking tool | ✅ the keyboard hook only detects word boundaries; nothing is recorded in excluded apps/password fields; no exploitation or evasion |
+| Privacy statement, no undisclosed data sending | ✅ no network access at all; `docs/PRIVACY.md` |
+| System changes warned, uninstall offered | ⚠ portable app with documented manual uninstall; installer with uninstaller still planned |
+| MFA for all members on GitHub and SignPath | ⬜ owner confirms 2FA on GitHub; enable on SignPath when the account exists |
+| "Code signing policy" on home and download page | ✅ linked from README and from every release's notes |
+| Security process | ✅ `SECURITY.md`, private vulnerability reporting, CodeQL, Dependabot |
 | Verifiable **reputation** for executables | ⚠ **main risk.** A brand-new project with no users or history may be declined. Acceptance is discretionary. |
 
 ## Steps
-1. Create the dedicated public repo, move `keyboard-fixer/` content to its root, add `LICENSE`, enable 2FA, tag a release.
-2. Add the "Code signing policy" link to the README and to the release notes.
-3. Apply at https://signpath.org/apply (they review the project's reputation once).
-4. After approval: install the SignPath GitHub App, create a project + signing policy (manual approval), add the
-   organization id as a repository variable and the API token as a repository secret.
-5. Extend the workflow: upload the unsigned `KeyFlip.exe` with `actions/upload-artifact@v4`, then call
-   `signpath/github-action-submit-signing-request` (exact inputs: verify in the SignPath docs) and publish the signed file.
-6. Keep product name/version stable per build as required by the enforced metadata.
+1. Publish a preview pre-release; collect real usage (issues, stars) for a few weeks.
+2. Apply at https://signpath.org/apply (they review the project's reputation once).
+3. After approval: install the SignPath GitHub App, create a project + signing policy (manual approval), add the
+   organization id as a repository variable and the API token as a repository **secret** (never in the repo).
+4. Extend the workflow: keep uploading the unsigned `KeyFlip.exe` with `actions/upload-artifact`, then call
+   `signpath/github-action-submit-signing-request` (exact inputs: verify in the SignPath docs) and attach the signed file to a **stable** release.
+5. Keep product name/version stable per build as required by the enforced metadata (`npm run check-version`).
 
 ## If SignPath declines
 - Build reputation (users, stars, issues, regular releases) and re-apply.
-- Meanwhile: self-signed certificate for own machines only, or `Unblock` + Defender false-positive report.
+- Meanwhile: Defender false-positive submission for each release, and `SHA256SUMS.txt` verification.
