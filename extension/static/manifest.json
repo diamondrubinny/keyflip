@@ -1,0 +1,28 @@
+{
+  "manifest_version": 3,
+  "name": "KeyFlip – תיקון הקלדה בשפה שגויה",
+  "short_name": "KeyFlip",
+  "version": "0.1.0",
+  "description": "מתקן אוטומטית טקסט שהוקלד בטעות במקלדת הלא נכונה (עברית ↔ אנגלית). הכול רץ מקומית, בלי שליחת מידע.",
+  "minimum_chrome_version": "110",
+  "icons": { "16": "icons/16.png", "32": "icons/32.png", "48": "icons/48.png", "128": "icons/128.png" },
+  "permissions": ["storage", "contextMenus", "activeTab"],
+  "background": { "service_worker": "background.js" },
+  "content_scripts": [
+    {
+      "matches": ["http://*/*", "https://*/*"],
+      "js": ["content.js"],
+      "all_frames": true,
+      "run_at": "document_idle"
+    }
+  ],
+  "action": { "default_title": "KeyFlip", "default_popup": "popup.html" },
+  "options_ui": { "page": "options.html", "open_in_tab": true },
+  "commands": {
+    "convert-selection": {
+      "suggested_key": { "default": "Alt+Shift+Z" },
+      "description": "המר את הטקסט שנבחר (או המילים האחרונות) עברית ↔ אנגלית"
+    }
+  },
+  "content_security_policy": { "extension_pages": "script-src 'self'; object-src 'self'" }
+}

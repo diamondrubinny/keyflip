@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>KeyFlip – הגדרות</title>
+  <link rel="stylesheet" href="ui.css">
+</head>
+<body>
+  <main>
+    <h1>KeyFlip – הגדרות</h1>
+
+    <fieldset>
+      <legend>תיקון אוטומטי</legend>
+      <label class="row"><input type="checkbox" id="auto"> הפעל תיקון אוטומטי בסיום מילה (רווח)</label>
+      <label class="row"><input type="checkbox" id="enToHe"> אנגלית שהוקלדה בטעות ← עברית</label>
+      <label class="row"><input type="checkbox" id="heToEn"> עברית שהוקלדה בטעות ← אנגלית</label>
+    </fieldset>
+
+    <div class="field">
+      <label for="hosts">אתרים שבהם התיקון האוטומטי מושבת (אחד בכל שורה)</label>
+      <textarea id="hosts" rows="6" dir="ltr" spellcheck="false" aria-describedby="hostsHelp"></textarea>
+      <p id="hostsHelp" class="hint">לדוגמה: <bdi>example.com</bdi>. כולל תת-דומיינים.</p>
+    </div>
+
+    <p><button type="button" id="save">שמור</button> <span id="status" role="status" aria-live="polite"></span></p>
+
+    <h2>איך זה עובד</h2>
+    <ul>
+      <li>הזיהוי מתבצע מקומית בדפדפן באמצעות רשימות מילים. שום טקסט לא נשלח החוצה.</li>
+      <li>התיקון לא פועל בשדות סיסמה, בשדות כרטיס אשראי, בעורכי קוד, ובמילים עם ספרות, כתובות או אותיות גדולות.</li>
+      <li>אפשר לבטל תיקון אוטומטי עם <kbd>Ctrl</kbd>+<kbd>Z</kbd>.</li>
+      <li>המרה ידנית: סמנו טקסט (או השאירו את הסמן אחרי המילים) ולחצו <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>Z</kbd>. את הקיצור אפשר לשנות ב-<bdi>chrome://extensions/shortcuts</bdi>.</li>
+    </ul>
+  </main>
+  <script src="options.js"></script>
+</body>
+</html>
