@@ -10,13 +10,19 @@
     "build": "node scripts/build.mjs",
     "e2e": "node tests/e2e.cjs",
     "a11y": "node tests/a11y.cjs",
-    "eval": "node --experimental-strip-types scripts/eval.ts"
+    "eval": "node --experimental-strip-types scripts/eval.ts",
+    "check-version": "node scripts/check-version.mjs",
+    "audit": "npm audit --audit-level=moderate"
   },
   "devDependencies": {
-    "@types/chrome": "0.0.287",
+    "@types/chrome": "0.3.6",
     "@types/node": "^22.20.5",
-    "axe-core": "^4.10.2",
-    "esbuild": "^0.25.10",
-    "typescript": "5.6.3"
+    "axe-core": "^4.14.0",
+    "esbuild": "^0.28.2",
+    "playwright": "1.64.1",
+    "typescript": "5.9.3"
+  },
+  "engines": {
+    "node": ">=22.6"
   }
 }
