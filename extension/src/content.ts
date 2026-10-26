@@ -111,9 +111,10 @@ function showNotice(message: string): void {
   const root = host.attachShadow({ mode: 'closed' });
   const box = document.createElement('div');
   box.setAttribute('role', 'status');
+  box.dir = 'auto';
   box.textContent = message;
   box.style.cssText =
-    'font:14px system-ui,sans-serif;background:#1f2937;color:#fff;padding:8px 12px;border-radius:6px;direction:rtl';
+    'font:14px system-ui,sans-serif;background:#1f2937;color:#fff;padding:8px 12px;border-radius:6px';
   root.append(box);
   document.documentElement.append(host);
   setTimeout(() => host.remove(), 2500);
@@ -124,7 +125,7 @@ function convertManually(): void {
   const el = deepActiveElement();
   if (!el || !isSafeTarget(el)) {
     // Fields we refuse for automatic mode (e.g. passwords) are also refused here.
-    if (el) showNotice('KeyFlip: אין שדה כתיבה פעיל להמרה');
+    if (el) showNotice(chrome.i18n.getMessage('noField'));
     return;
   }
   busy = true;
