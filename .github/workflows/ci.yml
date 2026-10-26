@@ -75,4 +75,4 @@ jobs:
           gh release create "keyflip-v0.1.0-${GITHUB_RUN_NUMBER}" release/* \
             --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --prerelease \
             --title "KeyFlip 0.1.0 (build ${GITHUB_RUN_NUMBER})" \
-            --notes "Unsigned preview build. Windows may show SmartScreen/antivirus warnings because the app uses a keyboard hook. Not manually tested on Windows yet. See keyboard-fixer/README.md."
+            --notes "Unsigned preview build. Windows may show SmartScreen/antivirus warnings because the app uses a keyboard hook. Not manually tested on Windows yet. See README.md."
