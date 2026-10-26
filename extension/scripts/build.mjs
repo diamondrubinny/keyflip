@@ -20,4 +20,6 @@ await build({
 
 cpSync(`${root}static`, dist, { recursive: true });
 if (existsSync(`${root}icons`)) cpSync(`${root}icons`, `${dist}/icons`, { recursive: true });
+// License and third-party attribution (CC BY-SA word lists) travel with every distributed build.
+for (const file of ['LICENSE', 'NOTICE.md']) cpSync(`${root}../${file}`, `${dist}/${file}`);
 console.log('built ->', dist);
