@@ -7,6 +7,14 @@ A Chrome extension (Manifest V3) and a Windows tray app. Everything runs locally
 - **[Code signing policy](docs/CODE_SIGNING_POLICY.md)** · [Privacy policy](docs/PRIVACY.md) · [Accessibility statement (draft)](docs/ACCESSIBILITY.md)
 - Download: see the [Releases](../../releases) page (Windows `KeyFlip.exe`, Chrome extension ZIP).
 
+![KeyFlip in action: text typed in the wrong layout, like "akuo jcrho", turns into Hebrew words as you type, and Hebrew-layout gibberish turns into the English sentence "hello world everything works great"](docs/screenshots/demo.gif)
+
+| Result | Extension popup (Hebrew UI) |
+|---|---|
+| ![The demo form after typing: "שלום חברים איך עובר עליכם היום" in the Hebrew field and "hello world everything works great" in the English field](docs/screenshots/demo-after.webp) | ![The KeyFlip popup: auto-correct while typing is on, a switch to disable it on the current site, the manual shortcut Alt+Shift+Z and a link to advanced settings](docs/screenshots/popup.png) |
+
+<sub>Recorded with the real built Chrome extension on a local demo page.</sub>
+
 ---
 
 מתקן טקסט שהוקלד בטעות במקלדת הלא נכונה: `akuo` ← `שלום`, `יקךךם` ← `hello`.
