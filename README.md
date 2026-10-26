@@ -16,6 +16,7 @@ npm run typecheck
 npm run build     # יוצר extension/dist
 npm run e2e       # בדיקה בדפדפן אמיתי (דורש build ו-Playwright)
 npm run eval      # מדידת דיוק הזיהוי
+npm run a11y      # בדיקת נגישות אוטומטית (axe-core)
 ```
 
 התקנה: `chrome://extensions` ← מצב מפתח ← "טען תוסף לא ארוז" ← בחרו את `extension/dist`.
@@ -45,3 +46,6 @@ npm run eval      # מדידת דיוק הזיהוי
 - **בנייה מקומית (Windows):** `dotnet test desktop/KeyFlip.Core.Tests` ואז `dotnet publish desktop/KeyFlip.App -c Release -r win-x64`.
 - **מגבלות:** לא פועלת בחלונות שרצים כמנהל; תוכנות שחוסמות הקלדה מדומה יפעלו חלקית; ההמרה הידנית של טקסט מסומן משתמשת בלוח (ומשחזרת טקסט בלבד); אנטי-וירוס עלול לסמן תוכנה עם keyboard hook (False Positive), לכן מומלץ חתימה דיגיטלית לפני הפצה.
 - **טרם נבדקה ידנית על מחשב Windows אמיתי** – הקומפילציה והבדיקות האוטומטיות של הליבה עברו ב-CI בלבד.
+
+## מסמכים (טיוטות לבדיקה משפטית/מקצועית)
+`docs/PRIVACY.md`, `docs/TERMS.md`, `docs/ACCESSIBILITY.md`, `docs/STORE_LISTING.md`, `docs/PRODUCTION_CHECKLIST.md`.
