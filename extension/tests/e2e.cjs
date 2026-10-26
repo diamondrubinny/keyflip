@@ -8,7 +8,8 @@ const assert = require('node:assert/strict');
 
 const PAGE = `<!doctype html><meta charset=utf-8><body>
 <textarea id=ta rows=3></textarea><input id=inp type=text><input id=pw type=password>
-<div id=ce contenteditable=true style="min-height:40px;border:1px solid"></div></body>`;
+<div id=ce contenteditable=true style="min-height:40px;border:1px solid"></div>
+<iframe id=fr srcdoc="<body contenteditable=true style='min-height:40px'></body>"></iframe></body>`;
 
 (async () => {
   const server = http.createServer((_, res) => { res.setHeader('content-type', 'text/html'); res.end(PAGE); });
@@ -38,6 +39,13 @@ const PAGE = `<!doctype html><meta charset=utf-8><body>
   await check('input: undo restores original', async () => { await page.fill('#inp', ''); await type('#inp', 'akuo '); await page.keyboard.press('Control+z'); await page.waitForTimeout(200); assert.equal((await val('#inp')).trim(), 'akuo'); });
   await check('password untouched', async () => { await type('#pw', 'akuo '); assert.equal(await val('#pw'), 'akuo '); });
   await check('contenteditable: en->he', async () => { await type('#ce', 'akuo tck '); assert.equal((await val('#ce')).replace(/ /g, ' '), 'שלום אבל '); });
+  await check('srcdoc iframe editor (match_origin_as_fallback): en->he', async () => {
+    const frame = page.frameLocator('#fr');
+    await frame.locator('body').click();
+    await page.keyboard.type('akuo ', { delay: 15 });
+    await page.waitForTimeout(400);
+    assert.equal((await frame.locator('body').textContent()).replace(/\u00a0/g, ' '), 'שלום ');
+  });
   await check('manual shortcut path: convert message', async () => {
     await page.fill('#inp', 'tk,');
     await page.click('#inp'); await page.keyboard.press('End');
