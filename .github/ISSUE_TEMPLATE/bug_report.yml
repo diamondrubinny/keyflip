@@ -1,0 +1,45 @@
+name: Bug report / דיווח על תקלה
+description: A word was converted wrongly, not converted, or something broke.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Never paste passwords or private text.** Describe the word pattern instead (e.g. "a 4-letter Hebrew word typed with an English layout").
+        **אל תדביקו סיסמאות או טקסט פרטי.**
+  - type: dropdown
+    id: component
+    attributes:
+      label: Component
+      options: [Chrome extension, Windows app, Both]
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: KeyFlip version
+      placeholder: '0.1.0 – extension: chrome://extensions, Windows: tray menu → פרטיות ומידע'
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Browser / Windows version and the site or application
+      placeholder: 'Chrome 140 on Windows 11, Gmail compose'
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: What did you type, what happened, what did you expect?
+      placeholder: |
+        Typed: akuo␣
+        Got: akuo
+        Expected: שלום
+    validations:
+      required: true
+  - type: dropdown
+    id: accessibility
+    attributes:
+      label: Is this an accessibility barrier? / האם זו בעיית נגישות?
+      options: ['No', 'Yes – keyboard / screen reader / zoom / contrast']
