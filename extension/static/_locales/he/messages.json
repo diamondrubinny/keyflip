@@ -1,0 +1,20 @@
+{
+  "extName": {
+    "message": "KeyFlip – תיקון הקלדה בשפה שגויה"
+  },
+  "extShortName": {
+    "message": "KeyFlip"
+  },
+  "extDescription": {
+    "message": "מתקן אוטומטית טקסט שהוקלד בטעות במקלדת הלא נכונה (עברית ↔ אנגלית). הכול רץ מקומית, בלי שליחת מידע."
+  },
+  "commandConvert": {
+    "message": "המר את הטקסט שנבחר (או המילים האחרונות) עברית ↔ אנגלית"
+  },
+  "menuConvert": {
+    "message": "KeyFlip: המר טקסט שנבחר (עברית ↔ אנגלית)"
+  },
+  "noField": {
+    "message": "KeyFlip: אין שדה כתיבה פעיל להמרה"
+  }
+}
