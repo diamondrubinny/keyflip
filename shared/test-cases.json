@@ -1,0 +1,46 @@
+{
+  "_comment": "Shared by the TypeScript (extension) and C# (desktop) test suites. Keep both implementations in sync with these cases.",
+  "convert": [
+    { "input": "akuo", "dir": "en-to-he", "expected": "שלום" },
+    { "input": "tk,", "dir": "en-to-he", "expected": "אלת" },
+    { "input": "AKUO", "dir": "en-to-he", "expected": "שלום" },
+    { "input": "a1 b2", "dir": "en-to-he", "expected": "ש1 נ2" },
+    { "input": "יקךךם", "dir": "he-to-en", "expected": "hello" },
+    { "input": "םרןעןמשך", "dir": "he-to-en", "expected": "original" },
+    { "input": "", "dir": "en-to-he", "expected": "" }
+  ],
+  "convertAuto": [
+    { "input": "akuo יקךךם", "expected": "שלום hello" },
+    { "input": "12345", "expected": "12345" },
+    { "input": "", "expected": "" }
+  ],
+  "trailingRunStart": [
+    { "text": "hello שלום akuo tck", "expected": 11 },
+    { "text": "abc\nakuo", "expected": 4 },
+    { "text": "akuo 123 tck", "expected": 0 },
+    { "text": "   ", "expected": 3 }
+  ],
+  "detect": [
+    { "token": "akuo", "fix": { "consumed": 4, "replacement": "שלום" } },
+    { "token": "יקךךם", "fix": { "consumed": 5, "replacement": "hello" } },
+    { "token": "akuo!", "fix": { "consumed": 4, "replacement": "שלום" } },
+    { "token": "\"akuo", "fix": { "consumed": 5, "replacement": "\"שלום" } },
+    { "token": "(akuo,", "fix": { "consumed": 5, "replacement": "(שלום" } },
+    { "token": "hello", "fix": null },
+    { "token": "hello,", "fix": null },
+    { "token": "world", "fix": null },
+    { "token": "שלום", "fix": null },
+    { "token": "בבקשה", "fix": null },
+    { "token": "the", "fix": null },
+    { "token": "ok", "fix": null },
+    { "token": "a", "fix": null },
+    { "token": "https://x.io", "fix": null },
+    { "token": "user@mail.com", "fix": null },
+    { "token": "iPhone", "fix": null },
+    { "token": "Tel", "fix": null },
+    { "token": "a1b2c3", "fix": null },
+    { "token": "function", "fix": null },
+    { "token": "const", "fix": null },
+    { "token": "", "fix": null }
+  ]
+}

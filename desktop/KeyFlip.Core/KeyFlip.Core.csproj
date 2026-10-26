@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>12.0</LangVersion>
+    <RootNamespace>KeyFlip.Core</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Single sources of truth shared with the Chrome extension. -->
+    <EmbeddedResource Include="..\..\shared\mapping.json" LogicalName="mapping.json" />
+    <EmbeddedResource Include="..\..\extension\src\data\en.txt" LogicalName="en.txt" />
+    <EmbeddedResource Include="..\..\extension\src\data\he.txt" LogicalName="he.txt" />
+  </ItemGroup>
+
+</Project>

@@ -74,3 +74,22 @@ test('trailingRunStart picks the trailing same-script run', () => {
   assert.equal(trailingRunStart('akuo 123 vkk'), 0);
   assert.equal(trailingRunStart('   '), 3);
 });
+
+import { readFileSync } from 'node:fs';
+import { convertAuto as convertAutoShared } from '../src/core.ts';
+
+const shared = JSON.parse(readFileSync(new URL('../../shared/test-cases.json', import.meta.url), 'utf8'));
+
+test('shared cases: convert', () => {
+  for (const c of shared.convert) assert.equal(convert(c.input, c.dir), c.expected, c.input);
+});
+test('shared cases: convertAuto', () => {
+  for (const c of shared.convertAuto) assert.equal(convertAutoShared(c.input), c.expected, c.input);
+});
+test('shared cases: trailingRunStart', () => {
+  for (const c of shared.trailingRunStart) assert.equal(trailingRunStart(c.text), c.expected, c.text);
+});
+test('shared cases: detect', () => {
+  const d = makeDetector();
+  for (const c of shared.detect) assert.deepEqual(d.fixToken(c.token), c.fix, c.token);
+});

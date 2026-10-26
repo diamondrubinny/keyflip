@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWindowsForms>true</UseWindowsForms>
+    <LangVersion>12.0</LangVersion>
+    <AssemblyName>KeyFlip</AssemblyName>
+    <RootNamespace>KeyFlip.App</RootNamespace>
+    <ApplicationIcon>Assets\keyflip.ico</ApplicationIcon>
+    <Version>0.1.0</Version>
+    <Company>KeyFlip</Company>
+    <Product>KeyFlip</Product>
+    <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+    <ApplicationHighDpiMode>SystemAware</ApplicationHighDpiMode>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\KeyFlip.Core\KeyFlip.Core.csproj" />
+    <EmbeddedResource Include="Assets\keyflip.ico" LogicalName="keyflip.ico" />
+  </ItemGroup>
+
+</Project>

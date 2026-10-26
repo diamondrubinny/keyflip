@@ -96,7 +96,7 @@ export class Detector {
     for (;;) {
       const candidate = body.slice(0, end);
       const fixed = this.fixWord(candidate);
-      if (fixed !== null) return { consumed: lead + end, replacement: fixed };
+      if (fixed !== null) return { consumed: lead + end, replacement: token.slice(0, lead) + fixed };
       if (end <= 1 || !TRAILING_PUNCT.test(candidate[end - 1]!)) return null;
       end--;
     }
