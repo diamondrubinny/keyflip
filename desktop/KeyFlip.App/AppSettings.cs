@@ -5,10 +5,12 @@ namespace KeyFlip.App;
 /// <summary>User settings stored in %APPDATA%\KeyFlip\settings.json. Contains no typed text.</summary>
 internal sealed class AppSettings
 {
-    /// <summary>Browsers are handled by the Chrome extension; the rest hold secrets or are terminals.</summary>
+    /// <summary>Browsers are skipped by default because the Chrome extension handles them (and password fields there are undetectable).</summary>
+    public static readonly string[] BrowserProcesses = { "chrome", "msedge", "firefox", "brave", "opera", "vivaldi" };
+
+    /// <summary>Processes that hold secrets, are terminals, or are remote-control tools.</summary>
     public static readonly string[] DefaultIgnoredProcesses =
     {
-        "chrome", "msedge", "firefox", "brave", "opera", "vivaldi",
         "keepass", "keepassxc", "1password", "bitwarden", "lastpass", "dashlane",
         "windowsterminal", "cmd", "powershell", "pwsh", "conhost", "mintty", "putty",
         "mstsc", "vmconnect", "teamviewer", "anydesk",
@@ -22,6 +24,9 @@ internal sealed class AppSettings
 
     public bool Auto { get; set; } = true;
 
+    /// <summary>When true the desktop app also corrects text typed in browsers (use it if the extension is not installed).</summary>
+    public bool IncludeBrowsers { get; set; }
+
     public List<string> IgnoredProcesses { get; set; } = new(DefaultIgnoredProcesses);
 
     private static string FilePath => Path.Combine(
@@ -34,7 +39,12 @@ internal sealed class AppSettings
             if (File.Exists(FilePath))
             {
                 AppSettings? loaded = JsonSerializer.Deserialize<AppSettings>(File.ReadAllText(FilePath));
-                if (loaded is not null) return loaded;
+                if (loaded is not null)
+                {
+                    // Older files listed browsers here; they are governed by IncludeBrowsers now.
+                    loaded.IgnoredProcesses.RemoveAll(p => BrowserProcesses.Contains(p, StringComparer.OrdinalIgnoreCase));
+                    return loaded;
+                }
             }
         }
         catch (Exception)
@@ -57,6 +67,10 @@ internal sealed class AppSettings
         }
     }
 
-    public bool IsProcessIgnored(string? processName) =>
-        processName is null || IgnoredProcesses.Any(p => string.Equals(p, processName, StringComparison.OrdinalIgnoreCase));
+    public bool IsProcessIgnored(string? processName)
+    {
+        if (processName is null) return true; // unknown or elevated: input cannot be injected anyway
+        if (BrowserProcesses.Contains(processName, StringComparer.OrdinalIgnoreCase)) return !IncludeBrowsers;
+        return IgnoredProcesses.Any(p => string.Equals(p, processName, StringComparison.OrdinalIgnoreCase));
+    }
 }

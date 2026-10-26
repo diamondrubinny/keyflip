@@ -35,6 +35,7 @@ internal sealed class TrayApp : ApplicationContext
     private readonly NotifyIcon _tray;
     private readonly ToolStripMenuItem _autoItem;
     private readonly ToolStripMenuItem _startupItem;
+    private readonly ToolStripMenuItem _browsersItem;
     private LastFix? _lastFix;
     private bool _busy;
 
@@ -45,6 +46,17 @@ internal sealed class TrayApp : ApplicationContext
         {
             _settings.Auto = _autoItem.Checked;
             _settings.Save();
+        };
+
+        _browsersItem = new ToolStripMenuItem("פעל גם בדפדפנים") { CheckOnClick = true, Checked = _settings.IncludeBrowsers };
+        _browsersItem.CheckedChanged += (_, _) =>
+        {
+            _settings.IncludeBrowsers = _browsersItem.Checked;
+            _settings.Save();
+            if (_browsersItem.Checked)
+            {
+                Notify("מופעל גם בדפדפנים. כבו את התוסף של KeyFlip בכרום כדי למנוע תיקון כפול, ושימו לב: אין זיהוי של שדות סיסמה בדפדפן.");
+            }
         };
 
         var convertItem = new ToolStripMenuItem("המר עכשיו (Ctrl+Alt+Space)");
@@ -62,7 +74,7 @@ internal sealed class TrayApp : ApplicationContext
         var menu = new ContextMenuStrip { RightToLeft = RightToLeft.Yes };
         menu.Items.AddRange(new ToolStripItem[]
         {
-            _autoItem, convertItem, _startupItem, new ToolStripSeparator(), aboutItem, exitItem,
+            _autoItem, _browsersItem, convertItem, _startupItem, new ToolStripSeparator(), aboutItem, exitItem,
         });
 
         _tray = new NotifyIcon
@@ -99,7 +111,7 @@ internal sealed class TrayApp : ApplicationContext
             "פרטיות:\n" +
             "• התוכנה עוקבת אחרי המקשים שנלחצים כדי לזהות מילה שהסתיימה, ושומרת רק את השורה הנוכחית בזיכרון (עד 200 תווים).\n" +
             "• שום דבר לא נכתב לדיסק, לא נרשם ביומן ולא נשלח לרשת.\n" +
-            "• התוכנה לא פועלת בדפדפנים (התוסף מטפל בהם), במנהלי סיסמאות, בטרמינלים ובשדות סיסמה קלאסיים.\n" +
+            "• כברירת מחדל התוכנה לא פועלת בדפדפנים (התוסף מטפל בהם; אפשר להפעיל מתפריט המגש), ולעולם לא במנהלי סיסמאות, בטרמינלים ובשדות סיסמה קלאסיים.\n" +
             "• ההגדרות נשמרות ב-%APPDATA%\\KeyFlip\\settings.json.\n\n" +
             "ביטול תיקון אוטומטי: Ctrl+Alt+Space מיד אחריו.",
             "KeyFlip",
