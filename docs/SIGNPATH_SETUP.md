@@ -5,8 +5,8 @@ Status: **not applied yet.** Facts below come from https://signpath.org/terms (c
 ## Eligibility vs. KeyFlip today
 | Requirement | Status |
 |---|---|
-| OSI-approved license, no proprietary parts | ⬜ choose license and add `LICENSE` (e.g. MIT) |
-| Project owns its repository, builds from source | ⬜ needs a dedicated public repo (e.g. `keyflip`); today it lives in a subfolder of a profile repo |
+| OSI-approved license, no proprietary parts | ✅ Apache-2.0 (`LICENSE`) |
+| Project owns its repository, builds from source | ⬜ create the empty public repo `diamondrubinny/keyflip` and push the project (see README, "העברה לריפו עצמאי"); `.github/workflows/ci.yml` is ready for the new root |
 | Actively maintained, already released | ✅ pre-release exists; ⬜ publish a proper release |
 | Functionality documented on download page | ✅ README (Hebrew); ⬜ add an English README section |
 | Not a hacking tool | ✅ the keyboard hook only detects word boundaries; no exploitation or evasion |

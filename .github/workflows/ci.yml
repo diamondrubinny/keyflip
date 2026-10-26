@@ -1,0 +1,78 @@
+name: KeyFlip
+
+on:
+  push:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  extension:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: extension
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: extension/package-lock.json
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: keyflip-chrome-extension
+          path: extension/dist
+
+  desktop:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - name: Test core
+        run: dotnet test desktop/KeyFlip.Core.Tests -c Release
+      - name: Publish (framework-dependent, needs .NET 8 Desktop Runtime)
+        run: dotnet publish desktop/KeyFlip.App -c Release -r win-x64 --self-contained false -p:PublishSingleFile=true -o out/framework-dependent
+      - name: Publish (self-contained)
+        run: dotnet publish desktop/KeyFlip.App -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -o out/self-contained
+      - uses: actions/upload-artifact@v4
+        with:
+          name: keyflip-windows-framework-dependent
+          path: out/framework-dependent/KeyFlip.exe
+      - uses: actions/upload-artifact@v4
+        with:
+          name: keyflip-windows-self-contained
+          path: out/self-contained/KeyFlip.exe
+
+  release:
+    if: github.event_name == 'workflow_dispatch'
+    needs: [extension, desktop]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+      - name: Package
+        run: |
+          mkdir release
+          (cd artifacts/keyflip-chrome-extension && zip -r ../../release/KeyFlip-chrome-extension.zip .)
+          cp artifacts/keyflip-windows-self-contained/KeyFlip.exe release/KeyFlip-windows-x64-self-contained.exe
+          cp artifacts/keyflip-windows-framework-dependent/KeyFlip.exe release/KeyFlip-windows-x64-needs-dotnet8.exe
+          (cd release && sha256sum * > SHA256SUMS.txt)
+      - name: Publish pre-release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "keyflip-v0.1.0-${GITHUB_RUN_NUMBER}" release/* \
+            --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --prerelease \
+            --title "KeyFlip 0.1.0 (build ${GITHUB_RUN_NUMBER})" \
+            --notes "Unsigned preview build. Windows may show SmartScreen/antivirus warnings because the app uses a keyboard hook. Not manually tested on Windows yet. See keyboard-fixer/README.md."
