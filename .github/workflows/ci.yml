@@ -126,3 +126,20 @@ jobs:
           Windows may show SmartScreen/antivirus warnings because the app uses a keyboard hook. Verify downloads with SHA256SUMS.txt.
           The Windows app needs Windows 10/11 x64; the 'needs-dotnet10' file requires the .NET 10 Desktop Runtime.
           License: Apache-2.0. Word lists: CC BY-SA 4.0 (see NOTICE.md)."
+      - name: Update rolling latest-preview pre-release (stable download links)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir latest
+          cp "release/KeyFlip-${VERSION}-chrome-extension.zip" latest/KeyFlip-chrome-extension.zip
+          cp "release/KeyFlip-${VERSION}-windows-x64-self-contained.exe" latest/KeyFlip-windows-x64-self-contained.exe
+          cp "release/KeyFlip-${VERSION}-windows-x64-needs-dotnet10.exe" latest/KeyFlip-windows-x64-needs-dotnet10.exe
+          cp LICENSE NOTICE.md latest/
+          (cd latest && sha256sum * > SHA256SUMS.txt)
+          gh release delete latest-preview --repo "$GITHUB_REPOSITORY" --cleanup-tag --yes || true
+          gh release create latest-preview latest/* \
+            --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --prerelease \
+            --title "KeyFlip latest preview (mirrors v${VERSION}-preview.${GITHUB_RUN_NUMBER})" \
+            --notes "Rolling, unsigned PREVIEW pre-release. It always mirrors the newest build (v${VERSION}-preview.${GITHUB_RUN_NUMBER}) with version-free file names, so download links stay stable. See the Code signing policy: https://github.com/${GITHUB_REPOSITORY}/blob/main/docs/CODE_SIGNING_POLICY.md
+
+          Verify downloads with SHA256SUMS.txt. Windows may show SmartScreen/antivirus warnings because the app uses a keyboard hook."
