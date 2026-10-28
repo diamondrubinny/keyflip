@@ -77,3 +77,14 @@ git checkout claude/typing-error-translation-addon-ae6d7h
 git subtree split --prefix=keyboard-fixer -b keyflip-standalone
 git push https://github.com/diamondrubinny/keyflip.git keyflip-standalone:main
 ```
+
+
+---
+
+## 💼 Commercial license & rights acquisition
+
+KeyFlip is free and open source under the Apache-2.0. If you are interested in a **commercial agreement** or custom licensing terms, **white-label / exclusive rights**, or **acquiring full rights to the code**, send your proposal to **[d@rubinny.net](mailto:d@rubinny.net)**.
+
+Please include: who you are (company / contact), how you intend to use the code, and your offer.
+
+> 🇮🇱 מעוניינים ברישיון מסחרי, בזכויות בלעדיות או ברכישת הזכויות בקוד? שלחו הצעה ל-**[d@rubinny.net](mailto:d@rubinny.net)** — כולל פרטי קשר, אופן השימוש המתוכנן וההצעה שלכם.
