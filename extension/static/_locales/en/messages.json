@@ -1,0 +1,20 @@
+{
+  "extName": {
+    "message": "KeyFlip – fix Hebrew/English wrong-layout typing"
+  },
+  "extShortName": {
+    "message": "KeyFlip"
+  },
+  "extDescription": {
+    "message": "Automatically fixes text typed in the wrong keyboard layout (Hebrew ↔ English). Runs locally; no data is sent anywhere."
+  },
+  "commandConvert": {
+    "message": "Convert the selected text (or the last words) Hebrew ↔ English"
+  },
+  "menuConvert": {
+    "message": "KeyFlip: convert selected text (Hebrew ↔ English)"
+  },
+  "noField": {
+    "message": "KeyFlip: no active text field to convert"
+  }
+}

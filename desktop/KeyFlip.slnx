@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="KeyFlip.Core/KeyFlip.Core.csproj" />
+  <Project Path="KeyFlip.App/KeyFlip.App.csproj" />
+  <Project Path="KeyFlip.Core.Tests/KeyFlip.Core.Tests.csproj" />
+</Solution>

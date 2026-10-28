@@ -34,7 +34,7 @@ const MENU_ID = 'keyflip-convert';
 chrome.runtime.onInstalled.addListener(() => {
   chrome.contextMenus.create({
     id: MENU_ID,
-    title: 'KeyFlip: המר טקסט שנבחר (עברית ↔ אנגלית)',
+    title: chrome.i18n.getMessage('menuConvert'),
     contexts: ['selection', 'editable'],
   });
 });

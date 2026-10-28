@@ -3,3 +3,14 @@ dist/
 bin/
 obj/
 *.user
+out/
+release/
+artifacts/
+*.zip
+.vs/
+.vscode/
+.idea/
+TestResults/
+*.binlog
+test-results/
+playwright-report/
