@@ -126,7 +126,7 @@ CI: `.github/workflows/ci.yml` builds and tests both products on every push to `
 
 ### סטטוס בדיקות
 - אוטומטי (CI): בדיקות יחידה בשני המימושים, בדיקות קצה-לקצה בכרומיום אמיתי, סריקת נגישות axe-core, CodeQL ובדיקת חולשות בתלויות.
-- ידני: תוכנת Windows נבדקה בבדיקה בסיסית על מחשב אחד. בדיקה ידנית מקיפה (Word, Slack, Outlook, WhatsApp Web, Gmail, קורא מסך) עדיין פתוחה. ראו `docs/PRODUCTION_CHECKLIST.md`.
+- ידני: תוכנת Windows נבדקה ידנית על כמה מחשבים מסוגים שונים ועובדת. בדיקה ידנית מקיפה לפי תוכנות (Word, Slack, Outlook, WhatsApp Web, Gmail, קורא מסך) עדיין פתוחה. ראו `docs/PRODUCTION_CHECKLIST.md`.
 
 </div>
 
