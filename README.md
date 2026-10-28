@@ -8,7 +8,26 @@ Fixes text typed in the wrong keyboard layout between Hebrew and English: `akuo`
 A Chrome extension (Manifest V3) and a Windows tray app. **Everything runs locally; no data leaves your computer.**
 
 - **[Code signing policy](docs/CODE_SIGNING_POLICY.md)** · [Privacy policy](docs/PRIVACY.md) · [Terms](docs/TERMS.md) · [Accessibility statement](docs/ACCESSIBILITY.md) · [Security](SECURITY.md) · [Changelog](CHANGELOG.md)
-- Download: [Releases](https://github.com/diamondrubinny/keyflip/releases). Current builds are **unsigned previews** (pre-releases) – verify them with `SHA256SUMS.txt`.
+- All builds: [Releases](https://github.com/diamondrubinny/keyflip/releases). Current builds are **unsigned previews** (pre-releases) – verify them with `SHA256SUMS.txt`.
+
+## ⬇️ Download
+
+| File | For |
+|---|---|
+| **[KeyFlip-windows-x64-self-contained.exe](https://github.com/diamondrubinny/keyflip/releases/download/latest-preview/KeyFlip-windows-x64-self-contained.exe)** | Windows 10/11 x64 – runs as is (recommended) |
+| [KeyFlip-windows-x64-needs-dotnet10.exe](https://github.com/diamondrubinny/keyflip/releases/download/latest-preview/KeyFlip-windows-x64-needs-dotnet10.exe) | Windows 10/11 x64 – smaller, needs the [.NET 10 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/10.0) |
+| **[KeyFlip-chrome-extension.zip](https://github.com/diamondrubinny/keyflip/releases/download/latest-preview/KeyFlip-chrome-extension.zip)** | Chrome / Edge – unzip, then `chrome://extensions` → Developer mode → *Load unpacked* → the unzipped folder |
+| [SHA256SUMS.txt](https://github.com/diamondrubinny/keyflip/releases/download/latest-preview/SHA256SUMS.txt) | Checksums to verify the files |
+
+These links always point to the newest build ([`latest-preview`](https://github.com/diamondrubinny/keyflip/releases/tag/latest-preview)). The builds are not code-signed yet, so Windows SmartScreen or antivirus software may warn about the keyboard hook – see the [Code signing policy](docs/CODE_SIGNING_POLICY.md).
+
+![KeyFlip in action: text typed in the wrong layout, like "akuo jcrho", turns into Hebrew words as you type, and Hebrew-layout gibberish turns into the English sentence "hello world everything works great"](docs/screenshots/demo.gif)
+
+| Result | Extension popup (Hebrew UI) |
+|---|---|
+| ![The demo form after typing: "שלום חברים איך עובר עליכם היום" in the Hebrew field and "hello world everything works great" in the English field](docs/screenshots/demo-after.webp) | ![The KeyFlip popup: auto-correct while typing is on, a switch to disable it on the current site, the manual shortcut Alt+Shift+Z and a link to advanced settings](docs/screenshots/popup.png) |
+
+<sub>Recorded with the real built Chrome extension on a local demo page.</sub>
 
 [עברית למטה ↓](#עברית)
 
@@ -81,6 +100,11 @@ CI: `.github/workflows/ci.yml` builds and tests both products on every push to `
 
 מתקן טקסט שהוקלד בטעות במקלדת הלא נכונה: `akuo` ← `שלום`, `יקךךם` ← `hello`. תוסף Chrome ותוכנת Windows. **הכול רץ מקומית ושום מידע לא יוצא מהמחשב.**
 
+### הורדה
+- **[תוכנת Windows (מומלץ, רצה מיד)](https://github.com/diamondrubinny/keyflip/releases/download/latest-preview/KeyFlip-windows-x64-self-contained.exe)** · [גרסה קטנה שדורשת .NET 10 Desktop Runtime](https://github.com/diamondrubinny/keyflip/releases/download/latest-preview/KeyFlip-windows-x64-needs-dotnet10.exe)
+- **[תוסף Chrome (ZIP)](https://github.com/diamondrubinny/keyflip/releases/download/latest-preview/KeyFlip-chrome-extension.zip)** – מחלצים, ואז `chrome://extensions` ← מצב מפתח ← "טען תוסף לא ארוז" ← התיקייה שחולצה.
+- [SHA256SUMS.txt](https://github.com/diamondrubinny/keyflip/releases/download/latest-preview/SHA256SUMS.txt) לאימות הקבצים. הקישורים מפנים תמיד לגרסה האחרונה. הקבצים עדיין לא חתומים דיגיטלית, ולכן Windows או האנטי-וירוס עלולים להציג אזהרה.
+
 ### תוסף Chrome
 - **אוטומטי:** מקלידים מילה ולוחצים רווח. אם המילה הוקלדה בשפה שגויה היא מוחלפת. `Ctrl+Z` מבטל.
 - **ידני:** מסמנים טקסט (או משאירים את הסמן אחרי המילים) ולוחצים `Alt+Shift+Z`, או משתמשים בתפריט ההקשר.
@@ -105,3 +129,13 @@ CI: `.github/workflows/ci.yml` builds and tests both products on every push to `
 - ידני: תוכנת Windows נבדקה בבדיקה בסיסית על מחשב אחד. בדיקה ידנית מקיפה (Word, Slack, Outlook, WhatsApp Web, Gmail, קורא מסך) עדיין פתוחה. ראו `docs/PRODUCTION_CHECKLIST.md`.
 
 </div>
+
+---
+
+## 💼 Commercial license & rights acquisition
+
+KeyFlip is free and open source under the Apache-2.0. If you are interested in a **commercial agreement** or custom licensing terms, **white-label / exclusive rights**, or **acquiring full rights to the code**, send your proposal to **[d@rubinny.net](mailto:d@rubinny.net)**.
+
+Please include: who you are (company / contact), how you intend to use the code, and your offer.
+
+> 🇮🇱 מעוניינים ברישיון מסחרי, בזכויות בלעדיות או ברכישת הזכויות בקוד? שלחו הצעה ל-**[d@rubinny.net](mailto:d@rubinny.net)** — כולל פרטי קשר, אופן השימוש המתוכנן וההצעה שלכם.
