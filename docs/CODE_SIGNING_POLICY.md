@@ -20,7 +20,7 @@ All team members use multi-factor authentication on GitHub and SignPath. Changes
 
 ## Release and signing process
 1. Source is committed to this public repository; binaries are built **only** by GitHub Actions from that source.
-2. **Preview builds:** until signing is available, a maintainer may publish an *unsigned* build, always marked as a GitHub **pre-release** named `v<version>-preview.<run>` with "Unsigned PREVIEW build" in its notes and a `SHA256SUMS.txt`.
+2. **Preview builds:** until signing is available, a maintainer may publish an *unsigned* build, always marked as a GitHub **pre-release** named `v<version>-preview.<run>` with "Unsigned PREVIEW build" in its notes and a `SHA256SUMS.txt`. The same build is mirrored to a rolling pre-release tagged `latest-preview` (same files with version-free names and their own `SHA256SUMS.txt`) so the download links in the README stay stable.
 3. **Stable releases** (not marked pre-release) are published only after the signing request has been approved manually by an Approver. Unsigned or unverifiable builds are never published as stable releases.
 
 ## Privacy policy
