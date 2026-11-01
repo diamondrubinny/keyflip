@@ -1,7 +1,7 @@
 # KeyFlip – תיקון הקלדה בשפה לא נכונה (עברית ↔ אנגלית)
 
 > **סטטוס (26.10.2026):** שלבים 1–4 הושלמו, וגם חיזוק אבטחה ותשתית (ראו `docs/HARDENING_PLAN.md`, `CHANGELOG.md`).
-> **נותר:** בדיקות ידניות מקיפות (ראו `docs/PRODUCTION_CHECKLIST.md`), Release ראשון בריפו העצמאי, הגשה ל-SignPath, מתקין (MSIX/Inno Setup), פרסום בחנות Chrome.
+> **נותר:** בדיקות ידניות מקיפות (ראו `docs/PRODUCTION_CHECKLIST.md`), Release ראשון בריפו העצמאי, הגשה ל-SignPath, מתקין: חבילת MSIX ל-Store בבנייה (`docs/MSIX_STORE.md`), פרסום בחנות Chrome.
 > **החלטות שאושרו:** Windows ראשון; זיהוי אוטומטי + המרה ידנית; קיצורים `Alt+Shift+Z` (תוסף) ו-`Ctrl+Alt+Space` (תוכנה); קוד פתוח Apache-2.0.
 > המסמך הוא מקור האמת לבנייה. כל שלב מעדכן כאן את הסטטוס.
 
