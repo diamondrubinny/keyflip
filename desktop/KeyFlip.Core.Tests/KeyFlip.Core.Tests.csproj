@@ -14,6 +14,7 @@
   <ItemGroup>
     <ProjectReference Include="..\KeyFlip.Core\KeyFlip.Core.csproj" />
     <Content Include="..\..\shared\test-cases.json" Link="test-cases.json" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="..\..\extension\src\data\en.txt" Link="en.txt" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
 </Project>

@@ -44,7 +44,7 @@ PRIVACY FIRST
 
 GOOD TO KNOW
 • Does not work in windows running as administrator.
-• Detection is dictionary-based; very rare words may occasionally be skipped or corrected wrongly – undo is one shortcut away.
+• Detection combines word lists with a statistical model; very rare words may occasionally be skipped or corrected wrongly – undo is one shortcut away.
 • Open source (Apache-2.0): https://github.com/diamondrubinny/keyflip
 
 **What's new in this version:** First release in the Microsoft Store.

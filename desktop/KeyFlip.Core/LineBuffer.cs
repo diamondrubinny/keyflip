@@ -45,4 +45,25 @@ public sealed class LineBuffer
     }
 
     public void Reset() => _text.Clear();
+
+    /// <summary>
+    /// Short words (up to 4 chars) directly before <paramref name="tokenStart"/>, separated by single whitespace characters,
+    /// nearest first. Used to repair short words typed in the wrong layout just before a corrected word.
+    /// </summary>
+    public static IReadOnlyList<(int Start, string Token)> PreviousShortTokens(string text, int tokenStart, int maxTokens = 3)
+    {
+        var result = new List<(int, string)>();
+        int pos = tokenStart;
+        for (int i = 0; i < maxTokens; i++)
+        {
+            if (pos < 2 || !char.IsWhiteSpace(text[pos - 1]) || char.IsWhiteSpace(text[pos - 2])) break;
+            int start = pos - 1;
+            while (start > 0 && !char.IsWhiteSpace(text[start - 1])) start--;
+            string token = text[start..(pos - 1)];
+            if (token.Length == 0 || token.Length > 4) break;
+            result.Add((start, token));
+            pos = start;
+        }
+        return result;
+    }
 }

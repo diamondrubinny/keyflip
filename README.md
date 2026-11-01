@@ -43,7 +43,7 @@ Privacy and permissions:
 - Permissions: `storage` (settings), `contextMenus` (menu item), `activeTab` (current site in the popup). The content script runs on http/https pages (including `about:blank`/`srcdoc` editor frames) to see the word you just finished.
 - Never acts in password, credit-card or one-time-code fields, code editors, or on words with digits, `@`, URLs or capital letters.
 
-Limits: Google Docs and other canvas-based editors may not work. Detection is dictionary-based (≈96% recall, ≈0.5% wrong corrections on rare words); 3-letter words are checked more strictly.
+Limits: Google Docs and other canvas-based editors may not work. Detection uses word lists plus a statistical model: about 91% of wrongly typed Hebrew and 88% of wrongly typed English words (5+ letters, unseen during tuning) are recovered, with about 0.8% wrong corrections on rare words; a lone two-letter word is never changed. Details: [docs/ACCURACY.md](docs/ACCURACY.md).
 
 Install for development: `chrome://extensions` → Developer mode → *Load unpacked* → `extension/dist`.
 
@@ -115,7 +115,7 @@ CI: `.github/workflows/ci.yml` builds and tests both products on every push to `
 - **ידני:** מסמנים טקסט (או משאירים את הסמן אחרי המילים) ולוחצים `Alt+Shift+Z`, או משתמשים בתפריט ההקשר.
 - **הגדרות:** בחלון התוסף (הפעלה/כיבוי, השבתה לפי אתר) ובדף האפשרויות.
 - **פרטיות:** אין רשת, אין אנליטיקה ואין עוגיות. התוסף לא פועל בשדות סיסמה, כרטיס אשראי, קוד חד-פעמי ועורכי קוד.
-- **מגבלות:** Google Docs ועורכי canvas עלולים לא לעבוד. הזיהוי מבוסס מילון (כ-96% זיהוי, כ-0.5% תיקון שגוי במילים נדירות).
+- **מגבלות:** Google Docs ועורכי canvas עלולים לא לעבוד. הזיהוי מבוסס מילונים ומודל סטטיסטי: כ-91% (עברית) וכ-88% (אנגלית) זיהוי של מילים שלא היו במילון באורך 5+ אותיות, וכ-0.8% תיקון שגוי במילים נדירות. מילה קצרה בודדת לא משתנה. פירוט: `docs/ACCURACY.md`.
 
 ### תוכנת Windows
 - דורשת Windows 10/11 x64. הקובץ self-contained רץ כמו שהוא. הקובץ `needs-dotnet10` דורש את .NET 10 Desktop Runtime.

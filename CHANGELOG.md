@@ -4,6 +4,8 @@ All notable changes are documented here. Format: [Keep a Changelog](https://keep
 
 ## [Unreleased]
 ### Added
+- Detection v2 (extension and Windows app, same rules, shared test cases): larger word lists (about 135k English / 143k Hebrew words), a character n-gram model for words missing from the dictionaries, a frequency rule for words valid in both languages (`tck` -> אבל), Hebrew prefixes up to three letters, and context: after a fix the next short words are fixed more readily (`kt` -> לא), short words just before a fixed word are repaired too, and a short word between two fixed words is flipped even if it is valid English (`to` -> אם). Measured on unseen words (5+ letters): Hebrew typed on an English layout 57% -> 91%, English typed on a Hebrew layout 13% -> 88%; method and numbers in `docs/ACCURACY.md`.
+- Extension: also skips text fields named or labelled like passwords/PIN/OTP/card numbers and CSS-masked inputs.
 - Microsoft Store package (MSIX, x64, self-contained): `desktop/KeyFlip.Package` (manifest, logos, `build-msix.ps1`) and a `msix` CI job that also install-tests a self-signed copy.
 - Windows app: first-run notice that KeyFlip runs in the notification area; launching it again explains it is already running.
 ### Changed

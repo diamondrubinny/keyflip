@@ -6,6 +6,21 @@ const ALLOWED_INPUT_TYPES = new Set(['text', 'search', '']);
 const BLOCKED_AUTOCOMPLETE = /^(cc-|one-time-code|current-password|new-password)/;
 const CODE_EDITOR_SELECTOR = '.monaco-editor, .cm-editor, .CodeMirror, .ace_editor, [data-keyflip="off"]';
 
+/** Field names/labels that suggest secrets, even when the input type is plain text (e.g. "show password" toggles). */
+const SENSITIVE_HINT =
+  /pass(?:word|code|wd|phrase)|passw|pwd|secret|\bpin\b|otp|one-time|cvv|cvc|card.?num|credit.?card|\bssn\b|סיסמ|אימות|אשראי/i;
+
+function looksSensitive(el: TextField): boolean {
+  const hints = [el.name, el.id, el.placeholder, el.getAttribute('aria-label'), el.getAttribute('data-testid')]
+    .filter(Boolean)
+    .join(' ');
+  if (SENSITIVE_HINT.test(hints)) return true;
+  // Masked with CSS instead of type=password.
+  const style = getComputedStyle(el) as CSSStyleDeclaration & { webkitTextSecurity?: string };
+  const security = style.webkitTextSecurity ?? style.getPropertyValue('-webkit-text-security');
+  return security !== '' && security !== 'none';
+}
+
 export function isTextField(el: Element | null): el is TextField {
   if (el instanceof HTMLTextAreaElement) return true;
   return el instanceof HTMLInputElement && ALLOWED_INPUT_TYPES.has(el.type);
@@ -17,7 +32,8 @@ export function isSafeTarget(el: Element | null): boolean {
   if (el.closest(CODE_EDITOR_SELECTOR)) return false;
   if (isTextField(el)) {
     if (el.readOnly || el.disabled) return false;
-    return !BLOCKED_AUTOCOMPLETE.test(el.autocomplete ?? '');
+    if (BLOCKED_AUTOCOMPLETE.test(el.autocomplete ?? '')) return false;
+    return !looksSensitive(el);
   }
   return el instanceof HTMLElement && el.isContentEditable;
 }

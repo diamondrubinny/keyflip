@@ -51,10 +51,12 @@ public class CoreTests
         {
             string token = c.GetProperty("token").GetString()!;
             JsonElement expected = c.GetProperty("fix");
-            Fix? actual = SharedDetector.Value.FixToken(token);
+            int streak = c.TryGetProperty("streak", out JsonElement st) ? st.GetInt32() : 0;
+            bool sandwich = c.TryGetProperty("sandwich", out JsonElement sw) && sw.GetBoolean();
+            Fix? actual = SharedDetector.Value.FixToken(token, streak, sandwich);
             if (expected.ValueKind == JsonValueKind.Null)
             {
-                Assert.True(actual is null, $"'{token}' should be left alone but became '{actual?.Replacement}'");
+                Assert.True(actual is null, $"'{token}' (streak {streak}) should be left alone but became '{actual?.Replacement}'");
             }
             else
             {
@@ -86,5 +88,22 @@ public class CoreTests
         Assert.Equal(8, b.Text.Length); // bounded
         b.Reset();
         Assert.Equal("", b.Text);
+    }
+
+    [Fact]
+    public void PreviousShortTokens_FindsAdjacentShortWords()
+    {
+        var found = LineBuffer.PreviousShortTokens("kt zv tck ", 6);
+        Assert.Equal(new[] { (3, "zv"), (0, "kt") }, found.ToArray());
+        Assert.Empty(LineBuffer.PreviousShortTokens("hello tck ", 6)); // longer than 4 chars
+        Assert.Empty(LineBuffer.PreviousShortTokens("kt  tck ", 4));   // double space breaks adjacency
+    }
+
+    [Fact]
+    public void NgramModel_PrefersRealWordsOverRandomStrings()
+    {
+        var words = File.ReadAllLines(Path.Combine(AppContext.BaseDirectory, "en.txt")).Where(w => w.Length > 0).ToList();
+        var model = new NgramModel(words);
+        Assert.True(model.Score("information") > model.Score("xqzvkpw"));
     }
 }
