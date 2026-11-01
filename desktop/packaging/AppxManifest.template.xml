@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  MSIX manifest template for the Microsoft Store build of KeyFlip.
+  Author: Diamond Rubinny. Tokens (__NAME__, __PUBLISHER__, __PUBLISHER_DISPLAY__, __VERSION__)
+  are filled by build-msix.ps1 from the repository variables (Partner Center → Product identity).
+-->
+<Package
+  xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
+  xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
+  xmlns:desktop="http://schemas.microsoft.com/appx/manifest/desktop/windows10"
+  xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
+  IgnorableNamespaces="uap desktop rescap">
+
+  <Identity
+    Name="__NAME__"
+    Publisher="__PUBLISHER__"
+    Version="__VERSION__"
+    ProcessorArchitecture="x64" />
+
+  <Properties>
+    <DisplayName>KeyFlip</DisplayName>
+    <PublisherDisplayName>__PUBLISHER_DISPLAY__</PublisherDisplayName>
+    <Logo>Assets\StoreLogo.png</Logo>
+    <Description>Fixes text typed in the wrong keyboard layout (Hebrew/English). Local only.</Description>
+  </Properties>
+
+  <Dependencies>
+    <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.17763.0" MaxVersionTested="10.0.26100.0" />
+  </Dependencies>
+
+  <Resources>
+    <Resource Language="he-IL" />
+    <Resource Language="en-US" />
+  </Resources>
+
+  <Applications>
+    <Application Id="KeyFlip" Executable="KeyFlip.exe" EntryPoint="Windows.FullTrustApplication">
+      <uap:VisualElements
+        DisplayName="KeyFlip"
+        Description="Fixes text typed in the wrong keyboard layout (Hebrew/English)."
+        BackgroundColor="transparent"
+        Square150x150Logo="Assets\Square150x150Logo.png"
+        Square44x44Logo="Assets\Square44x44Logo.png">
+        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" />
+      </uap:VisualElements>
+      <Extensions>
+        <!-- Off by default: the user turns it on in Settings → Apps → Startup (opened from the tray menu). -->
+        <desktop:Extension Category="windows.startupTask" Executable="KeyFlip.exe" EntryPoint="Windows.FullTrustApplication">
+          <desktop:StartupTask TaskId="KeyFlipStartup" Enabled="false" DisplayName="KeyFlip" />
+        </desktop:Extension>
+      </Extensions>
+    </Application>
+  </Applications>
+
+  <Capabilities>
+    <!-- Required for every Win32 (full trust) app: keyboard hook + SendInput, all processing local. -->
+    <rescap:Capability Name="runFullTrust" />
+  </Capabilities>
+</Package>

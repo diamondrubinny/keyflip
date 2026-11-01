@@ -3,6 +3,9 @@
 All notable changes are documented here. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/).
 
 ## [Unreleased]
+### Added
+- Microsoft Store packaging: CI builds an unsigned MSIX (`keyflip-windows-msix` artifact) from the Partner Center identity variables, with an install/uninstall smoke test. See `docs/MSIX_STORE.md`.
+- Windows app (Store build): "start with Windows" uses a declared startup task, off by default, enabled by the user in Settings → Startup apps.
 ### Security
 - Windows app: keystrokes typed in ignored applications (password managers, terminals, editors) and in password boxes are no longer kept in memory at all.
 - Windows app: UI Automation `IsPassword` check blocks correction and manual conversion in password fields of Electron/Chromium, WPF and UWP apps.

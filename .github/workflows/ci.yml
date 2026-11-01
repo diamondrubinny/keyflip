@@ -87,6 +87,43 @@ jobs:
           path: out/self-contained/KeyFlip.exe
           if-no-files-found: error
 
+  # Unsigned MSIX for Microsoft Store submission (the Store signs it). See docs/MSIX_STORE.md.
+  # Skipped when the identity variables are missing (e.g. pull requests from forks).
+  msix:
+    if: vars.MSIX_IDENTITY_NAME != '' && vars.MSIX_PUBLISHER != '' && vars.MSIX_PUBLISHER_DISPLAY != ''
+    needs: [extension, desktop]
+    runs-on: windows-latest
+    timeout-minutes: 15
+    env:
+      MSIX_IDENTITY_NAME: ${{ vars.MSIX_IDENTITY_NAME }}
+      MSIX_PUBLISHER: ${{ vars.MSIX_PUBLISHER }}
+      MSIX_PUBLISHER_DISPLAY: ${{ vars.MSIX_PUBLISHER_DISPLAY }}
+      VERSION: ${{ needs.extension.outputs.version }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          sparse-checkout: |
+            desktop/packaging
+            LICENSE
+            NOTICE.md
+          sparse-checkout-cone-mode: false
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: keyflip-windows-self-contained
+          path: in
+      - name: Build MSIX
+        shell: pwsh
+        run: ./desktop/packaging/build-msix.ps1 -ExePath in/KeyFlip.exe -Version $env:VERSION -OutDir out/msix
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: keyflip-windows-msix
+          path: out/msix/
+          if-no-files-found: error
+      - name: Smoke test (install a temporary signed copy, verify identity, uninstall)
+        # Windows PowerShell 5.1: the Appx and PKI modules load natively there.
+        shell: powershell
+        run: ./desktop/packaging/test-msix.ps1 -Package out/msix/*.msix
+
   release:
     if: github.event_name == 'workflow_dispatch' && inputs.release && github.ref == 'refs/heads/main'
     needs: [extension, desktop]

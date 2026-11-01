@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Reflection;
 using KeyFlip.Core;
 using Microsoft.Win32;
@@ -63,8 +64,18 @@ internal sealed class TrayApp : ApplicationContext
         var convertItem = new ToolStripMenuItem("המר עכשיו (Ctrl+Alt+Space)");
         convertItem.Click += async (_, _) => await ConvertNowAsync();
 
-        _startupItem = new ToolStripMenuItem("הפעל עם Windows") { CheckOnClick = true, Checked = IsStartupEnabled() };
-        _startupItem.CheckedChanged += (_, _) => SetStartup(_startupItem.Checked);
+        if (PackageInfo.IsPackaged)
+        {
+            // Store (MSIX) build: HKCU\...\Run writes are virtualized, so startup is a declared StartupTask
+            // that the user enables in Windows Settings.
+            _startupItem = new ToolStripMenuItem("הפעלה עם Windows (פותח הגדרות)…");
+            _startupItem.Click += (_, _) => OpenStartupSettings();
+        }
+        else
+        {
+            _startupItem = new ToolStripMenuItem("הפעל עם Windows") { CheckOnClick = true, Checked = IsStartupEnabled() };
+            _startupItem.CheckedChanged += (_, _) => SetStartup(_startupItem.Checked);
+        }
 
         var aboutItem = new ToolStripMenuItem("פרטיות ומידע");
         aboutItem.Click += (_, _) => ShowAbout();
@@ -114,7 +125,9 @@ internal sealed class TrayApp : ApplicationContext
             "• התוכנה עוקבת אחרי המקשים שנלחצים כדי לזהות מילה שהסתיימה, ושומרת רק את השורה הנוכחית בזיכרון (עד 200 תווים).\n" +
             "• שום דבר לא נכתב לדיסק, לא נרשם ביומן ולא נשלח לרשת.\n" +
             "• כברירת מחדל התוכנה לא פועלת בדפדפנים (התוסף מטפל בהם; אפשר להפעיל מתפריט המגש), ולעולם לא במנהלי סיסמאות, בטרמינלים ובשדות סיסמה קלאסיים.\n" +
-            "• ההגדרות נשמרות ב-%APPDATA%\\KeyFlip\\settings.json.\n\n" +
+            (PackageInfo.IsPackaged
+                ? "• ההגדרות נשמרות בתיקייה הפרטית של האפליקציה ונמחקות בהסרה.\n\n"
+                : "• ההגדרות נשמרות ב-%APPDATA%\\KeyFlip\\settings.json.\n\n") +
             "ביטול תיקון אוטומטי: Ctrl+Alt+Space מיד אחריו.\n\n" +
             $"גרסה {Application.ProductVersion}. קוד פתוח ברישיון Apache-2.0: https://github.com/diamondrubinny/keyflip\n" +
             "מילוני הזיהוי נגזרים מ-FrequencyWords (hermitdave, נתוני OpenSubtitles 2018) ברישיון CC BY-SA 4.0.",
@@ -315,6 +328,19 @@ internal sealed class TrayApp : ApplicationContext
         catch (Exception)
         {
             // Policy may block writing to Run; the menu check simply won't stick.
+        }
+    }
+
+    private void OpenStartupSettings()
+    {
+        try
+        {
+            Process.Start(new ProcessStartInfo("ms-settings:startupapps") { UseShellExecute = true });
+            Notify("ב-Startup apps הדליקו את KeyFlip כדי שיופעל עם Windows.");
+        }
+        catch (Exception)
+        {
+            Notify("לא ניתן לפתוח את ההגדרות. היכנסו ל-הגדרות → אפליקציות → הפעלה (Startup) והדליקו את KeyFlip.");
         }
     }
 

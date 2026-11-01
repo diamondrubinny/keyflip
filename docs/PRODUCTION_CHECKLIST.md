@@ -50,4 +50,4 @@
 - ✅ workflow ל-Pre-release (preview) לא חתום, עם SHA256 + LICENSE + NOTICE
 - ⬜ Pre-release ראשון בריפו העצמאי
 - ⬜ חבילה לחנות Chrome וכרטיס חנות (`STORE_LISTING.md`)
-- ⬜ מתקין (MSIX/Inno Setup) והסרה נקייה
+- 🟡 חבילת MSIX ל-Microsoft Store נבנית ב-CI (`docs/MSIX_STORE.md`); נותר: CI ירוק, הגשה ובדיקת הסרה נקייה ידנית
