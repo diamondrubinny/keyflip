@@ -180,7 +180,14 @@ function showNotice(message: string): void {
   setTimeout(() => host.remove(), 2500);
 }
 
-function convertManually(): void {
+/** Converted text from the background (it knows the enabled languages); the local Hebrew/English rules as a fallback. */
+const convertText = (text: string): Promise<string> =>
+  chrome.runtime.sendMessage({ type: 'manual', text }).then(
+    (r: unknown) => (typeof r === 'string' ? r : convertAuto(text)),
+    () => convertAuto(text),
+  );
+
+async function convertManually(): Promise<void> {
   if (!document.hasFocus()) return;
   const el = deepActiveElement();
   if (!el || !isSafeTarget(el)) {
@@ -188,36 +195,53 @@ function convertManually(): void {
     if (el) showNotice(chrome.i18n.getMessage('noField'));
     return;
   }
-  busy = true;
-  try {
-    if (isTextField(el)) {
-      const { selectionStart: s, selectionEnd: e } = el;
-      if (s === null || e === null) return;
-      if (s !== e) {
-        replaceInTextField(el, s, e, convertAuto(el.value.slice(s, e)));
-      } else {
-        const start = trailingRunStart(el.value.slice(0, s));
-        if (start === s) return;
-        replaceInTextField(el, start, s, convertAuto(el.value.slice(start, s)));
-      }
-      return;
+  // Every branch reads the text first, converts it in the background, then replaces it only if it is unchanged.
+  if (isTextField(el)) {
+    const { selectionStart: s, selectionEnd: e } = el;
+    if (s === null || e === null) return;
+    const start = s !== e ? s : trailingRunStart(el.value.slice(0, s));
+    if (start === e) return;
+    const original = el.value.slice(start, e);
+    const converted = await convertText(original);
+    if (el.value.slice(start, e) !== original) return;
+    busy = true;
+    try {
+      replaceInTextField(el, start, e, converted);
+    } finally {
+      busy = false;
     }
-    const sel = window.getSelection();
-    if (!sel) return;
-    if (!sel.isCollapsed) {
-      document.execCommand('insertText', false, convertAuto(sel.toString()));
-    } else if (sel.anchorNode instanceof Text) {
-      const node = sel.anchorNode;
-      const caret = sel.anchorOffset;
-      const start = trailingRunStart(node.data.slice(0, caret));
-      if (start < caret) replaceInTextNode(node, start, caret, convertAuto(node.data.slice(start, caret)));
+    return;
+  }
+  const sel = window.getSelection();
+  if (!sel) return;
+  if (!sel.isCollapsed) {
+    const original = sel.toString();
+    const converted = await convertText(original);
+    if (window.getSelection()?.toString() !== original) return;
+    busy = true;
+    try {
+      document.execCommand('insertText', false, converted);
+    } finally {
+      busy = false;
     }
-  } finally {
-    busy = false;
+  } else if (sel.anchorNode instanceof Text) {
+    const node = sel.anchorNode;
+    const caret = sel.anchorOffset;
+    const start = trailingRunStart(node.data.slice(0, caret));
+    if (start >= caret) return;
+    const original = node.data.slice(start, caret);
+    const converted = await convertText(original);
+    if (!node.isConnected || node.data.slice(start, caret) !== original) return;
+    busy = true;
+    try {
+      replaceInTextNode(node, start, caret, converted);
+    } finally {
+      busy = false;
+    }
   }
 }
 
 chrome.runtime.onMessage.addListener((msg: unknown, sender) => {
   if (sender.id !== chrome.runtime.id) return;
-  if ((msg as { type?: string }).type === 'convert') convertManually();
+  if ((msg as { type?: string }).type === 'convert') void convertManually();
 });

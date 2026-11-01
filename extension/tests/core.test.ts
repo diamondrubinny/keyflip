@@ -107,3 +107,35 @@ test('detector: leading punctuation is preserved', () => {
   const d = makeDetector();
   assert.deepEqual(d.fixToken('"akuo'), { consumed: 5, replacement: '"שלום' });
 });
+
+import { Detector } from '../src/detect.ts';
+import { manualConvert } from '../src/manual.ts';
+import { LAYOUTS, convertLayout } from '../src/layouts.ts';
+
+const detectorFor = (langs: string[]) => new Detector(Object.fromEntries(langs.map((l) => [l, read(`${l}.txt`)])));
+
+test('russian layout: round trip and known words', () => {
+  assert.equal(convertLayout('ghbdtn', LAYOUTS.us!, LAYOUTS.ru!), 'привет');
+  assert.equal(convertLayout('руддщ', LAYOUTS.ru!, LAYOUTS.us!), 'hello');
+  const s = "qwertyuiop[]asdfghjkl;'zxcvbnm,.`";
+  assert.equal(convertLayout(convertLayout(s, LAYOUTS.us!, LAYOUTS.ru!), LAYOUTS.ru!, LAYOUTS.us!), s);
+});
+
+test('shared cases: detection with other language sets', () => {
+  const cache = new Map<string, Detector>();
+  for (const c of shared.detectLanguages) {
+    const key = c.languages.join(',');
+    if (!cache.has(key)) cache.set(key, detectorFor(c.languages));
+    const got = cache.get(key)!.fixToken(c.token, { streak: c.streak ?? 0, sandwich: c.sandwich ?? false });
+    assert.deepEqual(got, c.fix, `${key}: ${c.token}`);
+  }
+});
+
+test('shared cases: manual conversion', () => {
+  for (const c of shared.manualConvert) assert.equal(manualConvert(c.input, detectorFor(c.languages)), c.expected, c.input);
+});
+
+test('manual conversion equals convertAuto with Hebrew and English only', () => {
+  const d = detectorFor(['en', 'he']);
+  for (const c of shared.convertAuto) assert.equal(manualConvert(c.input, d), c.expected, c.input);
+});

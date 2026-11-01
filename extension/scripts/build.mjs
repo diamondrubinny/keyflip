@@ -21,5 +21,8 @@ await build({
 cpSync(`${root}static`, dist, { recursive: true });
 if (existsSync(`${root}icons`)) cpSync(`${root}icons`, `${dist}/icons`, { recursive: true });
 // License and third-party attribution (CC BY-SA word lists) travel with every distributed build.
+// Optional languages are loaded on demand by the background worker (src/dictionaries.ts).
+mkdirSync(`${dist}/data`, { recursive: true });
+for (const lang of ['ru']) cpSync(`${root}src/data/${lang}.txt`, `${dist}/data/${lang}.txt`);
 for (const file of ['LICENSE', 'NOTICE.md']) cpSync(`${root}../${file}`, `${dist}/${file}`);
 console.log('built ->', dist);

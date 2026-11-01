@@ -3037,5 +3037,2034 @@
       "sandwich": true,
       "fix": null
     }
+  ],
+  "detectLanguages": [
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "ghbdtn",
+      "fix": {
+        "consumed": 6,
+        "replacement": "привет"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "руддщ",
+      "fix": {
+        "consumed": 5,
+        "replacement": "hello"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "cgfcb,j",
+      "fix": {
+        "consumed": 7,
+        "replacement": "спасибо"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "vjcrdf",
+      "fix": {
+        "consumed": 6,
+        "replacement": "москва"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "hello",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "привет",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "yt",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "yt",
+      "streak": 1,
+      "fix": {
+        "consumed": 2,
+        "replacement": "не"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "nfr",
+      "streak": 1,
+      "fix": {
+        "consumed": 3,
+        "replacement": "так"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "csrf",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "akuo",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "ghbdtn",
+      "fix": {
+        "consumed": 6,
+        "replacement": "привет"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "akuo",
+      "fix": {
+        "consumed": 4,
+        "replacement": "שלום"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "руддщ",
+      "fix": {
+        "consumed": 5,
+        "replacement": "hello"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "יקךךם",
+      "fix": {
+        "consumed": 5,
+        "replacement": "hello"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "to",
+      "streak": 1,
+      "sandwich": true,
+      "fix": {
+        "consumed": 2,
+        "replacement": "אם"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "eybdthcfkmysq",
+      "fix": {
+        "consumed": 13,
+        "replacement": "универсальный"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "вщппщту",
+      "fix": {
+        "consumed": 7,
+        "replacement": "doggone"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "gjub,ibq",
+      "fix": {
+        "consumed": 8,
+        "replacement": "погибший"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "вшфекшиу",
+      "fix": {
+        "consumed": 8,
+        "replacement": "diatribe"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "jreyenmcz",
+      "fix": {
+        "consumed": 9,
+        "replacement": "окунуться"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "нуфпук",
+      "fix": {
+        "consumed": 6,
+        "replacement": "yeager"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": ",jhjlfnsq",
+      "fix": {
+        "consumed": 9,
+        "replacement": "бородатый"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "ифнкугер",
+      "fix": {
+        "consumed": 8,
+        "replacement": "bayreuth"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "hjhb",
+      "fix": {
+        "consumed": 4,
+        "replacement": "рори"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "сгкефшдув",
+      "fix": {
+        "consumed": 9,
+        "replacement": "curtailed"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": ",kbyxbrb",
+      "fix": {
+        "consumed": 8,
+        "replacement": "блинчики"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "фкьщгк",
+      "fix": {
+        "consumed": 6,
+        "replacement": "armour"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "hfccnf`vcz",
+      "fix": {
+        "consumed": 10,
+        "replacement": "расстаёмся"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "ефдлшт",
+      "fix": {
+        "consumed": 6,
+        "replacement": "talkin"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "abkt",
+      "fix": {
+        "consumed": 4,
+        "replacement": "филе"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "ощгктун",
+      "fix": {
+        "consumed": 7,
+        "replacement": "journey"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "jcnjhj;ys",
+      "fix": {
+        "consumed": 9,
+        "replacement": "осторожны"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "егкзшт",
+      "fix": {
+        "consumed": 6,
+        "replacement": "turpin"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "l;jdfyyf",
+      "fix": {
+        "consumed": 8,
+        "replacement": "джованна"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "акутуешс",
+      "fix": {
+        "consumed": 8,
+        "replacement": "frenetic"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "cnfht.n",
+      "fix": {
+        "consumed": 7,
+        "replacement": "стареют"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "пшььу",
+      "fix": {
+        "consumed": 5,
+        "replacement": "gimme"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "rbnybcc",
+      "fix": {
+        "consumed": 7,
+        "replacement": "китнисс"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "пфдмшт",
+      "fix": {
+        "consumed": 6,
+        "replacement": "galvin"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "gjregfntktq",
+      "fix": {
+        "consumed": 11,
+        "replacement": "покупателей"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "ьсьфкешт",
+      "fix": {
+        "consumed": 8,
+        "replacement": "mcmartin"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": ",kfujlfhtybz",
+      "fix": {
+        "consumed": 12,
+        "replacement": "благодарения"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "вшыштпутгщгы",
+      "fix": {
+        "consumed": 12,
+        "replacement": "disingenuous"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": ",thtubnt",
+      "fix": {
+        "consumed": 8,
+        "replacement": "берегите"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "ыуддштп",
+      "fix": {
+        "consumed": 7,
+        "replacement": "selling"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "he[yekj",
+      "fix": {
+        "consumed": 7,
+        "replacement": "рухнуло"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "фдфсл",
+      "fix": {
+        "consumed": 5,
+        "replacement": "alack"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "gjlxbybkcz",
+      "fix": {
+        "consumed": 10,
+        "replacement": "подчинился"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "зкшьгдф",
+      "fix": {
+        "consumed": 7,
+        "replacement": "primula"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "pfdthbkb",
+      "fix": {
+        "consumed": 8,
+        "replacement": "заверили"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "ерщьзлшты",
+      "fix": {
+        "consumed": 9,
+        "replacement": "thompkins"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "rhjdfnm",
+      "fix": {
+        "consumed": 7,
+        "replacement": "кровать"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "kbw",
+      "fix": {
+        "consumed": 3,
+        "replacement": "лиц"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "кумшуцук",
+      "fix": {
+        "consumed": 8,
+        "replacement": "reviewer"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "itgxtn",
+      "fix": {
+        "consumed": 6,
+        "replacement": "шепчет"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "ызгкы",
+      "fix": {
+        "consumed": 5,
+        "replacement": "spurs"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "vthprjuj",
+      "fix": {
+        "consumed": 8,
+        "replacement": "мерзкого"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "ьфппще",
+      "fix": {
+        "consumed": 6,
+        "replacement": "maggot"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "jnhtfubhe.n",
+      "fix": {
+        "consumed": 11,
+        "replacement": "отреагируют"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "ьуефддшсф",
+      "fix": {
+        "consumed": 9,
+        "replacement": "metallica"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "купгдфещк",
+      "fix": {
+        "consumed": 9,
+        "replacement": "regulator"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "j,jpdfk",
+      "fix": {
+        "consumed": 7,
+        "replacement": "обозвал"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "пгеут",
+      "fix": {
+        "consumed": 5,
+        "replacement": "guten"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "ctek",
+      "fix": {
+        "consumed": 4,
+        "replacement": "сеул"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "тшуе",
+      "fix": {
+        "consumed": 4,
+        "replacement": "niet"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "ahfycbcrj",
+      "fix": {
+        "consumed": 9,
+        "replacement": "франсиско"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "ищьифквьуте",
+      "fix": {
+        "consumed": 11,
+        "replacement": "bombardment"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "ght;ybvb",
+      "fix": {
+        "consumed": 8,
+        "replacement": "прежними"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "тштуешуы",
+      "fix": {
+        "consumed": 8,
+        "replacement": "nineties"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "ujdjhzobq",
+      "fix": {
+        "consumed": 9,
+        "replacement": "говорящий"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "пфддшакун",
+      "fix": {
+        "consumed": 9,
+        "replacement": "gallifrey"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "ghbdktrfntkmyfz",
+      "fix": {
+        "consumed": 15,
+        "replacement": "привлекательная"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "сщтмутшуте",
+      "fix": {
+        "consumed": 10,
+        "replacement": "convenient"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "ghbltnc",
+      "fix": {
+        "consumed": 7,
+        "replacement": "придетс"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "дфылн",
+      "fix": {
+        "consumed": 5,
+        "replacement": "lasky"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "универсальный",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "doggone",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "погибший",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "diatribe",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "окунуться",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "yeager",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "бородатый",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "bayreuth",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "рори",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "curtailed",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "блинчики",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "armour",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "расстаёмся",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "talkin",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "филе",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "journey",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "осторожны",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "turpin",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "джованна",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "frenetic",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "стареют",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "gimme",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "китнисс",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "galvin",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "покупателей",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "jrhe;f.obv",
+      "fix": {
+        "consumed": 10,
+        "replacement": "окружающим"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "цгерукштп",
+      "fix": {
+        "consumed": 9,
+        "replacement": "wuthering"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "yfvtxftncz",
+      "fix": {
+        "consumed": 10,
+        "replacement": "намечается"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "тщгы",
+      "fix": {
+        "consumed": 4,
+        "replacement": "nous"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "ltkmabyjd",
+      "fix": {
+        "consumed": 9,
+        "replacement": "дельфинов"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "фтшьфешщт",
+      "fix": {
+        "consumed": 9,
+        "replacement": "animation"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "hfp",
+      "fix": {
+        "consumed": 3,
+        "replacement": "раз"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "ыефшксфыуы",
+      "fix": {
+        "consumed": 10,
+        "replacement": "staircases"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "ghtlgjxntybt",
+      "fix": {
+        "consumed": 12,
+        "replacement": "предпочтение"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "сщттщк",
+      "fix": {
+        "consumed": 6,
+        "replacement": "connor"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "hfcgbibntcm",
+      "fix": {
+        "consumed": 11,
+        "replacement": "распишитесь"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "ырщще",
+      "fix": {
+        "consumed": 5,
+        "replacement": "shoot"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "v'yybyu",
+      "fix": {
+        "consumed": 7,
+        "replacement": "мэннинг"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "црщщырштп",
+      "fix": {
+        "consumed": 9,
+        "replacement": "whooshing"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "ghtlcnfdm",
+      "fix": {
+        "consumed": 9,
+        "replacement": "представь"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "ышдмфтщ",
+      "fix": {
+        "consumed": 7,
+        "replacement": "silvano"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "htityb.",
+      "fix": {
+        "consumed": 7,
+        "replacement": "решению"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "cjdthifnm",
+      "fix": {
+        "consumed": 9,
+        "replacement": "совершать"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "тшсщдуееу",
+      "fix": {
+        "consumed": 9,
+        "replacement": "nicolette"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "jnltkbnm",
+      "fix": {
+        "consumed": 8,
+        "replacement": "отделить"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "штвгыекшщгы",
+      "fix": {
+        "consumed": 11,
+        "replacement": "industrious"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "bydfkblyjcnb",
+      "fix": {
+        "consumed": 12,
+        "replacement": "инвалидности"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "ьфсдуфт",
+      "fix": {
+        "consumed": 7,
+        "replacement": "maclean"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "gbhcjy",
+      "fix": {
+        "consumed": 6,
+        "replacement": "пирсон"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "ыефдштпкфв",
+      "fix": {
+        "consumed": 10,
+        "replacement": "stalingrad"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "удшыущ",
+      "fix": {
+        "consumed": 6,
+        "replacement": "eliseo"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "gjcnegjr",
+      "fix": {
+        "consumed": 8,
+        "replacement": "поступок"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "фкешсгдфешщт",
+      "fix": {
+        "consumed": 12,
+        "replacement": "articulation"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "jnrk.xbnm",
+      "fix": {
+        "consumed": 9,
+        "replacement": "отключить"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "пфштыищкщгпр",
+      "fix": {
+        "consumed": 12,
+        "replacement": "gainsborough"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "vjrhjt",
+      "fix": {
+        "consumed": 6,
+        "replacement": "мокрое"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "ящрфк",
+      "fix": {
+        "consumed": 5,
+        "replacement": "zohar"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "njgkbdjv",
+      "fix": {
+        "consumed": 8,
+        "replacement": "топливом"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "ыздутвщгк",
+      "fix": {
+        "consumed": 9,
+        "replacement": "splendour"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "egjhcndj",
+      "fix": {
+        "consumed": 8,
+        "replacement": "упорство"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "сфвут",
+      "fix": {
+        "consumed": 5,
+        "replacement": "caden"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "djpvenbntkmyj",
+      "fix": {
+        "consumed": 13,
+        "replacement": "возмутительно"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "цршк",
+      "fix": {
+        "consumed": 4,
+        "replacement": "whir"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "ujhzxtt",
+      "fix": {
+        "consumed": 7,
+        "replacement": "горячее"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "гввук",
+      "fix": {
+        "consumed": 5,
+        "replacement": "udder"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "vbrhjcrjgjv",
+      "fix": {
+        "consumed": 11,
+        "replacement": "микроскопом"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "путедуые",
+      "fix": {
+        "consumed": 8,
+        "replacement": "gentlest"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "dtif.",
+      "fix": {
+        "consumed": 5,
+        "replacement": "вешаю"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "ыуфьфт",
+      "fix": {
+        "consumed": 6,
+        "replacement": "seaman"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "pdjybkb",
+      "fix": {
+        "consumed": 7,
+        "replacement": "звонили"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "еудуьуекн",
+      "fix": {
+        "consumed": 9,
+        "replacement": "telemetry"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "nhfdzyjq",
+      "fix": {
+        "consumed": 8,
+        "replacement": "травяной"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "ысфккштп",
+      "fix": {
+        "consumed": 8,
+        "replacement": "scarring"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "hbceyjr",
+      "fix": {
+        "consumed": 7,
+        "replacement": "рисунок"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "еутьф",
+      "fix": {
+        "consumed": 5,
+        "replacement": "tenma"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "gjrblfqnt",
+      "fix": {
+        "consumed": 9,
+        "replacement": "покидайте"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "зшуеук",
+      "fix": {
+        "consumed": 6,
+        "replacement": "pieter"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "kfnbycrbq",
+      "fix": {
+        "consumed": 9,
+        "replacement": "латинский"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "пуерыуьфту",
+      "fix": {
+        "consumed": 10,
+        "replacement": "gethsemane"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "pfcnfdk",
+      "fix": {
+        "consumed": 7,
+        "replacement": "заставл"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "сщтсщсешщт",
+      "fix": {
+        "consumed": 10,
+        "replacement": "concoction"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "gjrhsns",
+      "fix": {
+        "consumed": 7,
+        "replacement": "покрыты"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "скшызн",
+      "fix": {
+        "consumed": 6,
+        "replacement": "crispy"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "фттшршдфеув",
+      "fix": {
+        "consumed": 11,
+        "replacement": "annihilated"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "uhecnye.",
+      "fix": {
+        "consumed": 8,
+        "replacement": "грустную"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "окружающим",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "wuthering",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "намечается",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "nous",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "дельфинов",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "animation",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "раз",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "staircases",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "предпочтение",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "connor",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "распишитесь",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "shoot",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "мэннинг",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "whooshing",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "представь",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "silvano",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "решению",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "кщг",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "rou",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "совершать",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "nicolette",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "отделить",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "industrious",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "инвалидности",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "token": "maclean",
+      "fix": null
+    }
+  ],
+  "manualConvert": [
+    {
+      "languages": [
+        "en",
+        "he"
+      ],
+      "input": "akuo יקךךם",
+      "expected": "שלום hello"
+    },
+    {
+      "languages": [
+        "en",
+        "he"
+      ],
+      "input": "12345",
+      "expected": "12345"
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "input": "ghbdtn rfr ltkf",
+      "expected": "привет как дела"
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "input": "руддщ цщкдв",
+      "expected": "hello world"
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "input": "ghbdtn rfr ltkf",
+      "expected": "привет как дела"
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru"
+      ],
+      "input": "akuo nv akunl",
+      "expected": "שלום מה שלומך"
+    }
   ]
 }

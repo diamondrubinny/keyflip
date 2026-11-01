@@ -1,5 +1,6 @@
 import us from '../../shared/layouts/us.json' with { type: 'json' };
 import he from '../../shared/layouts/he.json' with { type: 'json' };
+import ru from '../../shared/layouts/ru.json' with { type: 'json' };
 
 /**
  * A keyboard layout as a map from physical key to character. Keys are identified by the character they
@@ -31,6 +32,7 @@ function build(file: LayoutFile): Layout {
 export const LAYOUTS: Readonly<Record<string, Layout>> = {
   us: build(us as LayoutFile),
   he: build(he as LayoutFile),
+  ru: build(ru as LayoutFile),
 };
 
 /** Re-types text on another layout. Characters without a key in the source layout (digits, spaces, emoji) are kept. */

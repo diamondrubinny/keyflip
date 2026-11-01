@@ -142,6 +142,9 @@ internal static class NativeMethods
     public static extern IntPtr GetKeyboardLayout(uint idThread);
 
     [DllImport("user32.dll")]
+    public static extern int GetKeyboardLayoutList(int nBuff, [Out] IntPtr[]? lpList);
+
+    [DllImport("user32.dll")]
     public static extern int ToUnicodeEx(
         uint wVirtKey, uint wScanCode, byte[] lpKeyState,
         [Out, MarshalAs(UnmanagedType.LPWStr)] StringBuilder pwszBuff,
