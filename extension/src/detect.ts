@@ -1,10 +1,9 @@
-import { convert, hasHebrew } from './core.ts';
+import { LAYOUTS, convertLayout, type Layout } from './layouts.ts';
+import { LANGUAGES, type LanguageSpec } from './languages.ts';
 import { NgramModel } from './ngram.ts';
 
-export interface Dictionaries {
-  en: string[]; // ordered by frequency, most frequent first
-  he: string[];
-}
+/** Frequency-ordered word lists (most frequent first), keyed by language id (see languages.ts). */
+export type Dictionaries = Partial<Record<string, string[]>>;
 
 export interface Fix {
   /** Number of characters at the start of the token that were replaced. */
@@ -29,37 +28,51 @@ export const TUNING = {
   modelMargin: 0.8, // required score gap (nats per char) between target and typed language
   modelMinTarget: -3.4, // converted word must look at least this word-like
   modelMaxTyped: -3.0, // typed word must look at most this word-like in its own language
-  modelVowelMaxLen: 4, // typed Latin words up to this length without a, e, i, o, u, y are usually abbreviations (csrf, mkdir): skip the model
+  modelVowelMaxLen: 4, // typed Latin words up to this length without a vowel are usually abbreviations (csrf, mkdir): skip the model
   sandwichRank: 400, // 'to' between two corrected words becomes 'אם' (rank < 400 in the other language)
   dualMinRank: 1000, // a word valid in BOTH languages is only flipped if the typed reading is at least this rare...
   dualRatio: 30, // ...and the other reading is this many times more frequent (rank ratio)
 };
 
-const HE_PREFIX_LETTERS = 'והבלמשכ';
 const TRAILING_PUNCT = /[.,;:!?'"”’)\]}\/]/;
 const LEADING_PUNCT = /^["(“‘{]+/;
-const EN_SUFFIXES = ["'s", 's', 'es', 'ed', 'd', 'ing', 'ly', "'ll", "'re", "'ve", "n't", 'er', 'est', 'ies'];
+
+interface Lang {
+  spec: LanguageSpec;
+  layout: Layout;
+  words: readonly string[];
+  ranks: Map<string, number>;
+  model?: NgramModel;
+}
+
+interface Hit {
+  rank: number;
+  /** Prefix letters removed to find the word (Hebrew ו, ה, ב ...). */
+  stripped: number;
+}
+
+/** Where a typed token comes from: one or more languages sharing a script and a layout. */
+interface Source {
+  langs: Lang[];
+  layout: Layout;
+  side: 'latin' | 'other';
+}
 
 export class Detector {
-  private readonly en: Map<string, number>;
-  private readonly he: Map<string, number>;
-  private readonly dicts: Dictionaries;
-  private enModelCache?: NgramModel;
-  private heModelCache?: NgramModel;
+  private readonly langs: Lang[];
 
   constructor(dicts: Dictionaries) {
-    this.dicts = dicts;
-    this.en = new Map(dicts.en.map((w, i) => [w, i]));
-    this.he = new Map(dicts.he.map((w, i) => [w, i]));
+    this.langs = Object.values(LANGUAGES)
+      .filter((spec) => dicts[spec.id] !== undefined)
+      .map((spec) => {
+        const words = dicts[spec.id]!;
+        return { spec, layout: LAYOUTS[spec.layout]!, words, ranks: new Map(words.map((w, i) => [w, i])) };
+      });
   }
 
   // The statistical models are only needed for words missing from the dictionaries, so build them lazily.
-  private get enModel(): NgramModel {
-    return (this.enModelCache ??= new NgramModel(this.dicts.en));
-  }
-
-  private get heModel(): NgramModel {
-    return (this.heModelCache ??= new NgramModel(this.dicts.he));
+  private model(lang: Lang): NgramModel {
+    return (lang.model ??= new NgramModel(lang.words));
   }
 
   private rankLimit(len: number, streak: number): number {
@@ -69,42 +82,39 @@ export class Detector {
     return Number.POSITIVE_INFINITY;
   }
 
-  /** Dictionary lookup for English including simple inflections. Returns the best (lowest) rank or undefined. */
-  private englishRank(word: string): number | undefined {
-    const exact = this.en.get(word);
-    if (exact !== undefined) return exact;
-    for (const suffix of EN_SUFFIXES) {
+  /** Dictionary lookup with the language's inflection suffixes and stacked one-letter prefixes. */
+  private lookup(lang: Lang, word: string): Hit | undefined {
+    const exact = lang.ranks.get(word);
+    if (exact !== undefined) return { rank: exact, stripped: 0 };
+    for (const suffix of lang.spec.suffixes) {
       if (word.length > suffix.length + 2 && word.endsWith(suffix)) {
         const stem = word.slice(0, -suffix.length);
-        const r = this.en.get(stem) ?? this.en.get(stem + 'e');
-        if (r !== undefined) return r;
+        const r = lang.ranks.get(stem) ?? lang.ranks.get(stem + 'e');
+        if (r !== undefined) return { rank: r, stripped: 0 };
       }
     }
-    return undefined;
-  }
-
-  /** Dictionary lookup for Hebrew with up to three single-letter prefixes (ו, ה, ב, ל, מ, ש, כ). */
-  private hebrewRank(word: string): { rank: number; stripped: number } | undefined {
-    const exact = this.he.get(word);
-    if (exact !== undefined) return { rank: exact, stripped: 0 };
     let w = word;
-    for (let stripped = 1; stripped <= 3; stripped++) {
-      if (w.length < 4 || !HE_PREFIX_LETTERS.includes(w[0]!)) break;
+    for (let stripped = 1; stripped <= 3 && lang.spec.prefixes; stripped++) {
+      if (w.length < 4 || !lang.spec.prefixes.includes(w[0]!)) break;
       w = w.slice(1);
-      const r = this.he.get(w);
+      const r = lang.ranks.get(w);
       if (r !== undefined && w.length >= 3) return { rank: r, stripped };
     }
     return undefined;
   }
 
-  private isValidEnglish(word: string, streak = 0): boolean {
-    const r = this.englishRank(word);
-    if (r === undefined) return false;
-    return r < this.rankLimit(word.length, streak) || word.length >= 5;
+  /** Best (most frequent) reading of a word among several languages. */
+  private bestLookup(langs: readonly Lang[], word: string): Hit | undefined {
+    let best: Hit | undefined;
+    for (const lang of langs) {
+      const hit = this.lookup(lang, word);
+      if (hit && (!best || hit.rank < best.rank)) best = hit;
+    }
+    return best;
   }
 
-  private isValidHebrew(word: string, streak = 0): boolean {
-    const h = this.hebrewRank(word);
+  private isValid(lang: Lang, word: string, streak: number): boolean {
+    const h = this.lookup(lang, word);
     if (!h) return false;
     const stem = word.length - h.stripped;
     return h.rank < this.rankLimit(stem, streak) || stem >= 5;
@@ -118,49 +128,66 @@ export class Detector {
     );
   }
 
+  /** The script (and so the layout) the token was typed in, or null if it is not a word of any enabled language. */
+  private sourceOf(word: string): Source | null {
+    const latin = this.langs.filter((l) => l.spec.side === 'latin');
+    if (latin.some((l) => l.spec.typed.test(word) && l.spec.letter.test(word))) {
+      return { langs: latin, layout: latin[0]!.layout, side: 'latin' };
+    }
+    for (const lang of this.langs) {
+      if (lang.spec.side === 'other' && lang.spec.typed.test(word) && lang.spec.letter.test(word)) {
+        return { langs: [lang], layout: lang.layout, side: 'other' };
+      }
+    }
+    return null;
+  }
+
+  /** Every correction pairs a Latin language with a language in another script. */
+  private targetsOf(source: Source): Lang[] {
+    return this.langs.filter((l) => l.spec.side !== source.side);
+  }
+
+  private typedScore(source: Source, word: string): number {
+    return Math.max(...source.langs.map((l) => this.model(l).score(word)));
+  }
+
   /** Decides whether one word (without surrounding punctuation) was typed in the wrong layout. */
   private fixWord(word: string, streak: number, allowModel: boolean, sandwich: boolean): string | null {
     if (word.length < 2) return null;
     if (/[0-9@\\]|:\/\//.test(word)) return null;
     if (/[A-Z]/.test(word)) return null; // names, acronyms, sentence starts, camelCase
 
-    const isLatin = /^[a-z';,./`]+$/.test(word) && /[a-z]/.test(word);
-    if (isLatin) {
-      const he = convert(word, 'en-to-he');
-      const heOk = /^[\u05D0-\u05EA]+$/.test(he);
-      const er = this.englishRank(word);
-      if (er !== undefined) {
-        // Also a valid English word: flip only when the Hebrew reading is far more frequent.
-        const hr = heOk ? this.hebrewRank(he) : undefined;
-        const clear = (word.length >= 3 || streak > 0) && hr !== undefined && er >= TUNING.dualMinRank && hr.rank * TUNING.dualRatio < er;
-        const between = sandwich && word.length <= 3 && hr !== undefined && hr.rank < TUNING.sandwichRank;
-        return (clear || between) && this.isValidHebrew(he, Math.max(streak, between ? 1 : 0)) ? he : null;
-      }
-      if (!heOk) return null;
-      if (this.isValidHebrew(he, streak)) return he;
-      if (allowModel && he.length >= TUNING.modelMinLen && !this.hebrewRank(he) && (word.length > TUNING.modelVowelMaxLen || /[aeiouy]/.test(word))) {
-        return this.modelSaysFlip(this.enModel.score(word), this.heModel.score(he)) ? he : null;
-      }
-      return null;
-    }
+    const source = this.sourceOf(word);
+    if (!source) return null;
+    const typedHit = this.bestLookup(source.langs, word);
 
-    if (/^[\u05D0-\u05EA,.;'/]+$/.test(word) && hasHebrew(word)) {
-      const en = convert(word, 'he-to-en');
-      const enOk = /^[a-z]+$/.test(en);
-      const hr = this.hebrewRank(word);
-      if (hr !== undefined) {
-        // Also a valid Hebrew word: flip only when the English reading is far more frequent.
-        const er = enOk ? this.englishRank(en) : undefined;
-        const clear = (word.length >= 3 || streak > 0) && er !== undefined && hr.rank >= TUNING.dualMinRank && er * TUNING.dualRatio < hr.rank;
-        const between = sandwich && word.length <= 3 && er !== undefined && er < TUNING.sandwichRank;
-        return (clear || between) && this.isValidEnglish(en, Math.max(streak, between ? 1 : 0)) ? en : null;
+    for (const target of this.targetsOf(source)) {
+      const converted = convertLayout(word, source.layout, target.layout);
+      const ok = target.spec.word.test(converted);
+
+      if (typedHit !== undefined) {
+        // Also a valid word as typed: flip only when the other reading is far more frequent,
+        // or when a short word sits between two corrected words.
+        const hit = ok ? this.lookup(target, converted) : undefined;
+        const clear =
+          (word.length >= 3 || streak > 0) &&
+          hit !== undefined &&
+          typedHit.rank >= TUNING.dualMinRank &&
+          hit.rank * TUNING.dualRatio < typedHit.rank;
+        const between = sandwich && word.length <= 3 && hit !== undefined && hit.rank < TUNING.sandwichRank;
+        if ((clear || between) && this.isValid(target, converted, Math.max(streak, between ? 1 : 0))) return converted;
+        continue;
       }
-      if (!enOk) return null;
-      if (this.isValidEnglish(en, streak)) return en;
-      if (allowModel && en.length >= TUNING.modelMinLen && this.englishRank(en) === undefined) {
-        return this.modelSaysFlip(this.heModel.score(word), this.enModel.score(en)) ? en : null;
+
+      if (!ok) continue;
+      if (this.isValid(target, converted, streak)) return converted;
+      const abbreviation =
+        source.side === 'latin' &&
+        word.length <= TUNING.modelVowelMaxLen &&
+        !source.langs.some((l) => l.spec.vowels?.test(word));
+      if (allowModel && converted.length >= TUNING.modelMinLen && !this.lookup(target, converted) && !abbreviation) {
+        if (this.modelSaysFlip(this.typedScore(source, word), this.model(target).score(converted))) return converted;
       }
-      return null;
     }
     return null;
   }

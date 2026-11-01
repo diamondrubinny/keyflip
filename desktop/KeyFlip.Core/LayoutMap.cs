@@ -1,6 +1,4 @@
-using System.Reflection;
 using System.Text;
-using System.Text.Json;
 using System.Text.RegularExpressions;
 
 namespace KeyFlip.Core;
@@ -11,25 +9,10 @@ public enum Direction
     HeToEn,
 }
 
-/// <summary>Maps text between the US QWERTY layout and the Hebrew standard layout (SI-1452).</summary>
+/// <summary>Hebrew/English helpers for manual conversion, on top of <see cref="Layouts"/>.</summary>
 public static class LayoutMap
 {
-    private static readonly Dictionary<char, char> EnToHeMap = new();
-    private static readonly Dictionary<char, char> HeToEnMap = new();
     private static readonly Regex Whitespace = new(@"(\s+)", RegexOptions.Compiled);
-
-    static LayoutMap()
-    {
-        using Stream stream = OpenResource("mapping.json");
-        using JsonDocument doc = JsonDocument.Parse(stream);
-        foreach (JsonElement pair in doc.RootElement.GetProperty("pairs").EnumerateArray())
-        {
-            char en = pair[0].GetString()![0];
-            char he = pair[1].GetString()![0];
-            EnToHeMap[en] = he;
-            HeToEnMap[he] = en;
-        }
-    }
 
     internal static Stream OpenResource(string name) =>
         typeof(LayoutMap).Assembly.GetManifestResourceStream(name)
@@ -41,23 +24,9 @@ public static class LayoutMap
 
     public static bool HasHebrew(string text) => text.Any(IsHebrewLetter);
 
-    /// <summary>Maps every character through the layout table; unmapped characters are kept.</summary>
-    public static string Convert(string text, Direction direction)
-    {
-        var sb = new StringBuilder(text.Length);
-        foreach (char ch in text)
-        {
-            if (direction == Direction.EnToHe)
-            {
-                sb.Append(EnToHeMap.TryGetValue(char.ToLowerInvariant(ch), out char he) ? he : ch);
-            }
-            else
-            {
-                sb.Append(HeToEnMap.TryGetValue(ch, out char en) ? en : ch);
-            }
-        }
-        return sb.ToString();
-    }
+    /// <summary>Maps every character between the US and Hebrew layouts; unmapped characters are kept.</summary>
+    public static string Convert(string text, Direction direction) =>
+        direction == Direction.EnToHe ? Layouts.Us.ConvertTo(text, Layouts.Hebrew) : Layouts.Hebrew.ConvertTo(text, Layouts.Us);
 
     /// <summary>Majority direction by letters, or null when the text has no letters.</summary>
     public static Direction? DetectDirection(string text)

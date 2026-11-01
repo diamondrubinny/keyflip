@@ -7,7 +7,8 @@ public sealed record Fix(int Consumed, string Replacement);
 
 /// <summary>
 /// Decides whether a typed word was written in the wrong layout, using frequency word lists and a character n-gram
-/// model. Port of extension/src/detect.ts; thresholds in <see cref="Tuning"/> come from scripts/eval.ts.
+/// model per language. Port of extension/src/detect.ts; thresholds in <see cref="Tuning"/> come from scripts/eval.ts.
+/// Every correction pairs a Latin language with a language in another script.
 /// </summary>
 public sealed class Detector
 {
@@ -28,42 +29,49 @@ public sealed class Detector
         public const double SandwichRank = 400;
     }
 
-    private const string HePrefixLetters = "והבלמשכ";
     private const string TrailingPunct = ".,;:!?'\"”’)]}/";
     private const string LeadingPunct = "\"(“‘{";
 
-    private static readonly string[] EnSuffixes = { "'s", "s", "es", "ed", "d", "ing", "ly", "'ll", "'re", "'ve", "n't", "er", "est", "ies" };
     private static readonly Regex Forbidden = new(@"[0-9@\\]|://", RegexOptions.Compiled);
     private static readonly Regex UpperCase = new("[A-Z]", RegexOptions.Compiled);
-    private static readonly Regex LatinWord = new(@"^[a-z';,./`]+$", RegexOptions.Compiled);
-    private static readonly Regex HasLatin = new("[a-z]", RegexOptions.Compiled);
-    private static readonly Regex OnlyHebrew = new("^[א-ת]+$", RegexOptions.Compiled);
-    private static readonly Regex HebrewWord = new("^[א-ת,.;'/]+$", RegexOptions.Compiled);
-    private static readonly Regex OnlyLatin = new("^[a-z]+$", RegexOptions.Compiled);
-    private static readonly Regex Vowel = new("[aeiouy]", RegexOptions.Compiled);
 
-    private readonly IReadOnlyList<string> _enWords;
-    private readonly IReadOnlyList<string> _heWords;
-    private readonly Dictionary<string, int> _en;
-    private readonly Dictionary<string, int> _he;
-    private NgramModel? _enModel;
-    private NgramModel? _heModel;
+    private sealed class Lang
+    {
+        public required LanguageSpec Spec { get; init; }
+        public required Layout Layout { get; init; }
+        public required IReadOnlyList<string> Words { get; init; }
+        public required Dictionary<string, int> Ranks { get; init; }
+        public NgramModel? Model { get; set; }
+    }
+
+    private readonly record struct Hit(int Rank, int Stripped);
+
+    private sealed record Source(IReadOnlyList<Lang> Langs, Layout Layout, bool IsLatin);
+
+    private readonly List<Lang> _langs;
+
+    /// <summary>Word lists (most frequent first) keyed by language id; languages without a list are disabled.</summary>
+    public Detector(IReadOnlyDictionary<string, IReadOnlyList<string>> wordLists)
+    {
+        _langs = Languages.All
+            .Where(spec => wordLists.ContainsKey(spec.Id))
+            .Select(spec => new Lang
+            {
+                Spec = spec,
+                Layout = Layouts.Get(spec.Layout),
+                Words = wordLists[spec.Id],
+                Ranks = Index(wordLists[spec.Id]),
+            })
+            .ToList();
+    }
 
     public Detector(IReadOnlyList<string> english, IReadOnlyList<string> hebrew)
+        : this(new Dictionary<string, IReadOnlyList<string>> { ["en"] = english, ["he"] = hebrew })
     {
-        _enWords = english;
-        _heWords = hebrew;
-        _en = Index(english);
-        _he = Index(hebrew);
     }
 
     /// <summary>Builds a detector from the word lists embedded in the assembly.</summary>
     public static Detector CreateDefault() => new(ReadLines("en.txt"), ReadLines("he.txt"));
-
-    // The statistical models are only needed for words missing from the dictionaries, so they are built lazily.
-    private NgramModel EnModel => _enModel ??= new NgramModel(_enWords);
-
-    private NgramModel HeModel => _heModel ??= new NgramModel(_heWords);
 
     private static List<string> ReadLines(string resource)
     {
@@ -83,6 +91,9 @@ public sealed class Detector
         return map;
     }
 
+    // The statistical models are only needed for words missing from the dictionaries, so they are built lazily.
+    private static NgramModel ModelOf(Lang lang) => lang.Model ??= new NgramModel(lang.Words);
+
     private static double RankLimit(int len, int streak)
     {
         if (len <= 2) return streak > 0 ? Tuning.StreakRank2 : -1;
@@ -91,45 +102,43 @@ public sealed class Detector
         return double.PositiveInfinity;
     }
 
-    /// <summary>Dictionary lookup for English including simple inflections.</summary>
-    private int? EnglishRank(string word)
+    /// <summary>Dictionary lookup with the language's inflection suffixes and stacked one-letter prefixes.</summary>
+    private static Hit? Lookup(Lang lang, string word)
     {
-        if (_en.TryGetValue(word, out int exact)) return exact;
-        foreach (string suffix in EnSuffixes)
+        if (lang.Ranks.TryGetValue(word, out int exact)) return new Hit(exact, 0);
+        foreach (string suffix in lang.Spec.Suffixes)
         {
             if (word.Length > suffix.Length + 2 && word.EndsWith(suffix, StringComparison.Ordinal))
             {
                 string stem = word[..^suffix.Length];
-                if (_en.TryGetValue(stem, out int r) || _en.TryGetValue(stem + "e", out r)) return r;
+                if (lang.Ranks.TryGetValue(stem, out int r) || lang.Ranks.TryGetValue(stem + "e", out r)) return new Hit(r, 0);
             }
         }
-        return null;
-    }
-
-    /// <summary>Dictionary lookup for Hebrew with up to three single-letter prefixes.</summary>
-    private (int Rank, int Stripped)? HebrewRank(string word)
-    {
-        if (_he.TryGetValue(word, out int exact)) return (exact, 0);
         string w = word;
-        for (int stripped = 1; stripped <= 3; stripped++)
+        for (int stripped = 1; stripped <= 3 && lang.Spec.Prefixes.Length > 0; stripped++)
         {
-            if (w.Length < 4 || !HePrefixLetters.Contains(w[0])) break;
+            if (w.Length < 4 || !lang.Spec.Prefixes.Contains(w[0])) break;
             w = w[1..];
-            if (_he.TryGetValue(w, out int r) && w.Length >= 3) return (r, stripped);
+            if (lang.Ranks.TryGetValue(w, out int r) && w.Length >= 3) return new Hit(r, stripped);
         }
         return null;
     }
 
-    private bool IsValidEnglish(string word, int streak)
+    /// <summary>Best (most frequent) reading of a word among several languages.</summary>
+    private static Hit? BestLookup(IEnumerable<Lang> langs, string word)
     {
-        int? r = EnglishRank(word);
-        if (r is null) return false;
-        return r.Value < RankLimit(word.Length, streak) || word.Length >= 5;
+        Hit? best = null;
+        foreach (Lang lang in langs)
+        {
+            Hit? hit = Lookup(lang, word);
+            if (hit is not null && (best is null || hit.Value.Rank < best.Value.Rank)) best = hit;
+        }
+        return best;
     }
 
-    private bool IsValidHebrew(string word, int streak)
+    private static bool IsValid(Lang lang, string word, int streak)
     {
-        var h = HebrewRank(word);
+        Hit? h = Lookup(lang, word);
         if (h is null) return false;
         int stem = word.Length - h.Value.Stripped;
         return h.Value.Rank < RankLimit(stem, streak) || stem >= 5;
@@ -140,67 +149,71 @@ public sealed class Detector
         && targetScore >= Tuning.ModelMinTarget
         && typedScore <= Tuning.ModelMaxTyped;
 
+    /// <summary>The script (and so the layout) the token was typed in, or null if it is not a word of any enabled language.</summary>
+    private Source? SourceOf(string word)
+    {
+        List<Lang> latin = _langs.Where(l => l.Spec.IsLatin).ToList();
+        if (latin.Any(l => l.Spec.Typed.IsMatch(word) && l.Spec.Letter.IsMatch(word)))
+        {
+            return new Source(latin, latin[0].Layout, IsLatin: true);
+        }
+        foreach (Lang lang in _langs)
+        {
+            if (!lang.Spec.IsLatin && lang.Spec.Typed.IsMatch(word) && lang.Spec.Letter.IsMatch(word))
+            {
+                return new Source(new[] { lang }, lang.Layout, IsLatin: false);
+            }
+        }
+        return null;
+    }
+
+    private double TypedScore(Source source, string word) => source.Langs.Max(l => ModelOf(l).Score(word));
+
     private string? FixWord(string word, int streak, bool allowModel, bool sandwich)
     {
         if (word.Length < 2) return null;
         if (Forbidden.IsMatch(word)) return null;
         if (UpperCase.IsMatch(word)) return null; // names, acronyms, sentence starts, camelCase
 
-        if (LatinWord.IsMatch(word) && HasLatin.IsMatch(word))
-        {
-            string he = LayoutMap.Convert(word, Direction.EnToHe);
-            bool heOk = OnlyHebrew.IsMatch(he);
-            int? er = EnglishRank(word);
-            if (er is not null)
-            {
-                // Also a valid English word: flip only when the Hebrew reading is far more frequent.
-                var hr = heOk ? HebrewRank(he) : null;
-                bool clear = (word.Length >= 3 || streak > 0) && hr is not null
-                    && er.Value >= Tuning.DualMinRank && hr.Value.Rank * Tuning.DualRatio < er.Value;
-                bool between = sandwich && word.Length <= 3 && hr is not null && hr.Value.Rank < Tuning.SandwichRank;
-                return (clear || between) && IsValidHebrew(he, Math.Max(streak, between ? 1 : 0)) ? he : null;
-            }
-            if (!heOk) return null;
-            if (IsValidHebrew(he, streak)) return he;
-            if (allowModel && he.Length >= Tuning.ModelMinLen && HebrewRank(he) is null
-                && (word.Length > Tuning.ModelVowelMaxLen || Vowel.IsMatch(word)))
-            {
-                return ModelSaysFlip(EnModel.Score(word), HeModel.Score(he)) ? he : null;
-            }
-            return null;
-        }
+        Source? source = SourceOf(word);
+        if (source is null) return null;
+        Hit? typedHit = BestLookup(source.Langs, word);
 
-        if (HebrewWord.IsMatch(word) && LayoutMap.HasHebrew(word))
+        foreach (Lang target in _langs.Where(l => l.Spec.IsLatin != source.IsLatin))
         {
-            string en = LayoutMap.Convert(word, Direction.HeToEn);
-            bool enOk = OnlyLatin.IsMatch(en);
-            var hr = HebrewRank(word);
-            if (hr is not null)
-            {
-                // Also a valid Hebrew word: flip only when the English reading is far more frequent.
-                int? er = enOk ? EnglishRank(en) : null;
-                bool clear = (word.Length >= 3 || streak > 0) && er is not null
-                    && hr.Value.Rank >= Tuning.DualMinRank && er.Value * Tuning.DualRatio < hr.Value.Rank;
-                bool between = sandwich && word.Length <= 3 && er is not null && er.Value < Tuning.SandwichRank;
-                return (clear || between) && IsValidEnglish(en, Math.Max(streak, between ? 1 : 0)) ? en : null;
-            }
-            if (!enOk) return null;
-            if (IsValidEnglish(en, streak)) return en;
-            if (allowModel && en.Length >= Tuning.ModelMinLen && EnglishRank(en) is null)
-            {
-                return ModelSaysFlip(HeModel.Score(word), EnModel.Score(en)) ? en : null;
-            }
-            return null;
-        }
+            string converted = source.Layout.ConvertTo(word, target.Layout);
+            bool ok = target.Spec.Word.IsMatch(converted);
 
+            if (typedHit is not null)
+            {
+                // Also a valid word as typed: flip only when the other reading is far more frequent,
+                // or when a short word sits between two corrected words.
+                Hit? hit = ok ? Lookup(target, converted) : null;
+                bool clear = (word.Length >= 3 || streak > 0) && hit is not null
+                    && typedHit.Value.Rank >= Tuning.DualMinRank && hit.Value.Rank * Tuning.DualRatio < typedHit.Value.Rank;
+                bool between = sandwich && word.Length <= 3 && hit is not null && hit.Value.Rank < Tuning.SandwichRank;
+                if ((clear || between) && IsValid(target, converted, Math.Max(streak, between ? 1 : 0))) return converted;
+                continue;
+            }
+
+            if (!ok) continue;
+            if (IsValid(target, converted, streak)) return converted;
+            bool abbreviation = source.IsLatin && word.Length <= Tuning.ModelVowelMaxLen
+                && !source.Langs.Any(l => l.Spec.Vowels?.IsMatch(word) == true);
+            if (allowModel && converted.Length >= Tuning.ModelMinLen && Lookup(target, converted) is null && !abbreviation
+                && ModelSaysFlip(TypedScore(source, word), ModelOf(target).Score(converted)))
+            {
+                return converted;
+            }
+        }
         return null;
     }
 
     /// <summary>
     /// Examines a whitespace-free token that was just completed. <paramref name="streak"/> is the number of words just
     /// corrected in a row (wrong-layout typing tends to continue). <paramref name="sandwich"/> means the word sits between
-    /// words that were just corrected, so a short word valid in both languages is flipped when the other reading is very common. Trailing sentence punctuation is tried both as
-    /// punctuation and as layout-mapped letters (e.g. "," is the Hebrew ת key).
+    /// words that were just corrected, so a short word valid in both languages is flipped when the other reading is very common.
+    /// Trailing sentence punctuation is tried both as punctuation and as layout-mapped letters (e.g. "," is the Hebrew ת key).
     /// </summary>
     public Fix? FixToken(string token, int streak = 0, bool sandwich = false)
     {

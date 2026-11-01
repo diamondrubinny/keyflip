@@ -1,5 +1,5 @@
 {
-  "_comment": "Shared by the TypeScript (extension) and C# (desktop) test suites. Keep both implementations in sync with these cases.",
+  "_comment": "Shared by the TypeScript (extension) and C# (desktop) test suites. Keep both implementations in sync with these cases. The detect list also holds sampled decisions of the TypeScript engine (dictionary and model paths) so both implementations must agree.",
   "convert": [
     {
       "input": "akuo",
@@ -286,6 +286,2753 @@
     },
     {
       "token": "hello",
+      "streak": 1,
+      "sandwich": true,
+      "fix": null
+    },
+    {
+      "token": "קעעקרא",
+      "fix": {
+        "consumed": 6,
+        "replacement": "eggert"
+      }
+    },
+    {
+      "token": "ccjhb,",
+      "fix": {
+        "consumed": 6,
+        "replacement": "בבחינת"
+      }
+    },
+    {
+      "token": "shhbv",
+      "fix": {
+        "consumed": 5,
+        "replacement": "דיינה"
+      }
+    },
+    {
+      "token": "fnjkv",
+      "streak": 1,
+      "sandwich": true,
+      "fix": {
+        "consumed": 5,
+        "replacement": "כמחלה"
+      }
+    },
+    {
+      "token": "v,erhc",
+      "fix": {
+        "consumed": 6,
+        "replacement": "התקריב"
+      }
+    },
+    {
+      "token": "kvhktrh",
+      "streak": 1,
+      "fix": {
+        "consumed": 7,
+        "replacement": "להילארי"
+      }
+    },
+    {
+      "token": "tusr",
+      "fix": {
+        "consumed": 4,
+        "replacement": "אודר"
+      }
+    },
+    {
+      "token": "bafjho",
+      "streak": 1,
+      "sandwich": true,
+      "fix": {
+        "consumed": 6,
+        "replacement": "נשכחים"
+      }
+    },
+    {
+      "token": "טשדומםרן",
+      "streak": 1,
+      "fix": {
+        "consumed": 8,
+        "replacement": "yasunori"
+      }
+    },
+    {
+      "token": "דןגגםמד",
+      "streak": 1,
+      "sandwich": true,
+      "fix": {
+        "consumed": 7,
+        "replacement": "siddons"
+      }
+    },
+    {
+      "token": "nmpubl",
+      "fix": {
+        "consumed": 6,
+        "replacement": "מצפונך"
+      }
+    },
+    {
+      "token": "לקךלשר",
+      "streak": 1,
+      "fix": {
+        "consumed": 6,
+        "replacement": "kelkar"
+      }
+    },
+    {
+      "token": "םבקשמןב",
+      "fix": {
+        "consumed": 7,
+        "replacement": "oceanic"
+      }
+    },
+    {
+      "token": "vtrkh",
+      "streak": 1,
+      "sandwich": true,
+      "fix": {
+        "consumed": 5,
+        "replacement": "הארלי"
+      }
+    },
+    {
+      "token": "crhubho",
+      "streak": 1,
+      "sandwich": true,
+      "fix": {
+        "consumed": 7,
+        "replacement": "בריונים"
+      }
+    },
+    {
+      "token": "vmcgu,",
+      "streak": 1,
+      "sandwich": true,
+      "fix": {
+        "consumed": 6,
+        "replacement": "הצבעות"
+      }
+    },
+    {
+      "token": "dhrkz",
+      "streak": 1,
+      "sandwich": true,
+      "fix": {
+        "consumed": 5,
+        "replacement": "גירלז"
+      }
+    },
+    {
+      "token": "kubdhbux",
+      "streak": 1,
+      "sandwich": true,
+      "fix": {
+        "consumed": 8,
+        "replacement": "לונגינוס"
+      }
+    },
+    {
+      "token": "דש'שן",
+      "streak": 1,
+      "fix": {
+        "consumed": 5,
+        "replacement": "sawai"
+      }
+    },
+    {
+      "token": "צםמםדטךךשנךקד",
+      "streak": 1,
+      "sandwich": true,
+      "fix": {
+        "consumed": 13,
+        "replacement": "monosyllables"
+      }
+    },
+    {
+      "token": "mssho",
+      "streak": 1,
+      "sandwich": true,
+      "fix": {
+        "consumed": 5,
+        "replacement": "צדדים"
+      }
+    },
+    {
+      "token": "גןדשררם",
+      "streak": 1,
+      "fix": {
+        "consumed": 7,
+        "replacement": "disarro"
+      }
+    },
+    {
+      "token": "amsho",
+      "streak": 1,
+      "fix": {
+        "consumed": 5,
+        "replacement": "שצדים"
+      }
+    },
+    {
+      "token": "יטךק",
+      "streak": 1,
+      "fix": {
+        "consumed": 4,
+        "replacement": "hyle"
+      }
+    },
+    {
+      "token": "יםךךןמעד",
+      "fix": {
+        "consumed": 8,
+        "replacement": "hollings"
+      }
+    },
+    {
+      "token": "מםצןמשך",
+      "streak": 1,
+      "sandwich": true,
+      "fix": {
+        "consumed": 7,
+        "replacement": "nominal"
+      }
+    },
+    {
+      "token": "atayu;",
+      "streak": 1,
+      "fix": {
+        "consumed": 6,
+        "replacement": "שאשטוף"
+      }
+    },
+    {
+      "token": "דבואאךקנואא",
+      "streak": 1,
+      "fix": {
+        "consumed": 11,
+        "replacement": "scuttlebutt"
+      }
+    },
+    {
+      "token": "לןרדימקר",
+      "streak": 1,
+      "sandwich": true,
+      "fix": {
+        "consumed": 8,
+        "replacement": "kirshner"
+      }
+    },
+    {
+      "token": "khnhbfo",
+      "fix": {
+        "consumed": 7,
+        "replacement": "לימינכם"
+      }
+    },
+    {
+      "token": "vfb,h",
+      "streak": 1,
+      "sandwich": true,
+      "fix": {
+        "consumed": 5,
+        "replacement": "הכנתי"
+      }
+    },
+    {
+      "token": "nhnbv",
+      "streak": 1,
+      "fix": {
+        "consumed": 5,
+        "replacement": "מימנה"
+      }
+    },
+    {
+      "token": "דךקקפקרד",
+      "streak": 1,
+      "fix": {
+        "consumed": 8,
+        "replacement": "sleepers"
+      }
+    },
+    {
+      "token": "uemhmu,",
+      "streak": 1,
+      "fix": {
+        "consumed": 7,
+        "replacement": "וקציצות"
+      }
+    },
+    {
+      "token": "kanhg,",
+      "fix": {
+        "consumed": 6,
+        "replacement": "לשמיעת"
+      }
+    },
+    {
+      "token": "xynpk",
+      "fix": {
+        "consumed": 5,
+        "replacement": "סטמפל"
+      }
+    },
+    {
+      "token": "aetrnv",
+      "fix": {
+        "consumed": 6,
+        "replacement": "שקארמה"
+      }
+    },
+    {
+      "token": "nmuu,u",
+      "streak": 1,
+      "sandwich": true,
+      "fix": {
+        "consumed": 6,
+        "replacement": "מצוותו"
+      }
+    },
+    {
+      "token": "vnyru",
+      "fix": {
+        "consumed": 5,
+        "replacement": "המטרו"
+      }
+    },
+    {
+      "token": "anghs",
+      "streak": 1,
+      "fix": {
+        "consumed": 5,
+        "replacement": "שמעיד"
+      }
+    },
+    {
+      "token": "פרשבאןבקד",
+      "fix": {
+        "consumed": 9,
+        "replacement": "practices"
+      }
+    },
+    {
+      "token": "autcho",
+      "streak": 1,
+      "fix": {
+        "consumed": 6,
+        "replacement": "שואבים"
+      }
+    },
+    {
+      "token": "שךןקמ",
+      "fix": {
+        "consumed": 5,
+        "replacement": "alien"
+      }
+    },
+    {
+      "token": "vtk,hunyr",
+      "fix": {
+        "consumed": 9,
+        "replacement": "האלתיומטר"
+      }
+    },
+    {
+      "token": "בםומאקרפרםפםדשך",
+      "streak": 1,
+      "fix": {
+        "consumed": 15,
+        "replacement": "counterproposal"
+      }
+    },
+    {
+      "token": "muphu,",
+      "streak": 1,
+      "sandwich": true,
+      "fix": {
+        "consumed": 6,
+        "replacement": "צופיות"
+      }
+    },
+    {
+      "token": "shbuztur",
+      "streak": 1,
+      "fix": {
+        "consumed": 8,
+        "replacement": "דינוזאור"
+      }
+    },
+    {
+      "token": "צומבןק",
+      "streak": 1,
+      "sandwich": true,
+      "fix": {
+        "consumed": 6,
+        "replacement": "muncie"
+      }
+    },
+    {
+      "token": "חורקך",
+      "streak": 1,
+      "fix": {
+        "consumed": 5,
+        "replacement": "jurel"
+      }
+    },
+    {
+      "token": "cctukhbd",
+      "streak": 1,
+      "fix": {
+        "consumed": 8,
+        "replacement": "בבאולינג"
+      }
+    },
+    {
+      "token": "דפרקשגד",
+      "streak": 1,
+      "fix": {
+        "consumed": 7,
+        "replacement": "spreads"
+      }
+    },
+    {
+      "token": "cv,nussu,",
+      "streak": 1,
+      "sandwich": true,
+      "fix": {
+        "consumed": 9,
+        "replacement": "בהתמודדות"
+      }
+    },
+    {
+      "token": "דשממן",
+      "streak": 1,
+      "fix": {
+        "consumed": 5,
+        "replacement": "sanni"
+      }
+    },
+    {
+      "token": "vndubsr,",
+      "streak": 1,
+      "sandwich": true,
+      "fix": {
+        "consumed": 8,
+        "replacement": "המגונדרת"
+      }
+    },
+    {
+      "token": "אקהכןל",
+      "fix": {
+        "consumed": 6,
+        "replacement": "tevfik"
+      }
+    },
+    {
+      "token": "לישזשר",
+      "streak": 1,
+      "sandwich": true,
+      "fix": {
+        "consumed": 6,
+        "replacement": "khazar"
+      }
+    },
+    {
+      "token": "עקאאןמ",
+      "fix": {
+        "consumed": 6,
+        "replacement": "gettin"
+      }
+    },
+    {
+      "token": "קמעיןקמ",
+      "fix": {
+        "consumed": 7,
+        "replacement": "enghien"
+      }
+    },
+    {
+      "token": "n,gbd,",
+      "fix": {
+        "consumed": 6,
+        "replacement": "מתענגת"
+      }
+    },
+    {
+      "token": "htav",
+      "fix": {
+        "consumed": 4,
+        "replacement": "יאשה"
+      }
+    },
+    {
+      "token": "vtzurho",
+      "fix": {
+        "consumed": 7,
+        "replacement": "האזורים"
+      }
+    },
+    {
+      "token": "ךזומםלשצן",
+      "fix": {
+        "consumed": 9,
+        "replacement": "lzunokami"
+      }
+    },
+    {
+      "token": "knjc,",
+      "streak": 1,
+      "sandwich": true,
+      "fix": {
+        "consumed": 5,
+        "replacement": "למחבת"
+      }
+    },
+    {
+      "token": "ctxys",
+      "fix": {
+        "consumed": 5,
+        "replacement": "באסטד"
+      }
+    },
+    {
+      "token": "knemug",
+      "streak": 1,
+      "fix": {
+        "consumed": 6,
+        "replacement": "למקצוע"
+      }
+    },
+    {
+      "token": "nakhy",
+      "streak": 1,
+      "fix": {
+        "consumed": 5,
+        "replacement": "משליט"
+      }
+    },
+    {
+      "token": "vnbhgv",
+      "streak": 1,
+      "sandwich": true,
+      "fix": {
+        "consumed": 6,
+        "replacement": "המניעה"
+      }
+    },
+    {
+      "token": "שןרקד",
+      "streak": 1,
+      "sandwich": true,
+      "fix": {
+        "consumed": 5,
+        "replacement": "aires"
+      }
+    },
+    {
+      "token": "ksnnv",
+      "streak": 1,
+      "fix": {
+        "consumed": 5,
+        "replacement": "לדממה"
+      }
+    },
+    {
+      "token": "קפןךםעוק",
+      "streak": 1,
+      "sandwich": true,
+      "fix": {
+        "consumed": 8,
+        "replacement": "epilogue"
+      }
+    },
+    {
+      "token": "אורבםאאק",
+      "streak": 1,
+      "sandwich": true,
+      "fix": {
+        "consumed": 8,
+        "replacement": "turcotte"
+      }
+    },
+    {
+      "token": "קסןדאקג",
+      "streak": 1,
+      "sandwich": true,
+      "fix": {
+        "consumed": 7,
+        "replacement": "existed"
+      }
+    },
+    {
+      "token": "erubv",
+      "streak": 1,
+      "fix": {
+        "consumed": 5,
+        "replacement": "קרונה"
+      }
+    },
+    {
+      "token": "ךןדאקג",
+      "streak": 1,
+      "fix": {
+        "consumed": 6,
+        "replacement": "listed"
+      }
+    },
+    {
+      "token": "קןעיא",
+      "fix": {
+        "consumed": 5,
+        "replacement": "eight"
+      }
+    },
+    {
+      "token": "mvku,",
+      "streak": 1,
+      "fix": {
+        "consumed": 5,
+        "replacement": "צהלות"
+      }
+    },
+    {
+      "token": "דאשעמקאן",
+      "streak": 1,
+      "fix": {
+        "consumed": 8,
+        "replacement": "stagneti"
+      }
+    },
+    {
+      "token": "nhyhcv",
+      "fix": {
+        "consumed": 6,
+        "replacement": "מיטיבה"
+      }
+    },
+    {
+      "token": "דששךקפ",
+      "streak": 1,
+      "sandwich": true,
+      "fix": {
+        "consumed": 6,
+        "replacement": "saalep"
+      }
+    },
+    {
+      "token": "vbvru,",
+      "streak": 1,
+      "sandwich": true,
+      "fix": {
+        "consumed": 6,
+        "replacement": "הנהרות"
+      }
+    },
+    {
+      "token": "נשךשג",
+      "streak": 1,
+      "sandwich": true,
+      "fix": {
+        "consumed": 5,
+        "replacement": "balad"
+      }
+    },
+    {
+      "token": "צןדןגקמאןכןבשאןםמ",
+      "streak": 1,
+      "sandwich": true,
+      "fix": {
+        "consumed": 17,
+        "replacement": "misidentification"
+      }
+    },
+    {
+      "token": "ab,eg,",
+      "fix": {
+        "consumed": 6,
+        "replacement": "שנתקעת"
+      }
+    },
+    {
+      "token": "דךןפופ",
+      "fix": {
+        "consumed": 6,
+        "replacement": "slipup"
+      }
+    },
+    {
+      "token": "cv,jacu,",
+      "streak": 1,
+      "fix": {
+        "consumed": 8,
+        "replacement": "בהתחשבות"
+      }
+    },
+    {
+      "token": "cxsb,",
+      "fix": {
+        "consumed": 5,
+        "replacement": "בסדנת"
+      }
+    },
+    {
+      "token": "איקרצםצקאקרד",
+      "streak": 1,
+      "fix": {
+        "consumed": 12,
+        "replacement": "thermometers"
+      }
+    },
+    {
+      "token": "ומבקראשןמ",
+      "streak": 1,
+      "fix": {
+        "consumed": 9,
+        "replacement": "uncertain"
+      }
+    },
+    {
+      "token": ",srah",
+      "streak": 1,
+      "sandwich": true,
+      "fix": {
+        "consumed": 5,
+        "replacement": "תדרשי"
+      }
+    },
+    {
+      "token": "נשבנשב",
+      "streak": 1,
+      "fix": {
+        "consumed": 6,
+        "replacement": "bacbac"
+      }
+    },
+    {
+      "token": "בשממןנשךןזקג",
+      "streak": 1,
+      "sandwich": true,
+      "fix": {
+        "consumed": 12,
+        "replacement": "cannibalized"
+      }
+    },
+    {
+      "token": "nvaukjbu,",
+      "streak": 1,
+      "fix": {
+        "consumed": 9,
+        "replacement": "מהשולחנות"
+      }
+    },
+    {
+      "token": "chueui",
+      "streak": 1,
+      "sandwich": true,
+      "fix": {
+        "consumed": 6,
+        "replacement": "ביוקון"
+      }
+    },
+    {
+      "token": "v,nuyyv",
+      "streak": 1,
+      "fix": {
+        "consumed": 7,
+        "replacement": "התמוטטה"
+      }
+    },
+    {
+      "token": "fscrhhl",
+      "streak": 1,
+      "sandwich": true,
+      "fix": {
+        "consumed": 7,
+        "replacement": "כדברייך"
+      }
+    },
+    {
+      "token": "acxupu",
+      "fix": {
+        "consumed": 6,
+        "replacement": "שבסופו"
+      }
+    },
+    {
+      "token": "vshuebtu,",
+      "fix": {
+        "consumed": 9,
+        "replacement": "הדיוקנאות"
+      }
+    },
+    {
+      "token": "ךןכקאןצקד",
+      "fix": {
+        "consumed": 9,
+        "replacement": "lifetimes"
+      }
+    },
+    {
+      "token": "bacg,o",
+      "streak": 1,
+      "fix": {
+        "consumed": 6,
+        "replacement": "נשבעתם"
+      }
+    },
+    {
+      "token": "vgahrh,",
+      "fix": {
+        "consumed": 7,
+        "replacement": "העשירית"
+      }
+    },
+    {
+      "token": "zgpi",
+      "streak": 1,
+      "sandwich": true,
+      "fix": {
+        "consumed": 4,
+        "replacement": "זעפן"
+      }
+    },
+    {
+      "token": "עושאקצשךשמד",
+      "streak": 1,
+      "sandwich": true,
+      "fix": {
+        "consumed": 11,
+        "replacement": "guatemalans"
+      }
+    },
+    {
+      "token": "pbyu,k",
+      "fix": {
+        "consumed": 6,
+        "replacement": "פנטותל"
+      }
+    },
+    {
+      "token": "uvafr",
+      "streak": 1,
+      "sandwich": true,
+      "fix": {
+        "consumed": 5,
+        "replacement": "והשכר"
+      }
+    },
+    {
+      "token": "עשלן",
+      "streak": 1,
+      "fix": {
+        "consumed": 4,
+        "replacement": "gaki"
+      }
+    },
+    {
+      "token": "יקןצ",
+      "fix": {
+        "consumed": 4,
+        "replacement": "heim"
+      }
+    },
+    {
+      "token": "גקךש'שרק",
+      "streak": 1,
+      "fix": {
+        "consumed": 8,
+        "replacement": "delaware"
+      }
+    },
+    {
+      "token": "נשאןדק",
+      "streak": 1,
+      "sandwich": true,
+      "fix": {
+        "consumed": 6,
+        "replacement": "batise"
+      }
+    },
+    {
+      "token": "דםכאקמד",
+      "fix": {
+        "consumed": 7,
+        "replacement": "softens"
+      }
+    },
+    {
+      "token": "vuao",
+      "streak": 1,
+      "sandwich": true,
+      "fix": {
+        "consumed": 4,
+        "replacement": "הושם"
+      }
+    },
+    {
+      "token": "v,chhah",
+      "streak": 1,
+      "fix": {
+        "consumed": 7,
+        "replacement": "התביישי"
+      }
+    },
+    {
+      "token": "cyjubu",
+      "fix": {
+        "consumed": 6,
+        "replacement": "בטחונו"
+      }
+    },
+    {
+      "token": "tucxxhcho",
+      "streak": 1,
+      "sandwich": true,
+      "fix": {
+        "consumed": 9,
+        "replacement": "אובססיבים"
+      }
+    },
+    {
+      "token": "דרןמן",
+      "streak": 1,
+      "sandwich": true,
+      "fix": {
+        "consumed": 5,
+        "replacement": "srini"
+      }
+    },
+    {
+      "token": "עןעשמאק",
+      "streak": 1,
+      "fix": {
+        "consumed": 7,
+        "replacement": "gigante"
+      }
+    },
+    {
+      "token": "tuphhl",
+      "fix": {
+        "consumed": 6,
+        "replacement": "אופייך"
+      }
+    },
+    {
+      "token": "פוךךקא",
+      "fix": {
+        "consumed": 6,
+        "replacement": "pullet"
+      }
+    },
+    {
+      "token": "טוצןלם",
+      "fix": {
+        "consumed": 6,
+        "replacement": "yumiko"
+      }
+    },
+    {
+      "token": "נירןעו",
+      "fix": {
+        "consumed": 6,
+        "replacement": "bhrigu"
+      }
+    },
+    {
+      "token": "אירןבק",
+      "streak": 1,
+      "fix": {
+        "consumed": 6,
+        "replacement": "thrice"
+      }
+    },
+    {
+      "token": "צשאביקד",
+      "streak": 1,
+      "sandwich": true,
+      "fix": {
+        "consumed": 7,
+        "replacement": "matches"
+      }
+    },
+    {
+      "token": "ubal",
+      "streak": 1,
+      "fix": {
+        "consumed": 4,
+        "replacement": "ונשך"
+      }
+    },
+    {
+      "token": "ubdi",
+      "streak": 1,
+      "fix": {
+        "consumed": 4,
+        "replacement": "ונגן"
+      }
+    },
+    {
+      "token": "כשןןןמע",
+      "streak": 1,
+      "sandwich": true,
+      "fix": {
+        "consumed": 7,
+        "replacement": "faiiing"
+      }
+    },
+    {
+      "token": "צןמשך",
+      "streak": 1,
+      "fix": {
+        "consumed": 5,
+        "replacement": "minal"
+      }
+    },
+    {
+      "token": "ukrs,",
+      "fix": {
+        "consumed": 5,
+        "replacement": "ולרדת"
+      }
+    },
+    {
+      "token": "uatk,h",
+      "streak": 1,
+      "sandwich": true,
+      "fix": {
+        "consumed": 6,
+        "replacement": "ושאלתי"
+      }
+    },
+    {
+      "token": "nsuru,",
+      "fix": {
+        "consumed": 6,
+        "replacement": "מדורות"
+      }
+    },
+    {
+      "token": "uhnmtu",
+      "streak": 1,
+      "sandwich": true,
+      "fix": {
+        "consumed": 6,
+        "replacement": "וימצאו"
+      }
+    },
+    {
+      "token": "דבשרנשבלד",
+      "streak": 1,
+      "sandwich": true,
+      "fix": {
+        "consumed": 9,
+        "replacement": "scarbacks"
+      }
+    },
+    {
+      "token": "nhaua",
+      "streak": 1,
+      "sandwich": true,
+      "fix": {
+        "consumed": 5,
+        "replacement": "מישוש"
+      }
+    },
+    {
+      "token": "צקצגוי",
+      "streak": 1,
+      "sandwich": true,
+      "fix": {
+        "consumed": 6,
+        "replacement": "memduh"
+      }
+    },
+    {
+      "token": "אקמגםמ",
+      "streak": 1,
+      "fix": {
+        "consumed": 6,
+        "replacement": "tendon"
+      }
+    },
+    {
+      "token": "ערןככם",
+      "streak": 1,
+      "sandwich": true,
+      "fix": {
+        "consumed": 6,
+        "replacement": "griffo"
+      }
+    },
+    {
+      "token": "srd,",
+      "streak": 1,
+      "sandwich": true,
+      "fix": {
+        "consumed": 4,
+        "replacement": "דרגת"
+      }
+    },
+    {
+      "token": "ךםרקךשן",
+      "streak": 1,
+      "fix": {
+        "consumed": 7,
+        "replacement": "lorelai"
+      }
+    },
+    {
+      "token": "אקמגקרמקדד",
+      "fix": {
+        "consumed": 10,
+        "replacement": "tenderness"
+      }
+    },
+    {
+      "token": "'יןפפט",
+      "fix": {
+        "consumed": 6,
+        "replacement": "whippy"
+      }
+    },
+    {
+      "token": "צבהשמק",
+      "fix": {
+        "consumed": 6,
+        "replacement": "mcvane"
+      }
+    },
+    {
+      "token": "מןדןצ",
+      "streak": 1,
+      "sandwich": true,
+      "fix": {
+        "consumed": 5,
+        "replacement": "nisim"
+      }
+    },
+    {
+      "token": "kkjmho",
+      "fix": {
+        "consumed": 6,
+        "replacement": "ללחצים"
+      }
+    },
+    {
+      "token": "'םאביש",
+      "fix": {
+        "consumed": 6,
+        "replacement": "wotcha"
+      }
+    },
+    {
+      "token": "cnaek",
+      "streak": 1,
+      "fix": {
+        "consumed": 5,
+        "replacement": "במשקל"
+      }
+    },
+    {
+      "token": "דיןנון",
+      "fix": {
+        "consumed": 6,
+        "replacement": "shibui"
+      }
+    },
+    {
+      "token": "khbu",
+      "streak": 1,
+      "fix": {
+        "consumed": 4,
+        "replacement": "לינו"
+      }
+    },
+    {
+      "token": "נם'צשמד",
+      "streak": 1,
+      "fix": {
+        "consumed": 7,
+        "replacement": "bowmans"
+      }
+    },
+    {
+      "token": "ןמישנןאשנךק",
+      "streak": 1,
+      "sandwich": true,
+      "fix": {
+        "consumed": 11,
+        "replacement": "inhabitable"
+      }
+    },
+    {
+      "token": "knxucl",
+      "streak": 1,
+      "fix": {
+        "consumed": 6,
+        "replacement": "למסובך"
+      }
+    },
+    {
+      "token": "ישררטןמע",
+      "streak": 1,
+      "fix": {
+        "consumed": 8,
+        "replacement": "harrying"
+      }
+    },
+    {
+      "token": "yueni",
+      "fix": {
+        "consumed": 5,
+        "replacement": "טוקמן"
+      }
+    },
+    {
+      "token": ",jxku",
+      "streak": 1,
+      "sandwich": true,
+      "fix": {
+        "consumed": 5,
+        "replacement": "תחסלו"
+      }
+    },
+    {
+      "token": "nua,b,",
+      "streak": 1,
+      "sandwich": true,
+      "fix": {
+        "consumed": 6,
+        "replacement": "מושתנת"
+      }
+    },
+    {
+      "token": "נק/וקשאיקג",
+      "fix": {
+        "consumed": 10,
+        "replacement": "bequeathed"
+      }
+    },
+    {
+      "token": "ebukh",
+      "fix": {
+        "consumed": 5,
+        "replacement": "קנולי"
+      }
+    },
+    {
+      "token": "דביםכןקךג",
+      "streak": 1,
+      "fix": {
+        "consumed": 9,
+        "replacement": "schofield"
+      }
+    },
+    {
+      "token": "tsh",
+      "fix": {
+        "consumed": 3,
+        "replacement": "אדי"
+      }
+    },
+    {
+      "token": "nf,chl",
+      "fix": {
+        "consumed": 6,
+        "replacement": "מכתביך"
+      }
+    },
+    {
+      "token": "בםצפרקיקמדןנךק",
+      "fix": {
+        "consumed": 14,
+        "replacement": "comprehensible"
+      }
+    },
+    {
+      "token": "kshtkhzv",
+      "streak": 1,
+      "fix": {
+        "consumed": 8,
+        "replacement": "לדיאליזה"
+      }
+    },
+    {
+      "token": "קשדךקט",
+      "fix": {
+        "consumed": 6,
+        "replacement": "easley"
+      }
+    },
+    {
+      "token": "usdho",
+      "streak": 1,
+      "fix": {
+        "consumed": 5,
+        "replacement": "ודגים"
+      }
+    },
+    {
+      "token": "קבךןפדם",
+      "fix": {
+        "consumed": 7,
+        "replacement": "eclipso"
+      }
+    },
+    {
+      "token": "ubakjv",
+      "streak": 1,
+      "sandwich": true,
+      "fix": {
+        "consumed": 6,
+        "replacement": "ונשלחה"
+      }
+    },
+    {
+      "token": "נורשאןמם",
+      "streak": 1,
+      "fix": {
+        "consumed": 8,
+        "replacement": "buratino"
+      }
+    },
+    {
+      "token": "צקרדקט",
+      "streak": 1,
+      "fix": {
+        "consumed": 6,
+        "replacement": "mersey"
+      }
+    },
+    {
+      "token": "בםרטממ",
+      "streak": 1,
+      "fix": {
+        "consumed": 6,
+        "replacement": "corynn"
+      }
+    },
+    {
+      "token": "a,ebu",
+      "streak": 1,
+      "fix": {
+        "consumed": 5,
+        "replacement": "שתקנו"
+      }
+    },
+    {
+      "token": "uhnmtu",
+      "streak": 1,
+      "fix": {
+        "consumed": 6,
+        "replacement": "וימצאו"
+      }
+    },
+    {
+      "token": "זקוד",
+      "streak": 1,
+      "fix": {
+        "consumed": 4,
+        "replacement": "zeus"
+      }
+    },
+    {
+      "token": "j,ru",
+      "fix": {
+        "consumed": 4,
+        "replacement": "חתרו"
+      }
+    },
+    {
+      "token": "גשטבןש",
+      "fix": {
+        "consumed": 6,
+        "replacement": "daycia"
+      }
+    },
+    {
+      "token": "ןמדורקד",
+      "streak": 1,
+      "sandwich": true,
+      "fix": {
+        "consumed": 7,
+        "replacement": "insures"
+      }
+    },
+    {
+      "token": "gkhu",
+      "streak": 1,
+      "fix": {
+        "consumed": 4,
+        "replacement": "עליו"
+      }
+    },
+    {
+      "token": "עןמלש",
+      "streak": 1,
+      "fix": {
+        "consumed": 5,
+        "replacement": "ginka"
+      }
+    },
+    {
+      "token": "adkth",
+      "fix": {
+        "consumed": 5,
+        "replacement": "שגלאי"
+      }
+    },
+    {
+      "token": "נךםבליםודק",
+      "streak": 1,
+      "sandwich": true,
+      "fix": {
+        "consumed": 10,
+        "replacement": "blockhouse"
+      }
+    },
+    {
+      "token": "avrdg",
+      "fix": {
+        "consumed": 5,
+        "replacement": "שהרגע"
+      }
+    },
+    {
+      "token": "vtunr",
+      "streak": 1,
+      "sandwich": true,
+      "fix": {
+        "consumed": 5,
+        "replacement": "האומר"
+      }
+    },
+    {
+      "token": "קמאקרןמע",
+      "streak": 1,
+      "sandwich": true,
+      "fix": {
+        "consumed": 8,
+        "replacement": "entering"
+      }
+    },
+    {
+      "token": "uehxr",
+      "fix": {
+        "consumed": 5,
+        "replacement": "וקיסר"
+      }
+    },
+    {
+      "token": "vnxudku,",
+      "streak": 1,
+      "fix": {
+        "consumed": 8,
+        "replacement": "המסוגלות"
+      }
+    },
+    {
+      "token": "vecrho",
+      "streak": 1,
+      "fix": {
+        "consumed": 6,
+        "replacement": "הקברים"
+      }
+    },
+    {
+      "token": "avpbh,h",
+      "streak": 1,
+      "fix": {
+        "consumed": 7,
+        "replacement": "שהפניתי"
+      }
+    },
+    {
+      "token": "גןדךםבשאןםמד",
+      "streak": 1,
+      "fix": {
+        "consumed": 12,
+        "replacement": "dislocations"
+      }
+    },
+    {
+      "token": "ah,hhjxu",
+      "streak": 1,
+      "sandwich": true,
+      "fix": {
+        "consumed": 8,
+        "replacement": "שיתייחסו"
+      }
+    },
+    {
+      "token": "v,jku,",
+      "streak": 1,
+      "sandwich": true,
+      "fix": {
+        "consumed": 6,
+        "replacement": "התחלות"
+      }
+    },
+    {
+      "token": "דשכק'שט",
+      "streak": 1,
+      "fix": {
+        "consumed": 7,
+        "replacement": "safeway"
+      }
+    },
+    {
+      "token": "a,nvr",
+      "fix": {
+        "consumed": 5,
+        "replacement": "שתמהר"
+      }
+    },
+    {
+      "token": "בישךךשי",
+      "streak": 1,
+      "fix": {
+        "consumed": 7,
+        "replacement": "challah"
+      }
+    },
+    {
+      "token": "batr,o",
+      "fix": {
+        "consumed": 6,
+        "replacement": "נשארתם"
+      }
+    },
+    {
+      "token": "ugnh,",
+      "fix": {
+        "consumed": 5,
+        "replacement": "ועמית"
+      }
+    },
+    {
+      "token": "כרשמןדאשמ",
+      "streak": 1,
+      "sandwich": true,
+      "fix": {
+        "consumed": 9,
+        "replacement": "franistan"
+      }
+    },
+    {
+      "token": "אקלןמ",
+      "streak": 1,
+      "sandwich": true,
+      "fix": {
+        "consumed": 5,
+        "replacement": "tekin"
+      }
+    },
+    {
+      "token": "דאשמביןםמ",
+      "streak": 1,
+      "fix": {
+        "consumed": 9,
+        "replacement": "stanchion"
+      }
+    },
+    {
+      "token": "ax,unho",
+      "streak": 1,
+      "fix": {
+        "consumed": 7,
+        "replacement": "שסתומים"
+      }
+    },
+    {
+      "token": "ugpho",
+      "fix": {
+        "consumed": 5,
+        "replacement": "ועפים"
+      }
+    },
+    {
+      "token": "צשעמקדןש",
+      "streak": 1,
+      "sandwich": true,
+      "fix": {
+        "consumed": 8,
+        "replacement": "magnesia"
+      }
+    },
+    {
+      "token": "םצךקאאק",
+      "streak": 1,
+      "sandwich": true,
+      "fix": {
+        "consumed": 7,
+        "replacement": "omlette"
+      }
+    },
+    {
+      "token": "לונרןבל",
+      "streak": 1,
+      "fix": {
+        "consumed": 7,
+        "replacement": "kubrick"
+      }
+    },
+    {
+      "token": "anfhkho",
+      "streak": 1,
+      "fix": {
+        "consumed": 7,
+        "replacement": "שמכילים"
+      }
+    },
+    {
+      "token": "'שעעקג",
+      "streak": 1,
+      "fix": {
+        "consumed": 6,
+        "replacement": "wagged"
+      }
+    },
+    {
+      "token": "ahxcuk",
+      "streak": 1,
+      "fix": {
+        "consumed": 6,
+        "replacement": "שיסבול"
+      }
+    },
+    {
+      "token": "kgnu,v",
+      "streak": 1,
+      "sandwich": true,
+      "fix": {
+        "consumed": 6,
+        "replacement": "לעמותה"
+      }
+    },
+    {
+      "token": "פםפקטק",
+      "streak": 1,
+      "fix": {
+        "consumed": 6,
+        "replacement": "popeye"
+      }
+    },
+    {
+      "token": "'ןעךקןעי",
+      "streak": 1,
+      "fix": {
+        "consumed": 8,
+        "replacement": "wigleigh"
+      }
+    },
+    {
+      "token": "יטךק",
+      "fix": {
+        "consumed": 4,
+        "replacement": "hyle"
+      }
+    },
+    {
+      "token": "פרקפשרשאןםמ",
+      "streak": 1,
+      "sandwich": true,
+      "fix": {
+        "consumed": 11,
+        "replacement": "preparation"
+      }
+    },
+    {
+      "token": "קמישמבקד",
+      "streak": 1,
+      "fix": {
+        "consumed": 8,
+        "replacement": "enhances"
+      }
+    },
+    {
+      "token": "נרשןמקר",
+      "streak": 1,
+      "fix": {
+        "consumed": 7,
+        "replacement": "brainer"
+      }
+    },
+    {
+      "token": "אירם'קג",
+      "streak": 1,
+      "sandwich": true,
+      "fix": {
+        "consumed": 7,
+        "replacement": "throwed"
+      }
+    },
+    {
+      "token": "kvnubho",
+      "streak": 1,
+      "fix": {
+        "consumed": 7,
+        "replacement": "להמונים"
+      }
+    },
+    {
+      "token": "ybu.",
+      "streak": 1,
+      "sandwich": true,
+      "fix": {
+        "consumed": 4,
+        "replacement": "טנוץ"
+      }
+    },
+    {
+      "token": "kvufju,",
+      "streak": 1,
+      "sandwich": true,
+      "fix": {
+        "consumed": 7,
+        "replacement": "להוכחות"
+      }
+    },
+    {
+      "token": "nrduy",
+      "fix": {
+        "consumed": 5,
+        "replacement": "מרגוט"
+      }
+    },
+    {
+      "token": "duzn,",
+      "streak": 1,
+      "sandwich": true,
+      "fix": {
+        "consumed": 5,
+        "replacement": "גוזמת"
+      }
+    },
+    {
+      "token": "khcu",
+      "streak": 1,
+      "fix": {
+        "consumed": 4,
+        "replacement": "ליבו"
+      }
+    },
+    {
+      "token": "דוטשצנו",
+      "streak": 1,
+      "sandwich": true,
+      "fix": {
+        "consumed": 7,
+        "replacement": "suyambu"
+      }
+    },
+    {
+      "token": "איןצנךקד",
+      "streak": 1,
+      "fix": {
+        "consumed": 8,
+        "replacement": "thimbles"
+      }
+    },
+    {
+      "token": "ucea,h",
+      "streak": 1,
+      "fix": {
+        "consumed": 6,
+        "replacement": "ובקשתי"
+      }
+    },
+    {
+      "token": "פשראישדשרשאיט",
+      "streak": 1,
+      "sandwich": true,
+      "fix": {
+        "consumed": 13,
+        "replacement": "parthasarathy"
+      }
+    },
+    {
+      "token": "uaussho",
+      "streak": 1,
+      "sandwich": true,
+      "fix": {
+        "consumed": 7,
+        "replacement": "ושודדים"
+      }
+    },
+    {
+      "token": "nhsv",
+      "fix": {
+        "consumed": 4,
+        "replacement": "מידה"
+      }
+    },
+    {
+      "token": "vhh,fi",
+      "fix": {
+        "consumed": 6,
+        "replacement": "הייתכן"
+      }
+    },
+    {
+      "token": "שצםרםדם",
+      "streak": 1,
+      "fix": {
+        "consumed": 7,
+        "replacement": "amoroso"
+      }
+    },
+    {
+      "token": "nuprz",
+      "fix": {
+        "consumed": 5,
+        "replacement": "מופרז"
+      }
+    },
+    {
+      "token": "crebk",
+      "fix": {
+        "consumed": 5,
+        "replacement": "ברקנל"
+      }
+    },
+    {
+      "token": "utnl",
+      "streak": 1,
+      "fix": {
+        "consumed": 4,
+        "replacement": "ואמך"
+      }
+    },
+    {
+      "token": "vx,cl",
+      "streak": 1,
+      "sandwich": true,
+      "fix": {
+        "consumed": 5,
+        "replacement": "הסתבך"
+      }
+    },
+    {
+      "token": "atgyu;",
+      "fix": {
+        "consumed": 6,
+        "replacement": "שאעטוף"
+      }
+    },
+    {
+      "token": ",dho",
+      "streak": 1,
+      "fix": {
+        "consumed": 4,
+        "replacement": "תגים"
+      }
+    },
+    {
+      "token": "קגעשרד",
+      "fix": {
+        "consumed": 6,
+        "replacement": "edgars"
+      }
+    },
+    {
+      "token": "nyhjv",
+      "fix": {
+        "consumed": 5,
+        "replacement": "מטיחה"
+      }
+    },
+    {
+      "token": "kgzgtk",
+      "streak": 1,
+      "fix": {
+        "consumed": 6,
+        "replacement": "לעזעאל"
+      }
+    },
+    {
+      "token": "כשטדשך",
+      "fix": {
+        "consumed": 6,
+        "replacement": "faysal"
+      }
+    },
+    {
+      "token": "חקךךןקג",
+      "streak": 1,
+      "fix": {
+        "consumed": 7,
+        "replacement": "jellied"
+      }
+    },
+    {
+      "token": "ohskh",
+      "fix": {
+        "consumed": 5,
+        "replacement": "םידלי"
+      }
+    },
+    {
+      "token": "ןרםי",
+      "streak": 1,
+      "sandwich": true,
+      "fix": {
+        "consumed": 4,
+        "replacement": "iroh"
+      }
+    },
+    {
+      "token": "htuar",
+      "streak": 1,
+      "fix": {
+        "consumed": 5,
+        "replacement": "יאושר"
+      }
+    },
+    {
+      "token": "ישאבי'שט",
+      "streak": 1,
+      "fix": {
+        "consumed": 8,
+        "replacement": "hatchway"
+      }
+    },
+    {
+      "token": "דפרןמענםל",
+      "streak": 1,
+      "fix": {
+        "consumed": 9,
+        "replacement": "springbok"
+      }
+    },
+    {
+      "token": "ומצשגק",
+      "streak": 1,
+      "fix": {
+        "consumed": 6,
+        "replacement": "unmade"
+      }
+    },
+    {
+      "token": "unnhkt",
+      "streak": 1,
+      "fix": {
+        "consumed": 6,
+        "replacement": "וממילא"
+      }
+    },
+    {
+      "token": "בשרצןךךש",
+      "streak": 1,
+      "sandwich": true,
+      "fix": {
+        "consumed": 8,
+        "replacement": "carmilla"
+      }
+    },
+    {
+      "token": "פשרביצקמא",
+      "fix": {
+        "consumed": 9,
+        "replacement": "parchment"
+      }
+    },
+    {
+      "token": "bfcho",
+      "fix": {
+        "consumed": 5,
+        "replacement": "נכבים"
+      }
+    },
+    {
+      "token": "vturhh",
+      "fix": {
+        "consumed": 6,
+        "replacement": "האוריי"
+      }
+    },
+    {
+      "token": "vahfurho",
+      "streak": 1,
+      "sandwich": true,
+      "fix": {
+        "consumed": 8,
+        "replacement": "השיכורים"
+      }
+    },
+    {
+      "token": "גםקדמש",
+      "streak": 1,
+      "fix": {
+        "consumed": 6,
+        "replacement": "doesna"
+      }
+    },
+    {
+      "token": "דיןמם",
+      "fix": {
+        "consumed": 5,
+        "replacement": "shino"
+      }
+    },
+    {
+      "token": "נרםועיא",
+      "streak": 1,
+      "fix": {
+        "consumed": 7,
+        "replacement": "brought"
+      }
+    },
+    {
+      "token": "lavish",
+      "fix": null
+    },
+    {
+      "token": "infiltrated",
+      "streak": 1,
+      "sandwich": true,
+      "fix": null
+    },
+    {
+      "token": "romek",
+      "streak": 1,
+      "sandwich": true,
+      "fix": null
+    },
+    {
+      "token": "שנאו",
+      "streak": 1,
+      "fix": null
+    },
+    {
+      "token": "megalomaniacs",
+      "streak": 1,
+      "sandwich": true,
+      "fix": null
+    },
+    {
+      "token": "waynebeau",
+      "streak": 1,
+      "sandwich": true,
+      "fix": null
+    },
+    {
+      "token": "trendiest",
+      "fix": null
+    },
+    {
+      "token": "התוקפנות",
+      "fix": null
+    },
+    {
+      "token": "מפגינים",
+      "fix": null
+    },
+    {
+      "token": "weston",
+      "streak": 1,
+      "fix": null
+    },
+    {
+      "token": "םיה",
+      "streak": 1,
+      "sandwich": true,
+      "fix": null
+    },
+    {
+      "token": "פאריק",
+      "streak": 1,
+      "sandwich": true,
+      "fix": null
+    },
+    {
+      "token": "התעשרו",
+      "fix": null
+    },
+    {
+      "token": "קולברן",
+      "streak": 1,
+      "fix": null
+    },
+    {
+      "token": "המשמשת",
+      "fix": null
+    },
+    {
+      "token": "opportunism",
+      "streak": 1,
+      "sandwich": true,
+      "fix": null
+    },
+    {
+      "token": "dweeb",
+      "fix": null
+    },
+    {
+      "token": "הורנסטוק",
+      "streak": 1,
+      "fix": null
+    },
+    {
+      "token": "mural",
+      "fix": null
+    },
+    {
+      "token": "keti",
+      "streak": 1,
+      "fix": null
+    },
+    {
+      "token": "שארגנו",
+      "fix": null
+    },
+    {
+      "token": "attaches",
+      "streak": 1,
+      "sandwich": true,
+      "fix": null
+    },
+    {
+      "token": "להייד",
+      "streak": 1,
+      "fix": null
+    },
+    {
+      "token": "תגים",
+      "fix": null
+    },
+    {
+      "token": "fait",
+      "fix": null
+    },
+    {
+      "token": "כובלם",
+      "fix": null
+    },
+    {
+      "token": "וקסלר",
+      "streak": 1,
+      "sandwich": true,
+      "fix": null
+    },
+    {
+      "token": "בסקס",
+      "fix": null
+    },
+    {
+      "token": "bernsen",
+      "streak": 1,
+      "fix": null
+    },
+    {
+      "token": "alik",
+      "streak": 1,
+      "fix": null
+    },
+    {
+      "token": "שקיבלת",
+      "streak": 1,
+      "sandwich": true,
+      "fix": null
+    },
+    {
+      "token": "חמדנים",
+      "streak": 1,
+      "sandwich": true,
+      "fix": null
+    },
+    {
+      "token": "והשלכתי",
+      "fix": null
+    },
+    {
+      "token": "ללגב",
+      "streak": 1,
+      "sandwich": true,
+      "fix": null
+    },
+    {
+      "token": "crumble",
+      "streak": 1,
+      "fix": null
+    },
+    {
+      "token": "anny",
+      "streak": 1,
+      "fix": null
+    },
+    {
+      "token": "cartwheel",
+      "fix": null
+    },
+    {
+      "token": "מקלאוס",
+      "streak": 1,
+      "fix": null
+    },
+    {
+      "token": "moan",
+      "streak": 1,
+      "fix": null
+    },
+    {
+      "token": "קליפ",
+      "streak": 1,
+      "sandwich": true,
+      "fix": null
+    },
+    {
+      "token": "השוקה",
+      "streak": 1,
+      "sandwich": true,
+      "fix": null
+    },
+    {
+      "token": "scientists",
+      "fix": null
+    },
+    {
+      "token": "נעלם",
+      "fix": null
+    },
+    {
+      "token": "boiling",
+      "streak": 1,
+      "fix": null
+    },
+    {
+      "token": "וכשתגיע",
+      "fix": null
+    },
+    {
+      "token": "invades",
+      "streak": 1,
+      "fix": null
+    },
+    {
+      "token": "לקיצוצים",
+      "fix": null
+    },
+    {
+      "token": "pelican",
+      "fix": null
+    },
+    {
+      "token": "predominates",
+      "streak": 1,
+      "fix": null
+    },
+    {
+      "token": "dybbuk",
+      "streak": 1,
+      "sandwich": true,
+      "fix": null
+    },
+    {
+      "token": "regia",
+      "streak": 1,
+      "fix": null
+    },
+    {
+      "token": "atoast",
+      "streak": 1,
+      "sandwich": true,
+      "fix": null
+    },
+    {
+      "token": "spittin",
+      "fix": null
+    },
+    {
+      "token": "האלומיניום",
+      "streak": 1,
+      "sandwich": true,
+      "fix": null
+    },
+    {
+      "token": "תחצי",
+      "streak": 1,
+      "fix": null
+    },
+    {
+      "token": "אורקש",
+      "streak": 1,
+      "sandwich": true,
+      "fix": null
+    },
+    {
+      "token": "ונזדקק",
+      "fix": null
+    },
+    {
+      "token": "לסם",
+      "fix": null
+    },
+    {
+      "token": "freestyling",
+      "streak": 1,
+      "sandwich": true,
+      "fix": null
+    },
+    {
+      "token": "צרק",
+      "streak": 1,
+      "sandwich": true,
+      "fix": null
+    },
+    {
+      "token": "שעמדת",
+      "streak": 1,
+      "sandwich": true,
+      "fix": null
+    },
+    {
+      "token": "קווארד",
+      "streak": 1,
+      "sandwich": true,
+      "fix": null
+    },
+    {
+      "token": "אחוזה",
+      "streak": 1,
+      "fix": null
+    },
+    {
+      "token": "בנאמנות",
+      "streak": 1,
+      "sandwich": true,
+      "fix": null
+    },
+    {
+      "token": "mihalis",
+      "fix": null
+    },
+    {
+      "token": "tyree",
+      "streak": 1,
+      "fix": null
+    },
+    {
+      "token": "scummy",
+      "streak": 1,
+      "sandwich": true,
+      "fix": null
+    },
+    {
+      "token": "boet",
+      "fix": null
+    },
+    {
+      "token": "להומר",
+      "fix": null
+    },
+    {
+      "token": "חותרת",
+      "fix": null
+    },
+    {
+      "token": "newtons",
+      "streak": 1,
+      "fix": null
+    },
+    {
+      "token": "נקשור",
+      "fix": null
+    },
+    {
+      "token": "למפסידים",
+      "streak": 1,
+      "fix": null
+    },
+    {
+      "token": "חיוורת",
+      "streak": 1,
+      "fix": null
+    },
+    {
+      "token": "enlightens",
+      "streak": 1,
+      "fix": null
+    },
+    {
+      "token": "במזבלה",
+      "streak": 1,
+      "sandwich": true,
+      "fix": null
+    },
+    {
+      "token": "ssst",
+      "streak": 1,
+      "fix": null
+    },
+    {
+      "token": "שהגורם",
+      "streak": 1,
+      "sandwich": true,
+      "fix": null
+    },
+    {
+      "token": "stuttering",
+      "streak": 1,
+      "fix": null
+    },
+    {
+      "token": "הברחה",
+      "streak": 1,
+      "sandwich": true,
+      "fix": null
+    },
+    {
+      "token": "bindle",
+      "streak": 1,
+      "fix": null
+    },
+    {
+      "token": "והרגנו",
+      "streak": 1,
+      "fix": null
+    },
+    {
+      "token": "bleeped",
+      "streak": 1,
+      "fix": null
+    },
+    {
+      "token": "condensers",
+      "streak": 1,
+      "sandwich": true,
+      "fix": null
+    },
+    {
+      "token": "בסיסית",
+      "streak": 1,
+      "fix": null
+    },
+    {
+      "token": "narragansett",
+      "fix": null
+    },
+    {
+      "token": "הצעתו",
+      "streak": 1,
+      "fix": null
+    },
+    {
+      "token": "psychiatrists",
+      "streak": 1,
+      "sandwich": true,
+      "fix": null
+    },
+    {
+      "token": "wallin",
+      "fix": null
+    },
+    {
+      "token": "leaderless",
+      "fix": null
+    },
+    {
+      "token": "hydrophone",
+      "fix": null
+    },
+    {
+      "token": "sistah",
+      "streak": 1,
+      "sandwich": true,
+      "fix": null
+    },
+    {
+      "token": "סחרה",
+      "streak": 1,
+      "sandwich": true,
+      "fix": null
+    },
+    {
+      "token": "מהביצועים",
+      "streak": 1,
+      "fix": null
+    },
+    {
+      "token": "וחינוך",
+      "streak": 1,
+      "sandwich": true,
+      "fix": null
+    },
+    {
+      "token": "טןש",
+      "streak": 1,
+      "sandwich": true,
+      "fix": null
+    },
+    {
+      "token": "calvarium",
+      "streak": 1,
+      "sandwich": true,
+      "fix": null
+    },
+    {
+      "token": "נסקר",
+      "fix": null
+    },
+    {
+      "token": "שמתפוצץ",
+      "streak": 1,
+      "sandwich": true,
+      "fix": null
+    },
+    {
+      "token": "להתרעם",
+      "fix": null
+    },
+    {
+      "token": "dungeon",
+      "streak": 1,
+      "sandwich": true,
+      "fix": null
+    },
+    {
+      "token": "ובצל",
+      "fix": null
+    },
+    {
+      "token": "shingyoji",
+      "streak": 1,
+      "fix": null
+    },
+    {
+      "token": "knolls",
+      "streak": 1,
+      "fix": null
+    },
+    {
+      "token": "הנגרים",
+      "streak": 1,
+      "fix": null
+    },
+    {
+      "token": "implode",
+      "streak": 1,
+      "fix": null
+    },
+    {
+      "token": "מעוגלות",
+      "fix": null
+    },
+    {
+      "token": "ותמות",
+      "streak": 1,
+      "sandwich": true,
+      "fix": null
+    },
+    {
+      "token": "המעיל",
+      "streak": 1,
+      "sandwich": true,
+      "fix": null
+    },
+    {
+      "token": "mayko",
+      "streak": 1,
+      "sandwich": true,
+      "fix": null
+    },
+    {
+      "token": "lupins",
+      "streak": 1,
+      "sandwich": true,
+      "fix": null
+    },
+    {
+      "token": "canonized",
+      "streak": 1,
+      "fix": null
+    },
+    {
+      "token": "הדביקה",
+      "streak": 1,
+      "sandwich": true,
+      "fix": null
+    },
+    {
+      "token": "וכשאת",
+      "streak": 1,
+      "sandwich": true,
+      "fix": null
+    },
+    {
+      "token": "huffstodt",
+      "streak": 1,
+      "fix": null
+    },
+    {
+      "token": "משארית",
+      "streak": 1,
+      "fix": null
+    },
+    {
+      "token": "shion",
+      "streak": 1,
+      "fix": null
+    },
+    {
+      "token": "מחלתו",
+      "fix": null
+    },
+    {
+      "token": "בסנגאלה",
+      "streak": 1,
+      "sandwich": true,
+      "fix": null
+    },
+    {
+      "token": "המזלג",
+      "fix": null
+    },
+    {
+      "token": "הסלולרים",
+      "fix": null
+    },
+    {
+      "token": "מוואן",
+      "fix": null
+    },
+    {
+      "token": "עבדיו",
+      "streak": 1,
+      "fix": null
+    },
+    {
+      "token": "זוגיים",
+      "streak": 1,
+      "sandwich": true,
+      "fix": null
+    },
+    {
+      "token": "עפש",
+      "fix": null
+    },
+    {
+      "token": "שמגרקו",
+      "streak": 1,
+      "fix": null
+    },
+    {
+      "token": "matvei",
+      "fix": null
+    },
+    {
+      "token": "והפרסום",
+      "streak": 1,
+      "fix": null
+    },
+    {
+      "token": "zareb",
+      "streak": 1,
+      "fix": null
+    },
+    {
+      "token": "yarby",
+      "streak": 1,
+      "fix": null
+    },
+    {
+      "token": "erry",
+      "streak": 1,
+      "sandwich": true,
+      "fix": null
+    },
+    {
+      "token": "טוד",
+      "streak": 1,
+      "sandwich": true,
+      "fix": null
+    },
+    {
+      "token": "wyld",
+      "streak": 1,
+      "fix": null
+    },
+    {
+      "token": "smo",
+      "streak": 1,
+      "sandwich": true,
+      "fix": null
+    },
+    {
+      "token": "כשהאזעקה",
+      "streak": 1,
+      "fix": null
+    },
+    {
+      "token": "hagedorn",
+      "streak": 1,
+      "sandwich": true,
+      "fix": null
+    },
+    {
+      "token": "טייסי",
+      "fix": null
+    },
+    {
+      "token": "שמשרת",
+      "fix": null
+    },
+    {
+      "token": "רולנדו",
+      "fix": null
+    },
+    {
+      "token": "אבותיך",
+      "fix": null
+    },
+    {
+      "token": "הנמך",
+      "fix": null
+    },
+    {
+      "token": "macdowell",
+      "streak": 1,
+      "sandwich": true,
+      "fix": null
+    },
+    {
+      "token": "כמוהן",
+      "fix": null
+    },
+    {
+      "token": "אנדרלמוסיה",
+      "streak": 1,
+      "fix": null
+    },
+    {
+      "token": "בהבטחת",
+      "streak": 1,
+      "fix": null
+    },
+    {
+      "token": "shorelines",
+      "streak": 1,
+      "fix": null
+    },
+    {
+      "token": "לקנן",
+      "fix": null
+    },
+    {
+      "token": "dumptruck",
+      "streak": 1,
+      "sandwich": true,
+      "fix": null
+    },
+    {
+      "token": "שהאמריקאי",
+      "fix": null
+    },
+    {
+      "token": "הדבילים",
       "streak": 1,
       "sandwich": true,
       "fix": null
