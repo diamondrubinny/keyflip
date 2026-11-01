@@ -1,6 +1,5 @@
 using System.Reflection;
 using KeyFlip.Core;
-using Microsoft.Win32;
 
 namespace KeyFlip.App;
 
@@ -8,8 +7,6 @@ namespace KeyFlip.App;
 internal sealed class TrayApp : ApplicationContext
 {
     private const int HotkeyId = 0x4B46;
-    private const string RunKeyPath = @"Software\Microsoft\Windows\CurrentVersion\Run";
-    private const string RunValueName = "KeyFlip";
 
     private sealed record LastFix(string Original, string Retyped, long Epoch, IntPtr Window, DateTime At);
 
@@ -33,11 +30,13 @@ internal sealed class TrayApp : ApplicationContext
     private readonly KeyboardMonitor _monitor = new();
     private readonly MessageWindow _window = new();
     private readonly NotifyIcon _tray;
+    private readonly ContextMenuStrip _menu;
     private readonly ToolStripMenuItem _autoItem;
     private readonly ToolStripMenuItem _startupItem;
     private readonly ToolStripMenuItem _browsersItem;
     private LastFix? _lastFix;
     private bool _busy;
+    private bool _syncingStartup;
 
     public TrayApp()
     {
@@ -63,8 +62,14 @@ internal sealed class TrayApp : ApplicationContext
         var convertItem = new ToolStripMenuItem("המר עכשיו (Ctrl+Alt+Space)");
         convertItem.Click += async (_, _) => await ConvertNowAsync();
 
-        _startupItem = new ToolStripMenuItem("הפעל עם Windows") { CheckOnClick = true, Checked = IsStartupEnabled() };
-        _startupItem.CheckedChanged += (_, _) => SetStartup(_startupItem.Checked);
+        _startupItem = new ToolStripMenuItem("הפעל עם Windows") { CheckOnClick = true };
+        _startupItem.CheckedChanged += async (_, _) =>
+        {
+            if (_syncingStartup) return;
+            StartupResult result = await StartupRegistration.SetAsync(_startupItem.Checked);
+            SetStartupChecked(result.Enabled);
+            if (result.Message is not null) Notify(result.Message);
+        };
 
         var aboutItem = new ToolStripMenuItem("פרטיות ומידע");
         aboutItem.Click += (_, _) => ShowAbout();
@@ -72,8 +77,8 @@ internal sealed class TrayApp : ApplicationContext
         var exitItem = new ToolStripMenuItem("יציאה");
         exitItem.Click += (_, _) => ExitThread();
 
-        var menu = new ContextMenuStrip { RightToLeft = RightToLeft.Yes };
-        menu.Items.AddRange(new ToolStripItem[]
+        _menu = new ContextMenuStrip { RightToLeft = RightToLeft.Yes };
+        _menu.Items.AddRange(new ToolStripItem[]
         {
             _autoItem, _browsersItem, convertItem, _startupItem, new ToolStripSeparator(), aboutItem, exitItem,
         });
@@ -82,7 +87,7 @@ internal sealed class TrayApp : ApplicationContext
         {
             Icon = LoadIcon(),
             Text = "KeyFlip",
-            ContextMenuStrip = menu,
+            ContextMenuStrip = _menu,
             Visible = true,
         };
 
@@ -96,6 +101,38 @@ internal sealed class TrayApp : ApplicationContext
         _monitor.ShouldTrackWindow = hwnd => !_settings.IsProcessIgnored(WindowInfo.ProcessName(hwnd));
         _monitor.WordCompleted += OnWordCompleted;
         _monitor.Start();
+
+        _ = RefreshStartupItemAsync();
+
+        // A tray app has no window: tell first-time users (and Store reviewers) where KeyFlip went.
+        if (!_settings.Welcomed)
+        {
+            Notify("KeyFlip פועל ברקע. האייקון נמצא באזור ההודעות ליד השעון (לפעמים מתחת לחץ ^). לחיצה ימנית פותחת את התפריט.");
+            _settings.Welcomed = true;
+            _settings.Save();
+        }
+    }
+
+    private async Task RefreshStartupItemAsync() => SetStartupChecked(await StartupRegistration.IsEnabledAsync());
+
+    /// <summary>Updates the menu check without re-running the CheckedChanged handler.</summary>
+    private void SetStartupChecked(bool enabled)
+    {
+        if (_menu.IsDisposed) return;
+        if (_menu.InvokeRequired)
+        {
+            _menu.BeginInvoke(() => SetStartupChecked(enabled));
+            return;
+        }
+        _syncingStartup = true;
+        try
+        {
+            _startupItem.Checked = enabled;
+        }
+        finally
+        {
+            _syncingStartup = false;
+        }
     }
 
     private static Icon LoadIcon()
@@ -114,7 +151,7 @@ internal sealed class TrayApp : ApplicationContext
             "• התוכנה עוקבת אחרי המקשים שנלחצים כדי לזהות מילה שהסתיימה, ושומרת רק את השורה הנוכחית בזיכרון (עד 200 תווים).\n" +
             "• שום דבר לא נכתב לדיסק, לא נרשם ביומן ולא נשלח לרשת.\n" +
             "• כברירת מחדל התוכנה לא פועלת בדפדפנים (התוסף מטפל בהם; אפשר להפעיל מתפריט המגש), ולעולם לא במנהלי סיסמאות, בטרמינלים ובשדות סיסמה קלאסיים.\n" +
-            "• ההגדרות נשמרות ב-%APPDATA%\\KeyFlip\\settings.json.\n\n" +
+            "• ההגדרות נשמרות ב-%APPDATA%\\KeyFlip\\settings.json (בגרסת Microsoft Store: בתיקייה הפרטית של האפליקציה, ונמחקות בהסרה).\n\n" +
             "ביטול תיקון אוטומטי: Ctrl+Alt+Space מיד אחריו.\n\n" +
             $"גרסה {Application.ProductVersion}. קוד פתוח ברישיון Apache-2.0: https://github.com/diamondrubinny/keyflip\n" +
             "מילוני הזיהוי נגזרים מ-FrequencyWords (hermitdave, נתוני OpenSubtitles 2018) ברישיון CC BY-SA 4.0.",
@@ -294,28 +331,6 @@ internal sealed class TrayApp : ApplicationContext
             else Clipboard.Clear();
         });
         return copied;
-    }
-
-    /* ---------- start with Windows ---------- */
-
-    private static bool IsStartupEnabled()
-    {
-        using RegistryKey? key = Registry.CurrentUser.OpenSubKey(RunKeyPath);
-        return key?.GetValue(RunValueName) is string;
-    }
-
-    private static void SetStartup(bool enabled)
-    {
-        try
-        {
-            using RegistryKey key = Registry.CurrentUser.CreateSubKey(RunKeyPath);
-            if (enabled) key.SetValue(RunValueName, $"\"{Environment.ProcessPath}\"");
-            else key.DeleteValue(RunValueName, throwOnMissingValue: false);
-        }
-        catch (Exception)
-        {
-            // Policy may block writing to Run; the menu check simply won't stick.
-        }
     }
 
     protected override void ExitThreadCore()

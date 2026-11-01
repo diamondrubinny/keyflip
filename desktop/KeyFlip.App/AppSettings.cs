@@ -52,6 +52,9 @@ internal sealed class AppSettings
     /// <summary>When true the desktop app also corrects text typed in browsers (use it if the extension is not installed).</summary>
     public bool IncludeBrowsers { get; set; }
 
+    /// <summary>True after the first-run "KeyFlip is running in the tray" notice was shown.</summary>
+    public bool Welcomed { get; set; }
+
     public List<string> IgnoredProcesses { get; set; } = new(DefaultIgnoredProcesses);
 
     private static string FilePath => Path.Combine(
