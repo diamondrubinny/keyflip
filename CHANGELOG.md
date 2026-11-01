@@ -3,6 +3,11 @@
 All notable changes are documented here. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/).
 
 ## [Unreleased]
+### Added
+- Microsoft Store package (MSIX, x64, self-contained): `desktop/KeyFlip.Package` (manifest, logos, `build-msix.ps1`) and a `msix` CI job that also install-tests a self-signed copy.
+- Windows app: first-run notice that KeyFlip runs in the notification area; launching it again explains it is already running.
+### Changed
+- Windows app: "Start with Windows" uses the packaged `StartupTask` in the Store build (the Run key is still used by the standalone EXE).
 ### Security
 - Windows app: keystrokes typed in ignored applications (password managers, terminals, editors) and in password boxes are no longer kept in memory at all.
 - Windows app: UI Automation `IsPassword` check blocks correction and manual conversion in password fields of Electron/Chromium, WPF and UWP apps.

@@ -8,6 +8,7 @@ Fixes text typed in the wrong keyboard layout between Hebrew and English: `akuo`
 A Chrome extension (Manifest V3) and a Windows tray app. **Everything runs locally; no data leaves your computer.**
 
 - **[Code signing policy](docs/CODE_SIGNING_POLICY.md)** · [Privacy policy](docs/PRIVACY.md) · [Terms](docs/TERMS.md) · [Accessibility statement](docs/ACCESSIBILITY.md) · [Security](SECURITY.md) · [Changelog](CHANGELOG.md)
+- **Microsoft Store:** [KeyFlip on the Microsoft Store](https://apps.microsoft.com/detail/9NRH88MVCTQF) (signed by Microsoft; available after certification).
 - All builds: [Releases](https://github.com/diamondrubinny/keyflip/releases). Current builds are **unsigned previews** (pre-releases) – verify them with `SHA256SUMS.txt`.
 
 ## ⬇️ Download
@@ -75,6 +76,9 @@ npm run check-version          # same version in package.json, manifest, desktop
 # Windows app (.NET 10 SDK; global.json pins the SDK band)
 dotnet test desktop/KeyFlip.Core.Tests
 dotnet publish desktop/KeyFlip.App -c Release -r win-x64
+
+# Microsoft Store MSIX (Windows, Windows 10/11 SDK)
+pwsh desktop/KeyFlip.Package/build-msix.ps1 -OutDir out/msix -TestSign
 ```
 
 CI: `.github/workflows/ci.yml` builds and tests both products on every push to `main` and every pull request. A maintainer publishes a preview pre-release by running the workflow manually with **release = true**.
@@ -86,7 +90,8 @@ CI: `.github/workflows/ci.yml` builds and tests both products on every push to `
 | `extension/` | Chrome extension (TypeScript, esbuild) |
 | `desktop/` | Windows tray app (`KeyFlip.App`), shared core (`KeyFlip.Core`), tests; `KeyFlip.slnx` |
 | `shared/` | `mapping.json` (layout map, single source of truth) and `test-cases.json` |
-| `docs/` | Privacy, terms, accessibility, code signing, store listing, production checklist |
+| `desktop/KeyFlip.Package/` | Microsoft Store MSIX: `AppxManifest.xml`, logos, `build-msix.ps1` |
+| `docs/` | Privacy, terms, accessibility, code signing, store listings (Chrome + Microsoft Store), production checklist |
 
 ## License
 

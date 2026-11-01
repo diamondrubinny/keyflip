@@ -87,6 +87,45 @@ jobs:
           path: out/self-contained/KeyFlip.exe
           if-no-files-found: error
 
+  msix:
+    # Microsoft Store package. Unsigned on purpose: the Store signs it on submission.
+    runs-on: windows-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          global-json-file: global.json
+      - name: Build MSIX (+ self-signed test copy)
+        shell: pwsh
+        run: ./desktop/KeyFlip.Package/build-msix.ps1 -OutDir out/msix -TestSign
+      - name: Install test (self-signed copy, then uninstall)
+        # Validates the manifest and package on a real Windows deployment stack. Non-blocking because
+        # hosted Windows Server images may not support every AppX deployment scenario.
+        continue-on-error: true
+        shell: pwsh
+        run: |
+          $cer = Get-ChildItem out/msix/KeyFlip-test.cer
+          Import-Certificate -FilePath $cer.FullName -CertStoreLocation Cert:\LocalMachine\TrustedPeople | Out-Null
+          $test = Get-ChildItem out/msix/*-TEST-SIGNED.msix
+          Add-AppxPackage -Path $test.FullName
+          $pkg = Get-AppxPackage -Name DiamondRubinny.KeyFlip
+          if (-not $pkg) { throw 'Package not installed' }
+          Write-Output "Installed $($pkg.PackageFullName)"
+          Remove-AppxPackage -Package $pkg.PackageFullName
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: keyflip-msix-store-upload
+          path: out/msix/KeyFlip-*-x64.msix
+          if-no-files-found: error
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: keyflip-msix-local-test-only
+          path: |
+            out/msix/*-TEST-SIGNED.msix
+            out/msix/KeyFlip-test.cer
+          if-no-files-found: error
+
   release:
     if: github.event_name == 'workflow_dispatch' && inputs.release && github.ref == 'refs/heads/main'
     needs: [extension, desktop]

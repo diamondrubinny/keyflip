@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  MSIX manifest for the Microsoft Store build of KeyFlip.
+  Identity values come from Partner Center (product 9NRH88MVCTQF -> Product identity). Do not change them.
+  __VERSION__ is replaced by build-msix.ps1 with <Version> from desktop/Directory.Build.props plus ".0"
+  (the Store requires the fourth part to be 0).
+-->
+<Package
+  xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
+  xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
+  xmlns:desktop="http://schemas.microsoft.com/appx/manifest/desktop/windows10"
+  xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
+  IgnorableNamespaces="uap desktop rescap">
+
+  <Identity
+    Name="DiamondRubinny.KeyFlip"
+    Publisher="CN=A2694403-EEEE-4D3F-80BB-589A9E34AEA9"
+    Version="__VERSION__"
+    ProcessorArchitecture="x64" />
+
+  <Properties>
+    <DisplayName>KeyFlip</DisplayName>
+    <PublisherDisplayName>Diamond Rubinny</PublisherDisplayName>
+    <Logo>Assets\StoreLogo.png</Logo>
+    <Description>Fixes text typed in the wrong keyboard layout between Hebrew and English. Runs locally.</Description>
+  </Properties>
+
+  <Dependencies>
+    <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.17763.0" MaxVersionTested="10.0.26100.0" />
+  </Dependencies>
+
+  <Resources>
+    <Resource Language="he-IL" />
+    <Resource Language="en-US" />
+  </Resources>
+
+  <Applications>
+    <Application Id="KeyFlip" Executable="KeyFlip.exe" EntryPoint="Windows.FullTrustApplication">
+      <uap:VisualElements
+        DisplayName="KeyFlip"
+        Description="Fixes Hebrew/English wrong-layout typing"
+        BackgroundColor="transparent"
+        Square150x150Logo="Assets\Square150x150Logo.png"
+        Square44x44Logo="Assets\Square44x44Logo.png">
+        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" />
+      </uap:VisualElements>
+      <Extensions>
+        <!-- "Start with Windows" (tray menu). TaskId must match StartupRegistration.TaskId. Off until the user enables it. -->
+        <desktop:Extension Category="windows.startupTask" Executable="KeyFlip.exe" EntryPoint="Windows.FullTrustApplication">
+          <desktop:StartupTask TaskId="KeyFlipStartup" Enabled="false" DisplayName="KeyFlip" />
+        </desktop:Extension>
+      </Extensions>
+    </Application>
+  </Applications>
+
+  <Capabilities>
+    <!-- Required for a Win32 desktop app (keyboard hook, SendInput, clipboard). Justification: docs/MS_STORE_LISTING.md -->
+    <rescap:Capability Name="runFullTrust" />
+  </Capabilities>
+</Package>
