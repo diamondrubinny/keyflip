@@ -54,4 +54,15 @@ export const LANGUAGES: Readonly<Record<string, LanguageSpec>> = {
     suffixes: [], // the word list already holds inflected forms
     prefixes: '',
   },
+  ar: {
+    id: 'ar',
+    side: 'other',
+    layout: 'ar',
+    // Letters ء..غ and ف..ي (no tatweel, no diacritics). أ إ آ are Shift keys on the Arabic layout.
+    word: /^[\u0621-\u063A\u0641-\u064A]+$/,
+    typed: /^[\u0621-\u063A\u0641-\u064A]+$/,
+    letter: /[\u0621-\u063A\u0641-\u064A]/,
+    suffixes: [],
+    prefixes: '',
+  },
 };

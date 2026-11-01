@@ -1,5 +1,5 @@
 /** Languages KeyFlip can detect. English (the Latin side) and Hebrew are always on; the rest are optional. */
-export const OPTIONAL_LANGUAGES = ['ru'] as const;
+export const OPTIONAL_LANGUAGES = ['ru', 'ar'] as const;
 
 export interface Settings {
   auto: boolean;

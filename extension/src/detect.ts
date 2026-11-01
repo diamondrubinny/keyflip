@@ -1,4 +1,4 @@
-import { LAYOUTS, convertLayout, type Layout } from './layouts.ts';
+import { LAYOUTS, convertLayout, convertLayoutVariants, type Layout } from './layouts.ts';
 import { LANGUAGES, type LanguageSpec } from './languages.ts';
 import { NgramModel } from './ngram.ts';
 
@@ -32,6 +32,7 @@ export const TUNING = {
   sandwichRank: 400, // 'to' between two corrected words becomes 'אם' (rank < 400 in the other language)
   dualMinRank: 1000, // a word valid in BOTH languages is only flipped if the typed reading is at least this rare...
   dualRatio: 30, // ...and the other reading is this many times more frequent (rank ratio)
+  modelShiftMargin: 1.2, // tokens with Shift letters (Arabic أ = H) need a larger model margin: capitals are often names
   modelTieMargin: 0.5, // with several target languages, the best model reading must win by this much (nats per char)
 };
 
@@ -68,8 +69,18 @@ interface Source {
   side: 'latin' | 'other';
 }
 
+/** Dictionary readings beat model-only ones; among dictionary readings the more frequent wins. */
+function better(a: Candidate, b: Candidate): boolean {
+  if (a.rank !== undefined || b.rank !== undefined) return b.rank === undefined || (a.rank !== undefined && a.rank < b.rank);
+  return a.margin! > b.margin!;
+}
+
 export class Detector {
   private readonly langs: Lang[];
+  /** Uppercase Latin letters that are Shift keys of an enabled layout (Arabic H = أ), not capitals. */
+  private readonly shiftLetters: Set<string>;
+  /** Single Latin keys that type a whole word on an enabled layout (Arabic b = لا, "no"). */
+  private readonly wordKeys: Set<string>;
 
   constructor(dicts: Dictionaries) {
     this.langs = Object.values(LANGUAGES)
@@ -78,6 +89,16 @@ export class Detector {
         const words = dicts[spec.id]!;
         return { spec, layout: LAYOUTS[spec.layout]!, words, ranks: new Map(words.map((w, i) => [w, i])) };
       });
+    this.shiftLetters = new Set(
+      this.langs
+        .filter((l) => l.spec.side === 'other')
+        .flatMap((l) => [...l.layout.toChar.keys()].filter((k) => /^[A-Z]$/.test(k))),
+    );
+    this.wordKeys = new Set(
+      this.langs
+        .filter((l) => l.spec.side === 'other')
+        .flatMap((l) => [...l.layout.toChar].filter(([, out]) => [...out].length > 1).map(([k]) => k)),
+    );
   }
 
   // The statistical models are only needed for words missing from the dictionaries, so build them lazily.
@@ -130,9 +151,9 @@ export class Detector {
     return h.rank < this.rankLimit(stem, streak) || stem >= 5;
   }
 
-  private modelSaysFlip(typedScore: number, targetScore: number): boolean {
+  private modelSaysFlip(typedScore: number, targetScore: number, margin = TUNING.modelMargin): boolean {
     return (
-      targetScore - typedScore >= TUNING.modelMargin &&
+      targetScore - typedScore >= margin &&
       targetScore >= TUNING.modelMinTarget &&
       typedScore <= TUNING.modelMaxTyped
     );
@@ -163,13 +184,19 @@ export class Detector {
 
   /** Decides whether one word (without surrounding punctuation) was typed in the wrong layout. */
   private fixWord(word: string, streak: number, allowModel: boolean, sandwich: boolean): string | null {
-    if (word.length < 2) return null;
+    // One letter is never a word to fix, except a key that types a whole word, inside a run of fixes ("b" = لا).
+    if (word.length < 2 && !((streak > 0 || sandwich) && this.wordKeys.has(word))) return null;
     if (/[0-9@\\]|:\/\//.test(word)) return null;
-    if (/\p{Lu}/u.test(word)) return null; // names, acronyms, sentence starts, camelCase (any script)
+    // Capitals mean names, acronyms, sentence starts or camelCase (any script) - except Shift letters of an
+    // enabled layout (Arabic أ is Shift+H). For such tokens the model needs a larger margin.
+    const capitals = [...word].filter((ch) => /\p{Lu}/u.test(ch));
+    if (capitals.some((ch) => !this.shiftLetters.has(ch))) return null;
+    const shifted = capitals.length > 0;
 
-    const source = this.sourceOf(word);
+    const source = this.sourceOf(shifted ? word.toLowerCase() : word);
     if (!source) return null;
-    const typedHit = this.bestLookup(source.langs, word);
+    if (shifted && source.side !== 'latin') return null;
+    const typedHit = this.bestLookup(source.langs, word) ?? (shifted ? this.bestLookup(source.langs, word.toLowerCase()) : undefined);
 
     const candidates: Candidate[] = [];
     for (const target of this.targetsOf(source)) {
@@ -189,7 +216,25 @@ export class Detector {
     allowModel: boolean,
     sandwich: boolean,
   ): Candidate | null {
-    const converted = convertLayout(word, source.layout, target.layout);
+    // A layout with multi-character keys (Arabic لا) can be read several ways; keep the best reading.
+    let best: Candidate | null = null;
+    for (const converted of convertLayoutVariants(word, source.layout, target.layout)) {
+      const c = this.candidateFor(source, target, word, converted, typedHit, streak, allowModel, sandwich);
+      if (c && (!best || better(c, best))) best = c;
+    }
+    return best;
+  }
+
+  private candidateFor(
+    source: Source,
+    target: Lang,
+    word: string,
+    converted: string,
+    typedHit: Hit | undefined,
+    streak: number,
+    allowModel: boolean,
+    sandwich: boolean,
+  ): Candidate | null {
     const ok = target.spec.word.test(converted);
 
     if (typedHit !== undefined) {
@@ -215,9 +260,11 @@ export class Detector {
       word.length <= TUNING.modelVowelMaxLen &&
       !source.langs.some((l) => l.spec.vowels?.test(word));
     if (allowModel && converted.length >= TUNING.modelMinLen && !this.lookup(target, converted) && !abbreviation) {
-      const typed = this.typedScore(source, word);
+      const typed = this.typedScore(source, word.toLowerCase()); // the models know no capitals (Arabic أ is Shift+H)
       const score = this.model(target).score(converted);
-      if (this.modelSaysFlip(typed, score)) return { text: converted, margin: score - typed };
+      if (this.modelSaysFlip(typed, score, /[A-Z]/.test(word) ? TUNING.modelShiftMargin : TUNING.modelMargin)) {
+        return { text: converted, margin: score - typed };
+      }
     }
     return null;
   }

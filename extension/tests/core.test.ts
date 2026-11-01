@@ -110,7 +110,7 @@ test('detector: leading punctuation is preserved', () => {
 
 import { Detector } from '../src/detect.ts';
 import { manualConvert } from '../src/manual.ts';
-import { LAYOUTS, convertLayout } from '../src/layouts.ts';
+import { LAYOUTS, convertLayout, convertLayoutVariants } from '../src/layouts.ts';
 
 const detectorFor = (langs: string[]) => new Detector(Object.fromEntries(langs.map((l) => [l, read(`${l}.txt`)])));
 
@@ -138,4 +138,13 @@ test('shared cases: manual conversion', () => {
 test('manual conversion equals convertAuto with Hebrew and English only', () => {
   const d = detectorFor(['en', 'he']);
   for (const c of shared.convertAuto) assert.equal(manualConvert(c.input, d), c.expected, c.input);
+});
+
+test('arabic layout: shift letters, lam-alef and its two readings', () => {
+  assert.equal(convertLayout('Hkh', LAYOUTS.us!, LAYOUTS.ar!), 'أنا');
+  assert.equal(convertLayout('b', LAYOUTS.us!, LAYOUTS.ar!), 'لا');
+  assert.equal(convertLayout('لاخخن', LAYOUTS.ar!, LAYOUTS.us!), 'book');
+  assert.deepEqual(convertLayoutVariants('لاخخن', LAYOUTS.ar!, LAYOUTS.us!), ['book', 'ghook']);
+  // Hebrew and Russian keep using their lowercase entries for Shift
+  assert.equal(convertLayout('AKUO', LAYOUTS.us!, LAYOUTS.he!), 'שלום');
 });

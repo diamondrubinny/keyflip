@@ -7,6 +7,7 @@ internal static class InstalledLayouts
     private static readonly Dictionary<int, string> ByPrimaryLanguage = new()
     {
         [0x19] = "ru",
+        [0x01] = "ar",
     };
 
     public static IReadOnlyList<string> LanguageIds()

@@ -247,14 +247,15 @@ internal sealed class TrayApp : ApplicationContext
                 if (edits.Count > 0)
                 {
                     int segStart = edits[^1].Start; // nearest first, so the last edit is the earliest
+                    // Fixes can change the length (Arabic 'b' types لا): edit from the end so earlier offsets stay valid.
                     var sb = new System.Text.StringBuilder(line[segStart..]);
-                    foreach (var (start, token, retro) in edits)
+                    sb.Remove(wordStart - segStart, original.Length);
+                    sb.Insert(wordStart - segStart, retyped);
+                    foreach (var (start, token, retro) in edits) // nearest first = right to left
                     {
                         sb.Remove(start - segStart, token.Length);
                         sb.Insert(start - segStart, retro.Replacement + token[retro.Consumed..]);
                     }
-                    sb.Remove(wordStart - segStart, original.Length);
-                    sb.Insert(wordStart - segStart, retyped);
                     segment = line[segStart..];
                     newSegment = sb.ToString();
                 }

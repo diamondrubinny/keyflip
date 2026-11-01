@@ -174,4 +174,16 @@ public class CoreTests
             Assert.Equal(LayoutMap.ConvertAuto(input), ManualConverter.Convert(input, d));
         }
     }
+
+    [Fact]
+    public void Arabic_Layout_ShiftLettersAndLamAlef()
+    {
+        Layout us = Layouts.Us, ar = Layouts.Get("ar");
+        Assert.Equal("أنا", us.ConvertTo("Hkh", ar));
+        Assert.Equal("لا", us.ConvertTo("b", ar));
+        Assert.Equal("book", ar.ConvertTo("لاخخن", us));
+        Assert.Equal(new[] { "book", "ghook" }, ar.ConvertVariants("لاخخن", us).ToArray());
+        Assert.Equal("שלום", us.ConvertTo("AKUO", Layouts.Hebrew)); // layouts without Shift entries use lowercase
+    }
 }
+

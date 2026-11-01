@@ -28,6 +28,7 @@ public sealed class Detector
         public const double DualRatio = 30;
         public const double SandwichRank = 400;
         public const double ModelTieMargin = 0.5;
+        public const double ModelShiftMargin = 1.2;
     }
 
     private const string TrailingPunct = ".,;:!?'\"”’)]}/";
@@ -54,6 +55,12 @@ public sealed class Detector
 
     private readonly List<Lang> _langs;
 
+    /// <summary>Uppercase Latin letters that are Shift keys of an enabled layout (Arabic H = أ), not capitals.</summary>
+    private readonly HashSet<char> _shiftLetters;
+
+    /// <summary>Single Latin keys that type a whole word on an enabled layout (Arabic b = لا, "no").</summary>
+    private readonly HashSet<string> _wordKeys;
+
     /// <summary>Word lists (most frequent first) keyed by language id; languages without a list are disabled.</summary>
     public Detector(IReadOnlyDictionary<string, IReadOnlyList<string>> wordLists)
     {
@@ -67,6 +74,10 @@ public sealed class Detector
                 Ranks = Index(wordLists[spec.Id]),
             })
             .ToList();
+        List<Lang> others = _langs.Where(l => !l.Spec.IsLatin).ToList();
+        _shiftLetters = others.SelectMany(l => l.Layout.Keys)
+            .Where(k => k.Length == 1 && k[0] >= 'A' && k[0] <= 'Z').Select(k => k[0]).ToHashSet();
+        _wordKeys = others.SelectMany(l => l.Layout.Keys.Where(k => (l.Layout.Output(k)?.Length ?? 0) > 1)).ToHashSet();
     }
 
     public Detector(IReadOnlyList<string> english, IReadOnlyList<string> hebrew)
@@ -159,8 +170,8 @@ public sealed class Detector
         return h.Value.Rank < RankLimit(stem, streak) || stem >= 5;
     }
 
-    private static bool ModelSaysFlip(double typedScore, double targetScore) =>
-        targetScore - typedScore >= Tuning.ModelMargin
+    private static bool ModelSaysFlip(double typedScore, double targetScore, double margin) =>
+        targetScore - typedScore >= margin
         && targetScore >= Tuning.ModelMinTarget
         && typedScore <= Tuning.ModelMaxTyped;
 
@@ -186,13 +197,20 @@ public sealed class Detector
 
     private string? FixWord(string word, int streak, bool allowModel, bool sandwich)
     {
-        if (word.Length < 2) return null;
+        // One letter is never a word to fix, except a key that types a whole word, inside a run of fixes ("b" = لا).
+        if (word.Length < 2 && !((streak > 0 || sandwich) && _wordKeys.Contains(word))) return null;
         if (Forbidden.IsMatch(word)) return null;
-        if (UpperCase.IsMatch(word)) return null; // names, acronyms, sentence starts, camelCase (any script)
 
-        Source? source = SourceOf(word);
+        // Capitals mean names, acronyms, sentence starts or camelCase (any script) - except Shift letters of an
+        // enabled layout (Arabic أ is Shift+H). For such tokens the model needs a larger margin.
+        List<char> capitals = word.Where(ch => UpperCase.IsMatch(ch.ToString())).ToList();
+        if (capitals.Any(ch => !_shiftLetters.Contains(ch))) return null;
+        bool shifted = capitals.Count > 0;
+
+        Source? source = SourceOf(shifted ? word.ToLowerInvariant() : word);
         if (source is null) return null;
-        Hit? typedHit = BestLookup(source.Langs, word);
+        if (shifted && !source.IsLatin) return null;
+        Hit? typedHit = BestLookup(source.Langs, word) ?? (shifted ? BestLookup(source.Langs, word.ToLowerInvariant()) : null);
 
         var candidates = new List<Candidate>();
         foreach (Lang target in _langs.Where(l => l.Spec.IsLatin != source.IsLatin))
@@ -206,7 +224,26 @@ public sealed class Detector
     /// <summary>The correction into one target language, if the rules allow it.</summary>
     private Candidate? CandidateFor(Source source, Lang target, string word, Hit? typedHit, int streak, bool allowModel, bool sandwich)
     {
-        string converted = source.Layout.ConvertTo(word, target.Layout);
+        // A layout with multi-character keys (Arabic لا) can be read several ways; keep the best reading.
+        Candidate? best = null;
+        foreach (string converted in source.Layout.ConvertVariants(word, target.Layout))
+        {
+            Candidate? c = CandidateForReading(source, target, word, converted, typedHit, streak, allowModel, sandwich);
+            if (c is not null && (best is null || Better(c, best))) best = c;
+        }
+        return best;
+    }
+
+    /// <summary>Dictionary readings beat model-only ones; among dictionary readings the more frequent wins.</summary>
+    private static bool Better(Candidate a, Candidate b)
+    {
+        if (a.Rank is not null || b.Rank is not null) return b.Rank is null || (a.Rank is not null && a.Rank < b.Rank);
+        return a.Margin > b.Margin;
+    }
+
+    private Candidate? CandidateForReading(Source source, Lang target, string word, string converted, Hit? typedHit,
+        int streak, bool allowModel, bool sandwich)
+    {
         bool ok = target.Spec.Word.IsMatch(converted);
 
         if (typedHit is not null)
@@ -228,9 +265,10 @@ public sealed class Detector
             && !source.Langs.Any(l => l.Spec.Vowels?.IsMatch(word) == true);
         if (allowModel && converted.Length >= Tuning.ModelMinLen && Lookup(target, converted) is null && !abbreviation)
         {
-            double typed = TypedScore(source, word);
+            double typed = TypedScore(source, word.ToLowerInvariant()); // the models know no capitals (Arabic أ is Shift+H)
             double score = ModelOf(target).Score(converted);
-            if (ModelSaysFlip(typed, score)) return new Candidate(converted, null, score - typed);
+            double margin = word.Any(c => c >= 'A' && c <= 'Z') ? Tuning.ModelShiftMargin : Tuning.ModelMargin;
+            if (ModelSaysFlip(typed, score, margin)) return new Candidate(converted, null, score - typed);
         }
         return null;
     }

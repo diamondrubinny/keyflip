@@ -9,6 +9,7 @@ const WORD = {
   en: /^[a-z][a-z']*$/,
   he: /^[א-ת]{2,}$/,
   ru: /^[а-яё]{2,}$/,
+  ar: /^[\u0621-\u063A\u0641-\u064A]{2,}$/,
 };
 
 const args = process.argv.slice(2);

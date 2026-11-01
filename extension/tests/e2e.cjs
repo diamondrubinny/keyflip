@@ -90,6 +90,18 @@ const PAGE = `<!doctype html><meta charset=utf-8><body>
     assert.equal(await val('#inp'), 'שלום ');
     await worker.evaluate(() => chrome.storage.local.remove('languages'));
   });
+  await check('arabic enabled: shift letters, lam-alef key and a length-changing repair', async () => {
+    await worker.evaluate(() => chrome.storage.local.set({ languages: ['en', 'he', 'ar'] }));
+    await page.fill('#inp', ''); await page.click('#inp'); await page.waitForTimeout(2500); // loads data/ar.txt
+    await type('#inp', 'Hkh lvpfh ');
+    assert.equal(await val('#inp'), 'أنا مرحبا ');
+    await page.fill('#inp', ''); await page.waitForTimeout(100);
+    await type('#inp', 'hello b lvpfh '); // "b" (لا) is repaired after the next word is fixed; it gets one character longer
+    assert.equal(await val('#inp'), 'hello لا مرحبا ');
+    await page.keyboard.type('x', { delay: 15 });
+    assert.equal(await val('#inp'), 'hello لا مرحبا x'); // caret stayed at the end
+    await worker.evaluate(() => chrome.storage.local.remove('languages'));
+  });
   await check('disabled host respected', async () => {
     await worker.evaluate(() => chrome.storage.local.set({ disabledHosts: ['127.0.0.1'] }));
     await page.waitForTimeout(300);

@@ -3,8 +3,8 @@ import { convertLayout, LAYOUTS } from './layouts.ts';
 export type Direction = 'en-to-he' | 'he-to-en';
 
 const HEBREW_LETTER = /[\u05D0-\u05EA]/;
-// Any letter of a non-Latin script KeyFlip supports (Hebrew, Cyrillic); 'he-to-en' means "other script -> Latin".
-const OTHER_LETTER = /[\u05D0-\u05EA\u0400-\u04FF]/;
+// Any letter of a non-Latin script KeyFlip supports (Hebrew, Cyrillic, Arabic); 'he-to-en' means "other script -> Latin".
+const OTHER_LETTER = /[\u05D0-\u05EA\u0400-\u04FF\u0600-\u06FF]/;
 const LATIN_LETTER = /[A-Za-z]/;
 
 export function hasHebrew(text: string): boolean {

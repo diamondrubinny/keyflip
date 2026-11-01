@@ -46,3 +46,20 @@ Same method (`TARGET=ru npm run eval`), dictionary cut at 80,000 words, unseen w
 Enabling Hebrew next to Russian costs some Russian recall and adds the Hebrew false positives on English words, which is why
 optional languages are only on when the user actually uses them. With all three on, Hebrew typed on an English layout drops
 from 90.9% to 89.3% (unseen, 5+ letters).
+
+## Arabic (added in 0.2)
+`TARGET=ar npm run eval`, same method. The Arabic (101) layout types أ إ آ with Shift (`H`, `Y`, `N`), so these capitals
+are read as Arabic letters when Arabic is enabled (with a larger model margin, since capitals are often names), and the
+`b` key types لا (two characters; the same text can come from `g` + `h`, both readings are tried).
+
+| Metric | English + Arabic | English + Hebrew + Russian + Arabic |
+|---|---|---|
+| Arabic typed on an English layout, unseen, 5+ letters | 91.7% | 84.5% |
+| English typed on an Arabic layout, unseen, 5+ letters | 93.6% | 93.6% |
+| Frequency-weighted recall (Arabic / English) | 86.9% / 89.5% | 85.9% / 89.5% |
+| Wrongly "fixed" rare unseen English / Arabic words | 0.12% / 0.18% | 1.17% / 0.18% |
+| Stress test, rare English / Arabic tokens | 0.07% / 0.09% | 0.75% / 0.09% |
+| Capitalised rare English tokens starting with H/Y/N/B (names) | 0.06-0.07% | |
+
+With all four languages on, Hebrew typed on English drops to 86.2% and Russian to 89.1% (unseen, 5+ letters), and about
+1% of rare English words get corrected by mistake, mostly into Hebrew. Optional languages therefore stay off unless used.

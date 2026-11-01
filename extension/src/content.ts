@@ -83,13 +83,16 @@ async function fixTextField(el: TextField): Promise<void> {
   busy = true;
   try {
     replaceInTextField(el, tokenStart, tokenStart + fix.consumed, fix.replacement);
-    // Same-length replacements: earlier offsets stay valid, so short words before this one can be repaired too.
+    // A fix may change the length (Arabic 'b' types لا), so track how far the caret moves.
+    let delta = fix.replacement.length - fix.consumed;
+    // Short words before this one can be repaired too; they lie earlier in the text, so their offsets are still valid.
     for (const prev of previousShortTokens(value, tokenStart)) {
       const f = await askBackground(prev.token, 1, streakBefore >= 1);
       if (!f || el.value.slice(prev.start, prev.start + prev.token.length) !== prev.token) break;
       replaceInTextField(el, prev.start, prev.start + f.consumed, f.replacement);
+      delta += f.replacement.length - f.consumed;
     }
-    const newCaret = caretNow + (fix.replacement.length - fix.consumed);
+    const newCaret = caretNow + delta;
     el.setSelectionRange(newCaret, newCaret);
   } finally {
     busy = false;
@@ -119,13 +122,15 @@ async function fixContentEditable(): Promise<void> {
   busy = true;
   try {
     if (replaceInTextNode(node, tokenStart, tokenStart + fix.consumed, fix.replacement)) {
+      let delta = fix.replacement.length - fix.consumed; // fixes may change the length (Arabic 'b' types لا)
       for (const prev of previousShortTokens(text, tokenStart)) {
         const f = await askBackground(prev.token, 1, streakBefore >= 1);
         if (!f || !node.isConnected || node.data.slice(prev.start, prev.start + prev.token.length) !== prev.token) break;
         replaceInTextNode(node, prev.start, prev.start + f.consumed, f.replacement);
+        delta += f.replacement.length - f.consumed;
       }
       // Put the caret back after the boundary (and anything typed since).
-      const offset = Math.min(node.data.length, caret + extraTyped + (fix.replacement.length - fix.consumed));
+      const offset = Math.min(node.data.length, caret + extraTyped + delta);
       const range = document.createRange();
       range.setStart(node.isConnected ? node : sel.anchorNode ?? node, offset);
       range.collapse(true);
