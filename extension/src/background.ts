@@ -9,18 +9,26 @@ const getDetector = (): Detector => (detector ??= new Detector(loadDictionaries(
 interface FixRequest {
   type: 'fix';
   token: string;
+  streak?: number;
+  sandwich?: boolean;
 }
 
 chrome.runtime.onMessage.addListener((msg: unknown, sender, sendResponse) => {
   // Only our own content scripts may ask; never act on messages from other extensions.
   if (sender.id !== chrome.runtime.id) return false;
-  const req = msg as Partial<FixRequest>;
+  const req = msg as Partial<FixRequest> | { type: 'warmup' };
+  if (req.type === 'warmup') {
+    getDetector(); // builds the dictionaries so the first real request is fast
+    sendResponse(null);
+    return false;
+  }
   if (req.type !== 'fix' || typeof req.token !== 'string' || req.token.length > 200) return false;
   const token = req.token;
+  const streak = Number.isInteger(req.streak) ? Math.min(5, Math.max(0, req.streak as number)) : 0;
   void (async () => {
     const settings = await loadSettings();
     if (!settings.auto) return sendResponse(null);
-    const fix = getDetector().fixToken(token);
+    const fix = getDetector().fixToken(token, { streak, sandwich: req.sandwich === true });
     if (!fix) return sendResponse(null);
     const toHebrew = hasHebrew(fix.replacement);
     if ((toHebrew && !settings.enToHe) || (!toHebrew && !settings.heToEn)) return sendResponse(null);

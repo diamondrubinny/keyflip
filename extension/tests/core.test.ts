@@ -91,5 +91,19 @@ test('shared cases: trailingRunStart', () => {
 });
 test('shared cases: detect', () => {
   const d = makeDetector();
-  for (const c of shared.detect) assert.deepEqual(d.fixToken(c.token), c.fix, c.token);
+  for (const c of shared.detect) assert.deepEqual(d.fixToken(c.token, { streak: c.streak ?? 0, sandwich: c.sandwich ?? false }), c.fix, `${c.token} streak=${c.streak ?? 0}`);
+});
+
+import { NgramModel } from '../src/ngram.ts';
+import { read } from './helpers.ts';
+
+test('ngram model prefers real words over random strings', () => {
+  const model = new NgramModel(read('en.txt'));
+  assert.ok(model.score('information') > model.score('xqzvkpw'));
+  assert.ok(model.score('nothing') > model.score('akunl'));
+});
+
+test('detector: leading punctuation is preserved', () => {
+  const d = makeDetector();
+  assert.deepEqual(d.fixToken('"akuo'), { consumed: 5, replacement: '"שלום' });
 });
