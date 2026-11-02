@@ -4,7 +4,7 @@
 [![CodeQL](https://github.com/diamondrubinny/keyflip/actions/workflows/codeql.yml/badge.svg)](https://github.com/diamondrubinny/keyflip/actions/workflows/codeql.yml)
 [![License: Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 
-Fixes text typed in the wrong keyboard layout between Hebrew and English: `akuo` → `שלום`, `יקךךם` → `hello`. Russian is supported too (`ghbdtn` → `привет`): it turns on automatically when a Russian keyboard is installed in Windows or Russian is one of the browser's languages.
+Fixes text typed in the wrong keyboard layout between Hebrew and English: `akuo` → `שלום`, `יקךךם` → `hello`. Russian (`ghbdtn` → `привет`) and Arabic (`Hkh` → `أنا`) are supported too: each turns on automatically when its keyboard is installed in Windows or it is one of the browser's languages.
 A Chrome extension (Manifest V3) and a Windows tray app. **Everything runs locally; no data leaves your computer.**
 
 - **[Code signing policy](docs/CODE_SIGNING_POLICY.md)** · [Privacy policy](docs/PRIVACY.md) · [Terms](docs/TERMS.md) · [Accessibility statement](docs/ACCESSIBILITY.md) · [Security](SECURITY.md) · [Changelog](CHANGELOG.md)

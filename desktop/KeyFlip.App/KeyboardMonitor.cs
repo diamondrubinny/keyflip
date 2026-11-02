@@ -159,7 +159,16 @@ internal sealed class KeyboardMonitor : IDisposable
         if (text is null) return;
         if (text.Length != 1)
         {
-            Line.Reset();
+            // Some keys type several letters (Arabic 'b' types لا); keep them. Anything else (dead-key leftovers,
+            // control characters) makes the line unreliable.
+            if (text.Length > 1 && text.All(char.IsLetter))
+            {
+                foreach (char letter in text) Line.Append(letter);
+            }
+            else
+            {
+                Line.Reset();
+            }
             return;
         }
 

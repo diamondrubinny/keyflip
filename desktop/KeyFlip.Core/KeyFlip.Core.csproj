@@ -11,6 +11,7 @@
     <EmbeddedResource Include="..\..\extension\src\data\en.txt" LogicalName="en.txt" />
     <EmbeddedResource Include="..\..\extension\src\data\he.txt" LogicalName="he.txt" />
     <EmbeddedResource Include="..\..\extension\src\data\ru.txt" LogicalName="ru.txt" />
+    <EmbeddedResource Include="..\..\extension\src\data\ar.txt" LogicalName="ar.txt" />
   </ItemGroup>
 
 </Project>

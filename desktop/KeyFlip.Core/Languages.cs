@@ -48,11 +48,21 @@ public static class Languages
         Prefixes: "",
         Vowels: null);
 
+    // Letters ء..غ and ف..ي (no tatweel, no diacritics). أ إ آ are Shift keys on the Arabic layout.
+    public static readonly LanguageSpec Arabic = new(
+        "ar", IsLatin: false, "ar",
+        Word: new Regex("^[\u0621-\u063A\u0641-\u064A]+$", Opts),
+        Typed: new Regex("^[\u0621-\u063A\u0641-\u064A]+$", Opts),
+        Letter: new Regex("[\u0621-\u063A\u0641-\u064A]", Opts),
+        Suffixes: Array.Empty<string>(),
+        Prefixes: "",
+        Vowels: null);
+
     /// <summary>All languages, in the order the detector considers them.</summary>
-    public static readonly IReadOnlyList<LanguageSpec> All = new[] { English, Hebrew, Russian };
+    public static readonly IReadOnlyList<LanguageSpec> All = new[] { English, Hebrew, Russian, Arabic };
 
     /// <summary>Languages that are always on; the others are optional.</summary>
     public static readonly IReadOnlyList<string> Always = new[] { "en", "he" };
 
-    public static readonly IReadOnlyList<string> Optional = new[] { "ru" };
+    public static readonly IReadOnlyList<string> Optional = new[] { "ru", "ar" };
 }

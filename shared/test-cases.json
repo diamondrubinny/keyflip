@@ -5013,6 +5013,2077 @@
       ],
       "token": "maclean",
       "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "Hkh",
+      "fix": {
+        "consumed": 3,
+        "replacement": "أنا"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "lvpfh",
+      "fix": {
+        "consumed": 5,
+        "replacement": "مرحبا"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "a;vh",
+      "fix": {
+        "consumed": 4,
+        "replacement": "شكرا"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "Ygn",
+      "fix": {
+        "consumed": 3,
+        "replacement": "إلى"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "hgsghl",
+      "fix": {
+        "consumed": 6,
+        "replacement": "السلام"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "b",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "b",
+      "streak": 1,
+      "fix": {
+        "consumed": 1,
+        "replacement": "لا"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "اثممخ",
+      "fix": {
+        "consumed": 5,
+        "replacement": "hello"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "لاخخن",
+      "fix": {
+        "consumed": 5,
+        "replacement": "book"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "Hello",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "Nathan",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "Bob",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "hello",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": "Hkh",
+      "fix": {
+        "consumed": 3,
+        "replacement": "أنا"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": "akuo",
+      "fix": {
+        "consumed": 4,
+        "replacement": "שלום"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": "ghbdtn",
+      "fix": {
+        "consumed": 6,
+        "replacement": "привет"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": "ؤخةحعفثق",
+      "fix": {
+        "consumed": 8,
+        "replacement": "computer"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "k,hdhi",
+      "fix": {
+        "consumed": 6,
+        "replacement": "نواياه"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "يخللخىث",
+      "fix": {
+        "consumed": 7,
+        "replacement": "doggone"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "Hr'k",
+      "fix": {
+        "consumed": 4,
+        "replacement": "أقطن"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "يهشفقهلاث",
+      "fix": {
+        "consumed": 9,
+        "replacement": "diatribe"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "hgluhf]",
+      "fix": {
+        "consumed": 7,
+        "replacement": "المعابد"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "غثشلثق",
+      "fix": {
+        "consumed": 6,
+        "replacement": "yeager"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "ai,hkdm",
+      "fix": {
+        "consumed": 7,
+        "replacement": "شهوانية"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "لاشغقثعفا",
+      "fix": {
+        "consumed": 9,
+        "replacement": "bayreuth"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "avdv",
+      "fix": {
+        "consumed": 4,
+        "replacement": "شرير"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "ؤعقفشهمثي",
+      "fix": {
+        "consumed": 9,
+        "replacement": "curtailed"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "hgpg,m",
+      "fix": {
+        "consumed": 6,
+        "replacement": "الحلوة"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "شقةخعق",
+      "fix": {
+        "consumed": 6,
+        "replacement": "armour"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "gugkd",
+      "fix": {
+        "consumed": 5,
+        "replacement": "لعلني"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "فشمنهى",
+      "fix": {
+        "consumed": 6,
+        "replacement": "talkin"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "t,r;",
+      "fix": {
+        "consumed": 4,
+        "replacement": "فوقك"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "تخعقىثغ",
+      "fix": {
+        "consumed": 7,
+        "replacement": "journey"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "Hud]",
+      "fix": {
+        "consumed": 4,
+        "replacement": "أعيد"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "فعقحهى",
+      "fix": {
+        "consumed": 6,
+        "replacement": "turpin"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "ggHl,hg",
+      "fix": {
+        "consumed": 7,
+        "replacement": "للأموال"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "بقثىثفهؤ",
+      "fix": {
+        "consumed": 8,
+        "replacement": "frenetic"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "ulgdhjkh",
+      "fix": {
+        "consumed": 8,
+        "replacement": "عملياتنا"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "لهةةث",
+      "fix": {
+        "consumed": 5,
+        "replacement": "gimme"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "dafm",
+      "fix": {
+        "consumed": 4,
+        "replacement": "يشبة"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "لشمرهى",
+      "fix": {
+        "consumed": 6,
+        "replacement": "galvin"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "fdyd",
+      "fix": {
+        "consumed": 4,
+        "replacement": "بيغي"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "ةؤةشقفهى",
+      "fix": {
+        "consumed": 8,
+        "replacement": "mcmartin"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "fhgsdhvm",
+      "fix": {
+        "consumed": 8,
+        "replacement": "بالسيارة"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "يهسهىلثىعخعس",
+      "fix": {
+        "consumed": 12,
+        "replacement": "disingenuous"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "hglv,pdm",
+      "fix": {
+        "consumed": 8,
+        "replacement": "المروحية"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "سثممهىل",
+      "fix": {
+        "consumed": 7,
+        "replacement": "selling"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": ";hf,j",
+      "fix": {
+        "consumed": 5,
+        "replacement": "كابوت"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "شمشؤن",
+      "fix": {
+        "consumed": 5,
+        "replacement": "alack"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "Hi]hti",
+      "fix": {
+        "consumed": 6,
+        "replacement": "أهدافه"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "حقهةعمش",
+      "fix": {
+        "consumed": 7,
+        "replacement": "primula"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "]lil",
+      "fix": {
+        "consumed": 4,
+        "replacement": "دمهم"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "فاخةحنهىس",
+      "fix": {
+        "consumed": 9,
+        "replacement": "thompkins"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": ";bilh",
+      "fix": {
+        "consumed": 5,
+        "replacement": "كلاهما"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "رثقلا",
+      "fix": {
+        "consumed": 5,
+        "replacement": "verb"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "hbl,hg",
+      "fix": {
+        "consumed": 6,
+        "replacement": "الاموال"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "قثرهثصثق",
+      "fix": {
+        "consumed": 8,
+        "replacement": "reviewer"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "sjkql",
+      "fix": {
+        "consumed": 5,
+        "replacement": "ستنضم"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "سحعقس",
+      "fix": {
+        "consumed": 5,
+        "replacement": "spurs"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "hvjd",
+      "fix": {
+        "consumed": 4,
+        "replacement": "ارتي"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "ةشللخف",
+      "fix": {
+        "consumed": 6,
+        "replacement": "maggot"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "duhrfkd",
+      "fix": {
+        "consumed": 7,
+        "replacement": "يعاقبني"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "ةثفشممهؤش",
+      "fix": {
+        "consumed": 9,
+        "replacement": "metallica"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "jvpdf",
+      "fix": {
+        "consumed": 5,
+        "replacement": "ترحيب"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "قثلعمشفخق",
+      "fix": {
+        "consumed": 9,
+        "replacement": "regulator"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "hgbjdkd",
+      "fix": {
+        "consumed": 7,
+        "replacement": "اللاتيني"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "لعفثى",
+      "fix": {
+        "consumed": 5,
+        "replacement": "guten"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "u]jd",
+      "fix": {
+        "consumed": 4,
+        "replacement": "عدتي"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "ىهثف",
+      "fix": {
+        "consumed": 4,
+        "replacement": "niet"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "hgH,v;sjvh",
+      "fix": {
+        "consumed": 10,
+        "replacement": "الأوركسترا"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "لاخةلاشقيةثىف",
+      "fix": {
+        "consumed": 13,
+        "replacement": "bombardment"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "sd;,kh",
+      "fix": {
+        "consumed": 6,
+        "replacement": "سيكونا"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "ىهىثفهثس",
+      "fix": {
+        "consumed": 8,
+        "replacement": "nineties"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "jf]zd",
+      "fix": {
+        "consumed": 5,
+        "replacement": "تبدئي"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "لشممهبقثغ",
+      "fix": {
+        "consumed": 9,
+        "replacement": "gallifrey"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "l`hr",
+      "fix": {
+        "consumed": 4,
+        "replacement": "مذاق"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "ؤخىرثىهثىف",
+      "fix": {
+        "consumed": 10,
+        "replacement": "convenient"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "نواياه",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "doggone",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "أقطن",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "diatribe",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "المعابد",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "yeager",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "شهوانية",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "bayreuth",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "شرير",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "curtailed",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "الحلوة",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "armour",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "لعلني",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "talkin",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "فوقك",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "journey",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "أعيد",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "turpin",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "للأموال",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "frenetic",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "عملياتنا",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "gimme",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "يشبة",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "galvin",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "token": "بيغي",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": "hgYsbldm",
+      "fix": {
+        "consumed": 8,
+        "replacement": "الإسلامية"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": "صعفاثقهىل",
+      "fix": {
+        "consumed": 9,
+        "replacement": "wuthering"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": "hg]tum",
+      "fix": {
+        "consumed": 6,
+        "replacement": "الدفعة"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": "ىخعس",
+      "fix": {
+        "consumed": 4,
+        "replacement": "nous"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": "H,vfh",
+      "fix": {
+        "consumed": 5,
+        "replacement": "أوربا"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": "شىهةشفهخى",
+      "fix": {
+        "consumed": 9,
+        "replacement": "animation"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": "Hk;",
+      "fix": {
+        "consumed": 3,
+        "replacement": "أنك"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": "سفشهقؤشسثس",
+      "fix": {
+        "consumed": 10,
+        "replacement": "staircases"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": ",;h]",
+      "fix": {
+        "consumed": 4,
+        "replacement": "وكاد"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": "ؤخىىخق",
+      "fix": {
+        "consumed": 6,
+        "replacement": "connor"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": "hg'h,bj",
+      "fix": {
+        "consumed": 7,
+        "replacement": "الطاولات"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": "ساخخف",
+      "fix": {
+        "consumed": 5,
+        "replacement": "shoot"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": "g,jadhk,",
+      "fix": {
+        "consumed": 8,
+        "replacement": "لوتشيانو"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": "صاخخساهىل",
+      "fix": {
+        "consumed": 9,
+        "replacement": "whooshing"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": "hgik]",
+      "fix": {
+        "consumed": 5,
+        "replacement": "الهند"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": "سهمرشىخ",
+      "fix": {
+        "consumed": 7,
+        "replacement": "silvano"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": "jldd.",
+      "fix": {
+        "consumed": 5,
+        "replacement": "تمييز"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": "shlpdkd",
+      "fix": {
+        "consumed": 7,
+        "replacement": "سامحيني"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": "ىهؤخمثففث",
+      "fix": {
+        "consumed": 9,
+        "replacement": "nicolette"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": "ugljd",
+      "fix": {
+        "consumed": 5,
+        "replacement": "علمتي"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": "هىيعسفقهخعس",
+      "fix": {
+        "consumed": 11,
+        "replacement": "industrious"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": "lerhf",
+      "fix": {
+        "consumed": 5,
+        "replacement": "مثقاب"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": "ةشؤمثشى",
+      "fix": {
+        "consumed": 7,
+        "replacement": "maclean"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": "fefhj",
+      "fix": {
+        "consumed": 5,
+        "replacement": "بثبات"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": "سفشمهىلقشي",
+      "fix": {
+        "consumed": 10,
+        "replacement": "stalingrad"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": "tv,h",
+      "fix": {
+        "consumed": 4,
+        "replacement": "فروا"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": "ثمهسثخ",
+      "fix": {
+        "consumed": 6,
+        "replacement": "eliseo"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": "Yubk",
+      "fix": {
+        "consumed": 4,
+        "replacement": "إعلان"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": "شقفهؤعمشفهخى",
+      "fix": {
+        "consumed": 12,
+        "replacement": "articulation"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": "gptgm",
+      "fix": {
+        "consumed": 5,
+        "replacement": "لحفلة"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": "لشهىسلاخقخعلا",
+      "fix": {
+        "consumed": 13,
+        "replacement": "gainsborough"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": "ئخاشق",
+      "fix": {
+        "consumed": 5,
+        "replacement": "zohar"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": "ld][",
+      "fix": {
+        "consumed": 4,
+        "replacement": "ميدج"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": "سحمثىيخعق",
+      "fix": {
+        "consumed": 9,
+        "replacement": "splendour"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": ",j[gs",
+      "fix": {
+        "consumed": 5,
+        "replacement": "وتجلس"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": "ؤشيثى",
+      "fix": {
+        "consumed": 5,
+        "replacement": "caden"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": "thgdvd",
+      "fix": {
+        "consumed": 6,
+        "replacement": "فاليري"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": "صاهق",
+      "fix": {
+        "consumed": 4,
+        "replacement": "whir"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": "javp",
+      "fix": {
+        "consumed": 4,
+        "replacement": "تشرح"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": "عييثق",
+      "fix": {
+        "consumed": 5,
+        "replacement": "udder"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": "fd]t,v]",
+      "fix": {
+        "consumed": 7,
+        "replacement": "بيدفورد"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": "لثىفمثسف",
+      "fix": {
+        "consumed": 8,
+        "replacement": "gentlest"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": ",heri",
+      "fix": {
+        "consumed": 5,
+        "replacement": "واثقه"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": "سثشةشى",
+      "fix": {
+        "consumed": 6,
+        "replacement": "seaman"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": "fw,j",
+      "fix": {
+        "consumed": 4,
+        "replacement": "بصوت"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": "فثمثةثفقغ",
+      "fix": {
+        "consumed": 9,
+        "replacement": "telemetry"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": "v,ed",
+      "fix": {
+        "consumed": 4,
+        "replacement": "روثي"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": "سؤشققهىل",
+      "fix": {
+        "consumed": 8,
+        "replacement": "scarring"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": "uf,v",
+      "fix": {
+        "consumed": 4,
+        "replacement": "عبور"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": "فثىةش",
+      "fix": {
+        "consumed": 5,
+        "replacement": "tenma"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": "hgHu]hl",
+      "fix": {
+        "consumed": 7,
+        "replacement": "الأعدام"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": "حهثفثق",
+      "fix": {
+        "consumed": 6,
+        "replacement": "pieter"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": "f,gdsdm",
+      "fix": {
+        "consumed": 7,
+        "replacement": "بوليسية"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": "لثفاسثةشىث",
+      "fix": {
+        "consumed": 10,
+        "replacement": "gethsemane"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": "sHvdi",
+      "fix": {
+        "consumed": 5,
+        "replacement": "سأريه"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": "ؤخىؤخؤفهخى",
+      "fix": {
+        "consumed": 10,
+        "replacement": "concoction"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": "fhg'dvhk",
+      "fix": {
+        "consumed": 8,
+        "replacement": "بالطيران"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": "ؤقهسحغ",
+      "fix": {
+        "consumed": 6,
+        "replacement": "crispy"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": ",qu,ih",
+      "fix": {
+        "consumed": 6,
+        "replacement": "وضعوها"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": "شىىهاهمشفثي",
+      "fix": {
+        "consumed": 11,
+        "replacement": "annihilated"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": "الإسلامية",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": "wuthering",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": "الدفعة",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": "nous",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": "أوربا",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": "animation",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": "أنك",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": "staircases",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": "وكاد",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": "connor",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": "الطاولات",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": "shoot",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": "لوتشيانو",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": "whooshing",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": "الهند",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": "silvano",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": "تمييز",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": "قخع",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": "rou",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": "سامحيني",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": "nicolette",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": "علمتي",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": "industrious",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": "مثقاب",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "token": "maclean",
+      "fix": null
     }
   ],
   "manualConvert": [
@@ -5065,6 +7136,42 @@
       ],
       "input": "akuo nv akunl",
       "expected": "שלום מה שלומך"
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "input": "Hkh lvpfh a;vh",
+      "expected": "أنا مرحبا شكرا"
+    },
+    {
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "input": "اثممخ صخقمي",
+      "expected": "hello world"
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "input": "Hkh lvpfh",
+      "expected": "أنا مرحبا"
+    },
+    {
+      "languages": [
+        "en",
+        "he",
+        "ru",
+        "ar"
+      ],
+      "input": "ghbdtn rfr ltkf",
+      "expected": "привет как дела"
     }
   ]
 }
