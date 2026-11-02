@@ -20,6 +20,8 @@ export interface LanguageSpec {
   prefixes: string;
   /** Latin words up to TUNING.modelVowelMaxLen letters without one of these are abbreviations: skip the model. */
   vowels?: RegExp;
+  /** One-letter words, fixed only inside a run of corrections (Russian в, у, с, к ...). */
+  singleLetters?: string;
 }
 
 export const LANGUAGES: Readonly<Record<string, LanguageSpec>> = {
@@ -33,6 +35,7 @@ export const LANGUAGES: Readonly<Record<string, LanguageSpec>> = {
     suffixes: ["'s", 's', 'es', 'ed', 'd', 'ing', 'ly', "'ll", "'re", "'ve", "n't", 'er', 'est', 'ies'],
     prefixes: '',
     vowels: /[aeiouy]/,
+    singleLetters: 'a',
   },
   he: {
     id: 'he',
@@ -53,6 +56,7 @@ export const LANGUAGES: Readonly<Record<string, LanguageSpec>> = {
     letter: /[а-яё]/,
     suffixes: [], // the word list already holds inflected forms
     prefixes: '',
+    singleLetters: 'вускиаоя',
   },
   ar: {
     id: 'ar',

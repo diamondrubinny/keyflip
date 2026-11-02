@@ -197,8 +197,9 @@ public sealed class Detector
 
     private string? FixWord(string word, int streak, bool allowModel, bool sandwich)
     {
-        // One letter is never a word to fix, except a key that types a whole word, inside a run of fixes ("b" = لا).
-        if (word.Length < 2 && !((streak > 0 || sandwich) && _wordKeys.Contains(word))) return null;
+        // One letter is only fixed inside a run of fixes: a key that types a whole word ("b" = لا) or a one-letter word
+        // of the target language (Russian "e" = у).
+        if (word.Length < 2 && !(streak > 0 || sandwich)) return null;
         if (Forbidden.IsMatch(word)) return null;
 
         // Capitals mean names, acronyms, sentence starts or camelCase (any script) - except Shift letters of an
@@ -244,6 +245,11 @@ public sealed class Detector
     private Candidate? CandidateForReading(Source source, Lang target, string word, string converted, Hit? typedHit,
         int streak, bool allowModel, bool sandwich)
     {
+        if (word.Length == 1)
+        {
+            if (target.Spec.SingleLetters.Contains(converted, StringComparison.Ordinal) && converted.Length == 1) return new Candidate(converted, 0, 0);
+            if (!_wordKeys.Contains(word)) return null;
+        }
         bool ok = target.Spec.Word.IsMatch(converted);
 
         if (typedHit is not null)
