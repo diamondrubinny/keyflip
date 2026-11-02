@@ -1,28 +1,36 @@
-// Builds word lists from FrequencyWords (hermitdave/FrequencyWords, OpenSubtitles 2018, *_full.txt files).
-// Usage: node scripts/build-dicts.mjs <en_full.txt> <he_full.txt> [minCount=20] [maxWords=150000]
+// Builds frequency-ordered word lists from FrequencyWords (hermitdave/FrequencyWords, OpenSubtitles 2018, *_full.txt).
+// Usage: node scripts/build-dicts.mjs <lang>=<path to lang_full.txt> [...] [--min-count=20] [--max-words=150000]
+//   e.g. node scripts/build-dicts.mjs en=en_full.txt he=he_full.txt ru=ru_full.txt
+// Writes src/data/<lang>.txt (one word per line, most frequent first).
 import { readFileSync, writeFileSync } from 'node:fs';
 
-const [enPath, hePath, minArg, maxArg] = process.argv.slice(2);
-if (!enPath || !hePath) throw new Error('usage: build-dicts.mjs <en_full.txt> <he_full.txt> [minCount] [maxWords]');
-const minCount = Number(minArg ?? 20);
-const maxWords = Number(maxArg ?? 150000);
+/** Which tokens count as words, per language (must match the `word` patterns in src/languages.ts). */
+const WORD = {
+  en: /^[a-z][a-z']*$/,
+  he: /^[א-ת]{2,}$/,
+  ru: /^[а-яё]{2,}$/,
+};
 
-function load(path, re) {
+const args = process.argv.slice(2);
+const option = (name, fallback) => Number(args.find((a) => a.startsWith(`--${name}=`))?.split('=')[1] ?? fallback);
+const minCount = option('min-count', 20);
+const maxWords = option('max-words', 150000);
+const inputs = args.filter((a) => !a.startsWith('--')).map((a) => a.split('='));
+if (inputs.length === 0 || inputs.some(([lang, path]) => !WORD[lang] || !path)) {
+  throw new Error(`usage: build-dicts.mjs <lang>=<file> ... (langs: ${Object.keys(WORD).join(', ')})`);
+}
+
+for (const [lang, path] of inputs) {
   const out = [];
   const seen = new Set();
   for (const line of readFileSync(path, 'utf8').split('\n')) {
     const [word, count] = line.trim().split(' ');
     if (!word || Number(count) < minCount) break; // files are sorted by count
-    if (!re.test(word) || seen.has(word)) continue;
+    if (!WORD[lang].test(word) || seen.has(word)) continue;
     seen.add(word);
     out.push(word);
     if (out.length >= maxWords) break;
   }
-  return out;
+  writeFileSync(new URL(`../src/data/${lang}.txt`, import.meta.url), out.join('\n') + '\n');
+  console.log(`${lang}=${out.length}`);
 }
-
-const en = load(enPath, /^[a-z][a-z']*$/);
-const he = load(hePath, /^[א-ת]{2,}$/);
-writeFileSync(new URL('../src/data/en.txt', import.meta.url), en.join('\n') + '\n');
-writeFileSync(new URL('../src/data/he.txt', import.meta.url), he.join('\n') + '\n');
-console.log(`en=${en.length} he=${he.length}`);

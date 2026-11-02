@@ -32,6 +32,7 @@ export const TUNING = {
   sandwichRank: 400, // 'to' between two corrected words becomes 'אם' (rank < 400 in the other language)
   dualMinRank: 1000, // a word valid in BOTH languages is only flipped if the typed reading is at least this rare...
   dualRatio: 30, // ...and the other reading is this many times more frequent (rank ratio)
+  modelTieMargin: 0.5, // with several target languages, the best model reading must win by this much (nats per char)
 };
 
 const TRAILING_PUNCT = /[.,;:!?'"”’)\]}\/]/;
@@ -43,6 +44,15 @@ interface Lang {
   words: readonly string[];
   ranks: Map<string, number>;
   model?: NgramModel;
+}
+
+/** A possible correction into one target language. */
+interface Candidate {
+  text: string;
+  /** Dictionary rank of the reading, or undefined when only the statistical model supports it. */
+  rank?: number;
+  /** Model margin (target score minus typed score) for model-only readings. */
+  margin?: number;
 }
 
 interface Hit {
@@ -155,41 +165,104 @@ export class Detector {
   private fixWord(word: string, streak: number, allowModel: boolean, sandwich: boolean): string | null {
     if (word.length < 2) return null;
     if (/[0-9@\\]|:\/\//.test(word)) return null;
-    if (/[A-Z]/.test(word)) return null; // names, acronyms, sentence starts, camelCase
+    if (/\p{Lu}/u.test(word)) return null; // names, acronyms, sentence starts, camelCase (any script)
 
     const source = this.sourceOf(word);
     if (!source) return null;
     const typedHit = this.bestLookup(source.langs, word);
 
+    const candidates: Candidate[] = [];
     for (const target of this.targetsOf(source)) {
-      const converted = convertLayout(word, source.layout, target.layout);
-      const ok = target.spec.word.test(converted);
+      const candidate = this.candidate(source, target, word, typedHit, streak, allowModel, sandwich);
+      if (candidate) candidates.push(candidate);
+    }
+    return this.choose(candidates);
+  }
 
-      if (typedHit !== undefined) {
-        // Also a valid word as typed: flip only when the other reading is far more frequent,
-        // or when a short word sits between two corrected words.
-        const hit = ok ? this.lookup(target, converted) : undefined;
-        const clear =
-          (word.length >= 3 || streak > 0) &&
-          hit !== undefined &&
-          typedHit.rank >= TUNING.dualMinRank &&
-          hit.rank * TUNING.dualRatio < typedHit.rank;
-        const between = sandwich && word.length <= 3 && hit !== undefined && hit.rank < TUNING.sandwichRank;
-        if ((clear || between) && this.isValid(target, converted, Math.max(streak, between ? 1 : 0))) return converted;
-        continue;
-      }
+  /** The correction into one target language, if the rules allow it. */
+  private candidate(
+    source: Source,
+    target: Lang,
+    word: string,
+    typedHit: Hit | undefined,
+    streak: number,
+    allowModel: boolean,
+    sandwich: boolean,
+  ): Candidate | null {
+    const converted = convertLayout(word, source.layout, target.layout);
+    const ok = target.spec.word.test(converted);
 
-      if (!ok) continue;
-      if (this.isValid(target, converted, streak)) return converted;
-      const abbreviation =
-        source.side === 'latin' &&
-        word.length <= TUNING.modelVowelMaxLen &&
-        !source.langs.some((l) => l.spec.vowels?.test(word));
-      if (allowModel && converted.length >= TUNING.modelMinLen && !this.lookup(target, converted) && !abbreviation) {
-        if (this.modelSaysFlip(this.typedScore(source, word), this.model(target).score(converted))) return converted;
+    if (typedHit !== undefined) {
+      // Also a valid word as typed: flip only when the other reading is far more frequent,
+      // or when a short word sits between two corrected words.
+      const hit = ok ? this.lookup(target, converted) : undefined;
+      const clear =
+        (word.length >= 3 || streak > 0) &&
+        hit !== undefined &&
+        typedHit.rank >= TUNING.dualMinRank &&
+        hit.rank * TUNING.dualRatio < typedHit.rank;
+      const between = sandwich && word.length <= 3 && hit !== undefined && hit.rank < TUNING.sandwichRank;
+      if ((clear || between) && this.isValid(target, converted, Math.max(streak, between ? 1 : 0))) {
+        return { text: converted, rank: hit!.rank };
       }
+      return null;
+    }
+
+    if (!ok) return null;
+    if (this.isValid(target, converted, streak)) return { text: converted, rank: this.lookup(target, converted)!.rank };
+    const abbreviation =
+      source.side === 'latin' &&
+      word.length <= TUNING.modelVowelMaxLen &&
+      !source.langs.some((l) => l.spec.vowels?.test(word));
+    if (allowModel && converted.length >= TUNING.modelMinLen && !this.lookup(target, converted) && !abbreviation) {
+      const typed = this.typedScore(source, word);
+      const score = this.model(target).score(converted);
+      if (this.modelSaysFlip(typed, score)) return { text: converted, margin: score - typed };
     }
     return null;
+  }
+
+  /**
+   * Picks among corrections into different target languages (e.g. Latin letters that could be Hebrew or Russian).
+   * Dictionary readings beat model-only ones; a reading must clearly beat the runner-up, otherwise nothing is changed.
+   */
+  private choose(candidates: Candidate[]): string | null {
+    if (candidates.length <= 1) return candidates[0]?.text ?? null;
+    const dict = candidates.filter((c) => c.rank !== undefined).sort((a, b) => a.rank! - b.rank!);
+    if (dict.length === 1) return dict[0]!.text;
+    if (dict.length > 1) return dict[0]!.rank! * TUNING.dualRatio < dict[1]!.rank! ? dict[0]!.text : null;
+    const model = candidates.sort((a, b) => b.margin! - a.margin!);
+    return model[0]!.margin! - model[1]!.margin! >= TUNING.modelTieMargin ? model[0]!.text : null;
+  }
+
+  /**
+   * Manual conversion: picks the language a run of Latin words was meant to be in (e.g. Hebrew or Russian),
+   * by how many of the converted words are in each dictionary, then by how word-like they look.
+   */
+  pickTarget(latinWords: readonly string[]): { id: string; layout: Layout } | null {
+    const latin = this.langs.find((l) => l.spec.side === 'latin');
+    const targets = this.langs.filter((l) => l.spec.side === 'other');
+    if (!latin || targets.length === 0) return null;
+    if (targets.length === 1) return { id: targets[0]!.spec.id, layout: targets[0]!.layout };
+    const converted = (lang: Lang) =>
+      latinWords.map((w) => convertLayout(w.toLowerCase(), latin.layout, lang.layout)).filter((w) => lang.spec.word.test(w));
+    const ranked = targets
+      .map((lang) => ({ lang, hits: converted(lang).filter((w) => this.lookup(lang, w)).length }))
+      .sort((a, b) => b.hits - a.hits);
+    let best = ranked[0]!;
+    const tied = ranked.filter((r) => r.hits === best.hits);
+    if (tied.length > 1) {
+      // Only when the dictionaries cannot decide: which reading looks more like real words (builds the models).
+      const score = (lang: Lang) => converted(lang).reduce((sum, w) => sum + this.model(lang).score(w), 0);
+      best = tied.map((r) => ({ ...r, score: score(r.lang) })).sort((a, b) => b.score - a.score)[0]!;
+    }
+    return { id: best!.lang.spec.id, layout: best!.lang.layout };
+  }
+
+  /** The enabled language whose script a token is written in (null for Latin or neutral tokens). */
+  otherLanguageOf(token: string): { id: string; layout: Layout } | null {
+    const lang = this.langs.find((l) => l.spec.side === 'other' && l.spec.letter.test(token));
+    return lang ? { id: lang.spec.id, layout: lang.layout } : null;
   }
 
   /**

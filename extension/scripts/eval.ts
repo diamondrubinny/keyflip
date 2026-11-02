@@ -2,15 +2,22 @@
 // The dictionary is cut at rank N; words ranked N..N+M are "out of vocabulary" (rare words, names, inflections).
 //   recall: wrongly-typed words that are recovered       false positives: correctly-typed words that get "fixed"
 // Usage: node --experimental-strip-types scripts/eval.ts [N=80000] [M=45000]
-//   LEGACY=<path to an older detect.ts>   compare with an older detector
-//   STRESS_EN / STRESS_HE=<*_full.txt>    also measure false positives on very rare tokens (names, typos, foreign words)
+//   TARGET=he|ru                           the non-Latin language paired with English (default he)
+//   ALSO=he,ru                             extra languages enabled at full size, to measure interference between targets
+//   LEGACY=<path to an older detect.ts>    compare with an older detector
+//   STRESS_EN / STRESS_<TARGET>=<*_full.txt>  also measure false positives on very rare tokens (names, typos, foreign words)
 import { readFileSync } from 'node:fs';
-import { convert } from '../src/core.ts';
+import { LAYOUTS, convertLayout } from '../src/layouts.ts';
+import { LANGUAGES } from '../src/languages.ts';
 import { Detector as Current } from '../src/detect.ts';
 
 const read = (n: string) => readFileSync(new URL(`../src/data/${n}`, import.meta.url), 'utf8').split('\n').filter(Boolean);
+const TARGET = process.env.TARGET ?? 'he';
+const ALSO = (process.env.ALSO ?? '').split(',').filter((x) => x && x !== TARGET && x !== 'en');
+const T = TARGET.toUpperCase();
+const spec = LANGUAGES[TARGET]!;
 const en = read('en.txt');
-const he = read('he.txt');
+const he = read(`${TARGET}.txt`); // the target language's list (named "he" below for history)
 const N = Number(process.argv[2] ?? 80000);
 const M = Number(process.argv[3] ?? 45000);
 
@@ -37,7 +44,7 @@ function stressTokens(path: string | undefined, re: RegExp, minLen: number): str
   return out.filter((_, i) => i % 3 === 0).slice(0, 60000);
 }
 const stressEn = stressTokens(process.env.STRESS_EN, /^[a-z]+$/, 4);
-const stressHe = stressTokens(process.env.STRESS_HE, /^[\u05D0-\u05EA]+$/, 4);
+const stressHe = stressTokens(process.env[`STRESS_${T}`], spec.word, 4);
 
 function run(label: string, make: () => Det): void {
   const t0 = Date.now();
@@ -49,22 +56,22 @@ function run(label: string, make: () => Det): void {
     const set = words.filter((w) => w.length >= minLen && w.length <= maxLen).map((w) => [w, toTyped(w)] as const).filter(([w, t]) => t !== w);
     return pct(set.filter(([w, t]) => d.fixToken(t, opts)?.replacement === w).length, set.length);
   };
-  const heTyped = (w: string) => convert(w, 'he-to-en');
-  const enTyped = (w: string) => convert(w, 'en-to-he');
+  const heTyped = (w: string) => convertLayout(w, LAYOUTS[spec.layout]!, LAYOUTS.us!);
+  const enTyped = (w: string) => convertLayout(w, LAYOUTS.us!, LAYOUTS[spec.layout]!);
   const fp = (words: string[]) => words.filter((w) => d.fixToken(w) !== null);
 
   const fpEn = fp(enOov), fpHe = fp(heOov), fpTech = fp(TECH);
-  console.log(`\n=== ${label} (dict ${N}, build ${build} ms) ===`);
-  console.log('OOV recall  HE typed on EN layout  len3  :', rec(heOov, heTyped, (t) => t, 3, 3));
-  console.log('OOV recall  HE typed on EN layout  len4  :', rec(heOov, heTyped, (t) => t, 4, 4));
-  console.log('OOV recall  HE typed on EN layout  len5+ :', rec(heOov, heTyped, (t) => t, 5));
-  console.log('OOV recall  EN typed on HE layout  len3  :', rec(enOov.filter((w) => /^[a-z]+$/.test(w)), enTyped, (t) => t, 3, 3));
-  console.log('OOV recall  EN typed on HE layout  len4  :', rec(enOov.filter((w) => /^[a-z]+$/.test(w)), enTyped, (t) => t, 4, 4));
-  console.log('OOV recall  EN typed on HE layout  len5+ :', rec(enOov.filter((w) => /^[a-z]+$/.test(w)), enTyped, (t) => t, 5));
-  console.log('in-vocab recall HE (top 20k, len3+)      :', rec(he.slice(0, 20000), heTyped, (t) => t, 3));
+  console.log(`\n=== ${label}: EN + ${T}${ALSO.length ? ' (also ' + ALSO.join(', ') + ')' : ''} (dict ${N}, build ${build} ms) ===`);
+  console.log(`OOV recall  ${T} typed on EN layout  len3  :`, rec(heOov, heTyped, (t) => t, 3, 3));
+  console.log(`OOV recall  ${T} typed on EN layout  len4  :`, rec(heOov, heTyped, (t) => t, 4, 4));
+  console.log(`OOV recall  ${T} typed on EN layout  len5+ :`, rec(heOov, heTyped, (t) => t, 5));
+  console.log(`OOV recall  EN typed on ${T} layout  len3  :`, rec(enOov.filter((w) => /^[a-z]+$/.test(w)), enTyped, (t) => t, 3, 3));
+  console.log(`OOV recall  EN typed on ${T} layout  len4  :`, rec(enOov.filter((w) => /^[a-z]+$/.test(w)), enTyped, (t) => t, 4, 4));
+  console.log(`OOV recall  EN typed on ${T} layout  len5+ :`, rec(enOov.filter((w) => /^[a-z]+$/.test(w)), enTyped, (t) => t, 5));
+  console.log(`in-vocab recall ${T} (top 20k, len3+)      :`, rec(he.slice(0, 20000), heTyped, (t) => t, 3));
   console.log('in-vocab recall EN (top 20k, len3+)      :', rec(en.slice(0, 20000).filter((w) => /^[a-z]+$/.test(w)), enTyped, (t) => t, 3));
   console.log('FALSE POSITIVES  OOV English            :', pct(fpEn.length, enOov.length), fpEn.slice(0, 12).join(' '));
-  console.log('FALSE POSITIVES  OOV Hebrew             :', pct(fpHe.length, heOov.length), fpHe.slice(0, 12).join(' '));
+  console.log(`FALSE POSITIVES  OOV ${T}                 :`, pct(fpHe.length, heOov.length), fpHe.slice(0, 12).join(' '));
   console.log('FALSE POSITIVES  tech/brand terms       :', pct(fpTech.length, TECH.length), fpTech.join(' '));
   // Zipf-weighted recall over the whole in-vocabulary range: frequent words matter more.
   const zipf = (words: string[], typed: (w: string) => string) => {
@@ -72,21 +79,22 @@ function run(label: string, make: () => Det): void {
     words.forEach((w, i) => { const t = typed(w); if (t === w || w.length < 2) return; const wt = 1 / (i + 10); all += wt; if (d.fixToken(t, { streak: 0 })?.replacement === w) hit += wt; });
     return `${((100 * hit) / all).toFixed(2)}%`;
   };
-  console.log('ZIPF-weighted recall HE typed on EN layout:', zipf(he.slice(0, N), heTyped));
-  console.log('ZIPF-weighted recall EN typed on HE layout:', zipf(en.slice(0, N).filter((w) => /^[a-z]+$/.test(w)), enTyped));
+  console.log(`ZIPF-weighted recall ${T} typed on EN layout:`, zipf(he.slice(0, N), heTyped));
+  console.log(`ZIPF-weighted recall EN typed on ${T} layout:`, zipf(en.slice(0, N).filter((w) => /^[a-z]+$/.test(w)), enTyped));
   if (stressEn.length) {
     const a = fp(stressEn), b = fp(stressHe);
     console.log('STRESS false positives, rare English tokens:', pct(a.length, stressEn.length), a.slice(0, 14).join(' '));
-    console.log('STRESS false positives, rare Hebrew tokens :', pct(b.length, stressHe.length), b.slice(0, 14).join(' '));
+    console.log(`STRESS false positives, rare ${T} tokens :`, pct(b.length, stressHe.length), b.slice(0, 14).join(' '));
   }
   const heShort = he.slice(0, 400).filter((w) => w.length === 2);
-  console.log('short Hebrew 2-letter words in a streak  :', rec(heShort, heTyped, (t) => t, 2, 2, { streak: 1 }), '| without streak:', rec(heShort, heTyped, (t) => t, 2, 2));
+  console.log(`short ${T} 2-letter words in a streak  :`, rec(heShort, heTyped, (t) => t, 2, 2, { streak: 1 }), '| without streak:', rec(heShort, heTyped, (t) => t, 2, 2));
   const enShort = en.slice(0, 400).filter((w) => w.length === 2 && /^[a-z]+$/.test(w));
   const fpShort = [...enShort, ...heShort].filter((w) => d.fixToken(w, { streak: 1 }) !== null);
   console.log('FALSE POSITIVES  valid 2-letter in streak:', pct(fpShort.length, enShort.length + heShort.length), fpShort.join(' '));
 }
 
-const dicts = { en: en.slice(0, N), he: he.slice(0, N) };
+const dicts: Record<string, string[]> = { en: en.slice(0, N), [TARGET]: he.slice(0, N) };
+for (const lang of ALSO) dicts[lang] = read(`${lang}.txt`);
 if (process.env.LEGACY) {
   const { Detector: Legacy } = await import(process.env.LEGACY);
   run('LEGACY', () => new Legacy(dicts));

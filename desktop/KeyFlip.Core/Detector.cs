@@ -27,13 +27,14 @@ public sealed class Detector
         public const double DualMinRank = 1000;
         public const double DualRatio = 30;
         public const double SandwichRank = 400;
+        public const double ModelTieMargin = 0.5;
     }
 
     private const string TrailingPunct = ".,;:!?'\"”’)]}/";
     private const string LeadingPunct = "\"(“‘{";
 
     private static readonly Regex Forbidden = new(@"[0-9@\\]|://", RegexOptions.Compiled);
-    private static readonly Regex UpperCase = new("[A-Z]", RegexOptions.Compiled);
+    private static readonly Regex UpperCase = new(@"\p{Lu}", RegexOptions.Compiled);
 
     private sealed class Lang
     {
@@ -45,6 +46,9 @@ public sealed class Detector
     }
 
     private readonly record struct Hit(int Rank, int Stripped);
+
+    /// <summary>A possible correction into one target language: a dictionary rank, or a model margin.</summary>
+    private sealed record Candidate(string Text, int? Rank, double Margin);
 
     private sealed record Source(IReadOnlyList<Lang> Langs, Layout Layout, bool IsLatin);
 
@@ -70,8 +74,19 @@ public sealed class Detector
     {
     }
 
-    /// <summary>Builds a detector from the word lists embedded in the assembly.</summary>
-    public static Detector CreateDefault() => new(ReadLines("en.txt"), ReadLines("he.txt"));
+    /// <summary>Builds a detector for English and Hebrew from the word lists embedded in the assembly.</summary>
+    public static Detector CreateDefault() => Create(Languages.Always);
+
+    /// <summary>Builds a detector for the given language ids (unknown ids are ignored) from the embedded word lists.</summary>
+    public static Detector Create(IEnumerable<string> languageIds)
+    {
+        var lists = new Dictionary<string, IReadOnlyList<string>>();
+        foreach (string id in languageIds.Distinct())
+        {
+            if (Languages.All.Any(l => l.Id == id)) lists[id] = ReadLines($"{id}.txt");
+        }
+        return new Detector(lists);
+    }
 
     private static List<string> ReadLines(string resource)
     {
@@ -173,40 +188,100 @@ public sealed class Detector
     {
         if (word.Length < 2) return null;
         if (Forbidden.IsMatch(word)) return null;
-        if (UpperCase.IsMatch(word)) return null; // names, acronyms, sentence starts, camelCase
+        if (UpperCase.IsMatch(word)) return null; // names, acronyms, sentence starts, camelCase (any script)
 
         Source? source = SourceOf(word);
         if (source is null) return null;
         Hit? typedHit = BestLookup(source.Langs, word);
 
+        var candidates = new List<Candidate>();
         foreach (Lang target in _langs.Where(l => l.Spec.IsLatin != source.IsLatin))
         {
-            string converted = source.Layout.ConvertTo(word, target.Layout);
-            bool ok = target.Spec.Word.IsMatch(converted);
+            Candidate? c = CandidateFor(source, target, word, typedHit, streak, allowModel, sandwich);
+            if (c is not null) candidates.Add(c);
+        }
+        return Choose(candidates);
+    }
 
-            if (typedHit is not null)
-            {
-                // Also a valid word as typed: flip only when the other reading is far more frequent,
-                // or when a short word sits between two corrected words.
-                Hit? hit = ok ? Lookup(target, converted) : null;
-                bool clear = (word.Length >= 3 || streak > 0) && hit is not null
-                    && typedHit.Value.Rank >= Tuning.DualMinRank && hit.Value.Rank * Tuning.DualRatio < typedHit.Value.Rank;
-                bool between = sandwich && word.Length <= 3 && hit is not null && hit.Value.Rank < Tuning.SandwichRank;
-                if ((clear || between) && IsValid(target, converted, Math.Max(streak, between ? 1 : 0))) return converted;
-                continue;
-            }
+    /// <summary>The correction into one target language, if the rules allow it.</summary>
+    private Candidate? CandidateFor(Source source, Lang target, string word, Hit? typedHit, int streak, bool allowModel, bool sandwich)
+    {
+        string converted = source.Layout.ConvertTo(word, target.Layout);
+        bool ok = target.Spec.Word.IsMatch(converted);
 
-            if (!ok) continue;
-            if (IsValid(target, converted, streak)) return converted;
-            bool abbreviation = source.IsLatin && word.Length <= Tuning.ModelVowelMaxLen
-                && !source.Langs.Any(l => l.Spec.Vowels?.IsMatch(word) == true);
-            if (allowModel && converted.Length >= Tuning.ModelMinLen && Lookup(target, converted) is null && !abbreviation
-                && ModelSaysFlip(TypedScore(source, word), ModelOf(target).Score(converted)))
-            {
-                return converted;
-            }
+        if (typedHit is not null)
+        {
+            // Also a valid word as typed: flip only when the other reading is far more frequent,
+            // or when a short word sits between two corrected words.
+            Hit? hit = ok ? Lookup(target, converted) : null;
+            bool clear = (word.Length >= 3 || streak > 0) && hit is not null
+                && typedHit.Value.Rank >= Tuning.DualMinRank && hit.Value.Rank * Tuning.DualRatio < typedHit.Value.Rank;
+            bool between = sandwich && word.Length <= 3 && hit is not null && hit.Value.Rank < Tuning.SandwichRank;
+            return (clear || between) && IsValid(target, converted, Math.Max(streak, between ? 1 : 0))
+                ? new Candidate(converted, hit!.Value.Rank, 0)
+                : null;
+        }
+
+        if (!ok) return null;
+        if (IsValid(target, converted, streak)) return new Candidate(converted, Lookup(target, converted)!.Value.Rank, 0);
+        bool abbreviation = source.IsLatin && word.Length <= Tuning.ModelVowelMaxLen
+            && !source.Langs.Any(l => l.Spec.Vowels?.IsMatch(word) == true);
+        if (allowModel && converted.Length >= Tuning.ModelMinLen && Lookup(target, converted) is null && !abbreviation)
+        {
+            double typed = TypedScore(source, word);
+            double score = ModelOf(target).Score(converted);
+            if (ModelSaysFlip(typed, score)) return new Candidate(converted, null, score - typed);
         }
         return null;
+    }
+
+    /// <summary>
+    /// Picks among corrections into different target languages (e.g. Latin letters that could be Hebrew or Russian).
+    /// Dictionary readings beat model-only ones; a reading must clearly beat the runner-up, otherwise nothing is changed.
+    /// </summary>
+    private static string? Choose(List<Candidate> candidates)
+    {
+        if (candidates.Count <= 1) return candidates.Count == 1 ? candidates[0].Text : null;
+        List<Candidate> dict = candidates.Where(c => c.Rank is not null).OrderBy(c => c.Rank).ToList();
+        if (dict.Count == 1) return dict[0].Text;
+        if (dict.Count > 1) return dict[0].Rank!.Value * Tuning.DualRatio < dict[1].Rank!.Value ? dict[0].Text : null;
+        List<Candidate> model = candidates.OrderByDescending(c => c.Margin).ToList();
+        return model[0].Margin - model[1].Margin >= Tuning.ModelTieMargin ? model[0].Text : null;
+    }
+
+    /// <summary>
+    /// Manual conversion: the language a run of Latin words was meant to be in (e.g. Hebrew or Russian), by how many
+    /// converted words are in each dictionary; the models only break a tie. Null when no other language is enabled.
+    /// </summary>
+    public (string Id, Layout Layout)? PickTarget(IReadOnlyList<string> latinWords)
+    {
+        Lang? latin = _langs.FirstOrDefault(l => l.Spec.IsLatin);
+        List<Lang> targets = _langs.Where(l => !l.Spec.IsLatin).ToList();
+        if (latin is null || targets.Count == 0) return null;
+        if (targets.Count == 1) return (targets[0].Spec.Id, targets[0].Layout);
+        List<string> Converted(Lang lang) => latinWords
+            .Select(w => latin.Layout.ConvertTo(w.ToLowerInvariant(), lang.Layout))
+            .Where(w => lang.Spec.Word.IsMatch(w))
+            .ToList();
+        var ranked = targets
+            .Select(lang => (Lang: lang, Hits: Converted(lang).Count(w => Lookup(lang, w) is not null)))
+            .OrderByDescending(r => r.Hits)
+            .ToList();
+        Lang best = ranked[0].Lang;
+        var tied = ranked.Where(r => r.Hits == ranked[0].Hits).ToList();
+        if (tied.Count > 1)
+        {
+            // Only when the dictionaries cannot decide: which reading looks more like real words.
+            best = tied.OrderByDescending(r => Converted(r.Lang).Sum(w => ModelOf(r.Lang).Score(w))).First().Lang;
+        }
+        return (best.Spec.Id, best.Layout);
+    }
+
+    /// <summary>The enabled non-Latin language whose script a token is written in, or null.</summary>
+    public (string Id, Layout Layout)? OtherLanguageOf(string token)
+    {
+        Lang? lang = _langs.FirstOrDefault(l => !l.Spec.IsLatin && l.Spec.Letter.IsMatch(token));
+        return lang is null ? null : (lang.Spec.Id, lang.Layout);
     }
 
     /// <summary>

@@ -2,7 +2,9 @@ import { convertLayout, LAYOUTS } from './layouts.ts';
 
 export type Direction = 'en-to-he' | 'he-to-en';
 
-const HEBREW_LETTER = /[א-ת]/;
+const HEBREW_LETTER = /[\u05D0-\u05EA]/;
+// Any letter of a non-Latin script KeyFlip supports (Hebrew, Cyrillic); 'he-to-en' means "other script -> Latin".
+const OTHER_LETTER = /[\u05D0-\u05EA\u0400-\u04FF]/;
 const LATIN_LETTER = /[A-Za-z]/;
 
 export function hasHebrew(text: string): boolean {
@@ -21,7 +23,7 @@ export function detectDirection(text: string): Direction | null {
   let he = 0;
   let latin = 0;
   for (const ch of text) {
-    if (HEBREW_LETTER.test(ch)) he++;
+    if (OTHER_LETTER.test(ch)) he++;
     else if (LATIN_LETTER.test(ch)) latin++;
   }
   if (he === 0 && latin === 0) return null;

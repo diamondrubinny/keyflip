@@ -31,3 +31,18 @@ Notes
 - Frequency-weighted recall is capped by two- and three-letter words that are also valid in the other language (for example Hebrew `על` typed as `gk`); the streak and repair rules recover many of them in running text but not when a short word stands alone.
 - False positives were measured on rare words, which are a small share of real typing; every automatic fix can be undone (`Ctrl+Z` in the browser, `Ctrl+Alt+Space` in the Windows app).
 - The test data is movie-subtitle vocabulary (FrequencyWords). Formal, medical or technical text may behave differently. Treat all numbers as indicative.
+
+## Russian (added in 0.2)
+Same method (`TARGET=ru npm run eval`), dictionary cut at 80,000 words, unseen words ranked 80,000-125,000:
+
+| Metric | English + Russian | English + Hebrew + Russian |
+|---|---|---|
+| Russian typed on an English layout, unseen, 5+ letters | 96.6% | 93.3% |
+| English typed on a Russian layout, unseen, 5+ letters | 97.4% | 97.4% |
+| Frequency-weighted recall (Russian / English) | 89.3% / 89.2% | 88.5% / 89.2% |
+| Wrongly "fixed" rare unseen English / Russian words | 0.07% / 0.09% | 1.06% / 0.09% |
+| Stress test, rare English / Russian tokens | 0.05% / 0.07% | 0.69% / 0.07% |
+
+Enabling Hebrew next to Russian costs some Russian recall and adds the Hebrew false positives on English words, which is why
+optional languages are only on when the user actually uses them. With all three on, Hebrew typed on an English layout drops
+from 90.9% to 89.3% (unseen, 5+ letters).

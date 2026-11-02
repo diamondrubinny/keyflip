@@ -76,6 +76,20 @@ const PAGE = `<!doctype html><meta charset=utf-8><body>
     await page.waitForTimeout(300);
     assert.equal(await val('#inp'), 'אלת');
   });
+  await check('russian enabled: auto fix and manual conversion', async () => {
+    await worker.evaluate(() => chrome.storage.local.set({ languages: ['en', 'he', 'ru'] }));
+    await page.fill('#inp', ''); await page.click('#inp'); await page.waitForTimeout(2500); // loads data/ru.txt
+    await type('#inp', 'ghbdtn rfr ltkf ');
+    assert.equal(await val('#inp'), 'привет как дела ');
+    await page.fill('#inp', 'cgfcb,j');
+    await page.click('#inp'); await page.keyboard.press('End');
+    await worker.evaluate(async () => { const [t] = await chrome.tabs.query({ active: true }); await chrome.tabs.sendMessage(t.id, { type: 'convert' }); });
+    await page.waitForTimeout(1000);
+    assert.equal(await val('#inp'), 'спасибо');
+    await page.fill('#inp', ''); await type('#inp', 'akuo ');
+    assert.equal(await val('#inp'), 'שלום ');
+    await worker.evaluate(() => chrome.storage.local.remove('languages'));
+  });
   await check('disabled host respected', async () => {
     await worker.evaluate(() => chrome.storage.local.set({ disabledHosts: ['127.0.0.1'] }));
     await page.waitForTimeout(300);

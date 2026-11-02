@@ -10,6 +10,7 @@
     <EmbeddedResource Include="..\..\shared\layouts\*.json" LogicalName="layouts.%(Filename).json" />
     <EmbeddedResource Include="..\..\extension\src\data\en.txt" LogicalName="en.txt" />
     <EmbeddedResource Include="..\..\extension\src\data\he.txt" LogicalName="he.txt" />
+    <EmbeddedResource Include="..\..\extension\src\data\ru.txt" LogicalName="ru.txt" />
   </ItemGroup>
 
 </Project>

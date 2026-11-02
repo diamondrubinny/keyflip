@@ -1,7 +1,7 @@
 /**
  * Language definitions used by the detector. A language has a word list (frequency ordered, loaded elsewhere),
  * the layout it is typed on, and the few morphology rules the detector understands.
- * Phase 1 of docs/MULTILANG_PLAN.md: English and Hebrew only, with behaviour identical to detection v2.
+ * See docs/MULTILANG_PLAN.md. Every correction pairs a Latin language with a language in another script.
  */
 export interface LanguageSpec {
   id: string;
@@ -28,7 +28,7 @@ export const LANGUAGES: Readonly<Record<string, LanguageSpec>> = {
     side: 'latin',
     layout: 'us',
     word: /^[a-z]+$/,
-    typed: /^[a-z';,./`]+$/,
+    typed: /^[a-z';,./`[\]]+$/, // [ ] ; ' , . ` are letters on the Russian layout
     letter: /[a-z]/,
     suffixes: ["'s", 's', 'es', 'ed', 'd', 'ing', 'ly', "'ll", "'re", "'ve", "n't", 'er', 'est', 'ies'],
     prefixes: '',
@@ -43,5 +43,15 @@ export const LANGUAGES: Readonly<Record<string, LanguageSpec>> = {
     letter: /[א-ת]/,
     suffixes: [],
     prefixes: 'והבלמשכ',
+  },
+  ru: {
+    id: 'ru',
+    side: 'other',
+    layout: 'ru',
+    word: /^[а-яё]+$/,
+    typed: /^[а-яё]+$/,
+    letter: /[а-яё]/,
+    suffixes: [], // the word list already holds inflected forms
+    prefixes: '',
   },
 };

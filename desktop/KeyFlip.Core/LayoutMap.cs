@@ -24,6 +24,9 @@ public static class LayoutMap
 
     public static bool HasHebrew(string text) => text.Any(IsHebrewLetter);
 
+    /// <summary>A letter of a non-Latin script KeyFlip supports (Hebrew, Cyrillic).</summary>
+    public static bool IsOtherLetter(char c) => IsHebrewLetter(c) || (c >= '\u0400' && c <= '\u04FF');
+
     /// <summary>Maps every character between the US and Hebrew layouts; unmapped characters are kept.</summary>
     public static string Convert(string text, Direction direction) =>
         direction == Direction.EnToHe ? Layouts.Us.ConvertTo(text, Layouts.Hebrew) : Layouts.Hebrew.ConvertTo(text, Layouts.Us);
@@ -34,7 +37,7 @@ public static class LayoutMap
         int he = 0, latin = 0;
         foreach (char ch in text)
         {
-            if (IsHebrewLetter(ch)) he++;
+            if (IsOtherLetter(ch)) he++;
             else if (IsLatinLetter(ch)) latin++;
         }
         if (he == 0 && latin == 0) return null;

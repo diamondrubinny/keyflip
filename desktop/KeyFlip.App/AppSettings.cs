@@ -57,6 +57,21 @@ internal sealed class AppSettings
 
     public List<string> IgnoredProcesses { get; set; } = new(DefaultIgnoredProcesses);
 
+    /// <summary>
+    /// Optional languages the user turned on (e.g. "ru"). Null means automatic: every optional language whose keyboard
+    /// layout is installed in Windows. English and Hebrew are always on.
+    /// </summary>
+    public List<string>? Languages { get; set; }
+
+    public IReadOnlyList<string> EnabledLanguages()
+    {
+        IEnumerable<string> optional = Languages ?? InstalledLayouts.LanguageIds();
+        return KeyFlip.Core.Languages.Always
+            .Concat(optional.Where(id => KeyFlip.Core.Languages.Optional.Contains(id)))
+            .Distinct()
+            .ToList();
+    }
+
     private static string FilePath => Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "KeyFlip", "settings.json");
 

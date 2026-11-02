@@ -4,7 +4,7 @@ namespace KeyFlip.Core;
 
 /// <summary>
 /// A language the detector understands: its layout and the few morphology rules it uses.
-/// Port of extension/src/languages.ts (phase 1 of docs/MULTILANG_PLAN.md: English and Hebrew).
+/// Port of extension/src/languages.ts (see docs/MULTILANG_PLAN.md).
 /// </summary>
 public sealed record LanguageSpec(
     string Id,
@@ -24,7 +24,7 @@ public static class Languages
     public static readonly LanguageSpec English = new(
         "en", IsLatin: true, "us",
         Word: new Regex("^[a-z]+$", Opts),
-        Typed: new Regex(@"^[a-z';,./`]+$", Opts),
+        Typed: new Regex(@"^[a-z';,./`\[\]]+$", Opts), // [ ] ; ' , . ` are letters on the Russian layout
         Letter: new Regex("[a-z]", Opts),
         Suffixes: new[] { "'s", "s", "es", "ed", "d", "ing", "ly", "'ll", "'re", "'ve", "n't", "er", "est", "ies" },
         Prefixes: "",
@@ -39,6 +39,20 @@ public static class Languages
         Prefixes: "והבלמשכ",
         Vowels: null);
 
+    public static readonly LanguageSpec Russian = new(
+        "ru", IsLatin: false, "ru",
+        Word: new Regex("^[а-яё]+$", Opts),
+        Typed: new Regex("^[а-яё]+$", Opts),
+        Letter: new Regex("[а-яё]", Opts),
+        Suffixes: Array.Empty<string>(), // the word list already holds inflected forms
+        Prefixes: "",
+        Vowels: null);
+
     /// <summary>All languages, in the order the detector considers them.</summary>
-    public static readonly IReadOnlyList<LanguageSpec> All = new[] { English, Hebrew };
+    public static readonly IReadOnlyList<LanguageSpec> All = new[] { English, Hebrew, Russian };
+
+    /// <summary>Languages that are always on; the others are optional.</summary>
+    public static readonly IReadOnlyList<string> Always = new[] { "en", "he" };
+
+    public static readonly IReadOnlyList<string> Optional = new[] { "ru" };
 }

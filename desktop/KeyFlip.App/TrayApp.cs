@@ -26,7 +26,7 @@ internal sealed class TrayApp : ApplicationContext
     }
 
     private readonly AppSettings _settings = AppSettings.Load();
-    private readonly Detector _detector = Detector.CreateDefault();
+    private readonly Detector _detector;
     private readonly KeyboardMonitor _monitor = new();
     private readonly MessageWindow _window = new();
     private readonly NotifyIcon _tray;
@@ -40,6 +40,7 @@ internal sealed class TrayApp : ApplicationContext
 
     public TrayApp()
     {
+        _detector = Detector.Create(_settings.EnabledLanguages());
         _autoItem = new ToolStripMenuItem("תיקון אוטומטי") { CheckOnClick = true, Checked = _settings.Auto };
         _autoItem.CheckedChanged += (_, _) =>
         {
@@ -314,7 +315,7 @@ internal sealed class TrayApp : ApplicationContext
                 string? selected = await TryReadSelectionAsync();
                 if (!string.IsNullOrEmpty(selected))
                 {
-                    string converted = LayoutMap.ConvertAuto(selected);
+                    string converted = ManualConverter.Convert(selected, _detector);
                     if (converted != selected) TextInjector.Type(converted);
                     _monitor.Line.Reset();
                     return;
@@ -326,7 +327,7 @@ internal sealed class TrayApp : ApplicationContext
             int start = LayoutMap.TrailingRunStart(line);
             if (start >= line.Length) return;
             string run = line[start..];
-            string fixedRun = LayoutMap.ConvertAuto(run);
+            string fixedRun = ManualConverter.Convert(run, _detector);
             if (fixedRun == run) return;
             TextInjector.Backspace(run.Length);
             TextInjector.Type(fixedRun);

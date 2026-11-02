@@ -106,4 +106,72 @@ public class CoreTests
         var model = new NgramModel(words);
         Assert.True(model.Score("information") > model.Score("xqzvkpw"));
     }
+
+    private static readonly Dictionary<string, Detector> DetectorsByLanguages = new();
+
+    private static Detector DetectorFor(JsonElement languages)
+    {
+        string[] ids = languages.EnumerateArray().Select(l => l.GetString()!).ToArray();
+        string key = string.Join(',', ids);
+        lock (DetectorsByLanguages)
+        {
+            if (!DetectorsByLanguages.TryGetValue(key, out Detector? d)) DetectorsByLanguages[key] = d = Detector.Create(ids);
+            return d;
+        }
+    }
+
+    [Fact]
+    public void Russian_Layout_RoundTripAndKnownWords()
+    {
+        Layout us = Layouts.Us, ru = Layouts.Get("ru");
+        Assert.Equal("привет", us.ConvertTo("ghbdtn", ru));
+        Assert.Equal("hello", ru.ConvertTo("руддщ", us));
+        const string s = "qwertyuiop[]asdfghjkl;'zxcvbnm,.`";
+        Assert.Equal(s, ru.ConvertTo(us.ConvertTo(s, ru), us));
+    }
+
+    [Fact]
+    public void DetectLanguages_SharedCases()
+    {
+        foreach (JsonElement c in Cases("detectLanguages").EnumerateArray())
+        {
+            string token = c.GetProperty("token").GetString()!;
+            int streak = c.TryGetProperty("streak", out JsonElement st) ? st.GetInt32() : 0;
+            bool sandwich = c.TryGetProperty("sandwich", out JsonElement sw) && sw.GetBoolean();
+            Fix? actual = DetectorFor(c.GetProperty("languages")).FixToken(token, streak, sandwich);
+            JsonElement expected = c.GetProperty("fix");
+            string label = $"{c.GetProperty("languages")}: '{token}'";
+            if (expected.ValueKind == JsonValueKind.Null)
+            {
+                Assert.True(actual is null, $"{label} should be left alone but became '{actual?.Replacement}'");
+            }
+            else
+            {
+                Assert.True(actual is not null, $"{label} should become '{expected.GetProperty("replacement").GetString()}'");
+                Assert.Equal(expected.GetProperty("consumed").GetInt32(), actual!.Consumed);
+                Assert.Equal(expected.GetProperty("replacement").GetString(), actual.Replacement);
+            }
+        }
+    }
+
+    [Fact]
+    public void ManualConvert_SharedCases()
+    {
+        foreach (JsonElement c in Cases("manualConvert").EnumerateArray())
+        {
+            Detector d = DetectorFor(c.GetProperty("languages"));
+            Assert.Equal(c.GetProperty("expected").GetString(), ManualConverter.Convert(c.GetProperty("input").GetString()!, d));
+        }
+    }
+
+    [Fact]
+    public void ManualConvert_EqualsConvertAuto_WithHebrewAndEnglishOnly()
+    {
+        Detector d = Detector.Create(new[] { "en", "he" });
+        foreach (JsonElement c in Cases("convertAuto").EnumerateArray())
+        {
+            string input = c.GetProperty("input").GetString()!;
+            Assert.Equal(LayoutMap.ConvertAuto(input), ManualConverter.Convert(input, d));
+        }
+    }
 }
