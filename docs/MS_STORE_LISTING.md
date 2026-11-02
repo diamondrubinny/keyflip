@@ -47,7 +47,8 @@ GOOD TO KNOW
 • Detection combines word lists with a statistical model; very rare words may occasionally be skipped or corrected wrongly – undo is one shortcut away.
 • Open source (Apache-2.0): https://github.com/diamondrubinny/keyflip
 
-**What's new in this version:** First release in the Microsoft Store.
+**What's new in this version (0.2.0):**
+Much better detection: words missing from the dictionary, short words like "לא" and "את" in a sentence, and words that are valid in both languages are now fixed (unseen words: 57% -> 91% for Hebrew, 13% -> 88% for English). New: Russian and Arabic, turned on automatically when their keyboard is installed in Windows.
 
 **Product features (each ≤ 200 chars):**
 1. Automatically fixes Hebrew ↔ English words typed in the wrong keyboard layout
@@ -97,7 +98,8 @@ KeyFlip מתקן טקסט שהוקלד בפריסת המקלדת הלא נכונ
 • הזיהוי מבוסס מילון; מילים נדירות מאוד עלולות לעיתים לא להיות מזוהות או להיות מתוקנות בטעות – הביטול במרחק קיצור אחד.
 • קוד פתוח (Apache-2.0): https://github.com/diamondrubinny/keyflip
 
-**מה חדש בגרסה:** גרסה ראשונה ב-Microsoft Store.
+**מה חדש בגרסה (0.2.0):**
+זיהוי משופר בהרבה: מילים שלא במילון, מילים קצרות כמו "לא" ו"את" בתוך משפט, ומילים שתקינות בשתי השפות מתוקנות עכשיו (מילים לא מוכרות: 57% ← 91% בעברית, 13% ← 88% באנגלית). חדש: רוסית וערבית, שנדלקות אוטומטית כשהמקלדת שלהן מותקנת ב-Windows.
 
 **תכונות:**
 1. תיקון אוטומטי של מילים שהוקלדו בשפה הלא נכונה (עברית ↔ אנגלית)

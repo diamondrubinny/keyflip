@@ -3,6 +3,8 @@
 All notable changes are documented here. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/).
 
 ## [Unreleased]
+
+## [0.2.0] - 2026-11-02
 ### Added
 - Arabic (step 3 of `docs/MULTILANG_PLAN.md`): `shared/layouts/ar.json` (Arabic 101, including Shift letters أ إ آ and the لا key), a 150k-word Arabic list, and Arabic ↔ English detection in both apps (`Hkh` -> أنا, `lvpfh` -> مرحبا, `لاخخن` -> book, `b` -> لا inside a run of fixes). Unseen 5+ letter words: 91.7% / 93.6% recovered, 0.12-0.18% wrong corrections. Enabled automatically when an Arabic keyboard is installed or Arabic is a browser language.
 - Layouts may map a key to several characters and have Shift entries; text that could come from different keys is read every possible way.
