@@ -5,7 +5,7 @@ Thanks for helping! Issues and pull requests are welcome in English or Hebrew.
 ## Ground rules
 - **Local only.** No network requests, telemetry, analytics or remote code – ever.
 - **Privacy first.** Never log or persist typed text. Never include real passwords or private text in issues, tests or fixtures.
-- **Two implementations, one behaviour.** The extension (TypeScript) and the Windows app (C#) share `shared/mapping.json` and `shared/test-cases.json`. A behaviour change needs a shared test case and both implementations updated.
+- **Two implementations, one behaviour.** The extension (TypeScript) and the Windows app (C#) share `shared/layouts/*.json` and `shared/test-cases.json`. A behaviour change needs a shared test case and both implementations updated.
 - **Accessibility.** UI changes keep RTL, keyboard navigation, visible focus and AA contrast (`npm run a11y` must pass).
 
 ## Setup

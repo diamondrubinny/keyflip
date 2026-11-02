@@ -89,7 +89,7 @@ CI: `.github/workflows/ci.yml` builds and tests both products on every push to `
 |---|---|
 | `extension/` | Chrome extension (TypeScript, esbuild) |
 | `desktop/` | Windows tray app (`KeyFlip.App`), shared core (`KeyFlip.Core`), tests; `KeyFlip.slnx` |
-| `shared/` | `mapping.json` (layout map, single source of truth) and `test-cases.json` |
+| `shared/` | `layouts/*.json` (one keyboard layout per file, keyed by the physical US QWERTY key; single source of truth) and `test-cases.json` |
 | `desktop/KeyFlip.Package/` | Microsoft Store MSIX: `AppxManifest.xml`, logos, `build-msix.ps1` |
 | `docs/` | Privacy, terms, accessibility, code signing, store listings (Chrome + Microsoft Store), production checklist |
 

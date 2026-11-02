@@ -1,11 +1,4 @@
-import mapping from '../../shared/mapping.json' with { type: 'json' };
-
-const EN_TO_HE = new Map<string, string>();
-const HE_TO_EN = new Map<string, string>();
-for (const [en, he] of mapping.pairs as [string, string][]) {
-  EN_TO_HE.set(en, he);
-  HE_TO_EN.set(he, en);
-}
+import { convertLayout, LAYOUTS } from './layouts.ts';
 
 export type Direction = 'en-to-he' | 'he-to-en';
 
@@ -16,17 +9,11 @@ export function hasHebrew(text: string): boolean {
   return HEBREW_LETTER.test(text);
 }
 
-/** Maps each character through the layout table; unmapped characters (digits, spaces, emoji) are kept. */
+/** Maps each character between the US and Hebrew layouts; unmapped characters (digits, spaces, emoji) are kept. */
 export function convert(text: string, direction: Direction): string {
-  let out = '';
-  for (const ch of text) {
-    if (direction === 'en-to-he') {
-      out += EN_TO_HE.get(ch.toLowerCase()) ?? ch;
-    } else {
-      out += HE_TO_EN.get(ch) ?? ch;
-    }
-  }
-  return out;
+  return direction === 'en-to-he'
+    ? convertLayout(text, LAYOUTS.us!, LAYOUTS.he!)
+    : convertLayout(text, LAYOUTS.he!, LAYOUTS.us!);
 }
 
 /** Chooses the direction by majority of letters. Returns null when the text has no letters. */
