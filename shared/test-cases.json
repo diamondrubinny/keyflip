@@ -7084,6 +7084,80 @@
       ],
       "token": "maclean",
       "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "e",
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "e",
+      "streak": 1,
+      "fix": {
+        "consumed": 1,
+        "replacement": "у"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "d",
+      "streak": 1,
+      "fix": {
+        "consumed": 1,
+        "replacement": "в"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "ф",
+      "streak": 1,
+      "fix": {
+        "consumed": 1,
+        "replacement": "a"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "ru"
+      ],
+      "token": "q",
+      "streak": 1,
+      "fix": null
+    },
+    {
+      "languages": [
+        "en",
+        "he"
+      ],
+      "token": "ש",
+      "streak": 1,
+      "fix": {
+        "consumed": 1,
+        "replacement": "a"
+      }
+    },
+    {
+      "languages": [
+        "en",
+        "he"
+      ],
+      "token": "t",
+      "streak": 1,
+      "fix": null
     }
   ],
   "manualConvert": [

@@ -184,8 +184,9 @@ export class Detector {
 
   /** Decides whether one word (without surrounding punctuation) was typed in the wrong layout. */
   private fixWord(word: string, streak: number, allowModel: boolean, sandwich: boolean): string | null {
-    // One letter is never a word to fix, except a key that types a whole word, inside a run of fixes ("b" = لا).
-    if (word.length < 2 && !((streak > 0 || sandwich) && this.wordKeys.has(word))) return null;
+    // One letter is only fixed inside a run of fixes: a key that types a whole word ("b" = لا) or a one-letter word
+    // of the target language (Russian "e" = у).
+    if (word.length < 2 && !(streak > 0 || sandwich)) return null;
     if (/[0-9@\\]|:\/\//.test(word)) return null;
     // Capitals mean names, acronyms, sentence starts or camelCase (any script) - except Shift letters of an
     // enabled layout (Arabic أ is Shift+H). For such tokens the model needs a larger margin.
@@ -235,6 +236,10 @@ export class Detector {
     allowModel: boolean,
     sandwich: boolean,
   ): Candidate | null {
+    if (word.length === 1) {
+      if (target.spec.singleLetters?.includes(converted)) return { text: converted, rank: 0 };
+      if (!this.wordKeys.has(word)) return null;
+    }
     const ok = target.spec.word.test(converted);
 
     if (typedHit !== undefined) {

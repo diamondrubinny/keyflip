@@ -15,7 +15,8 @@ public sealed record LanguageSpec(
     Regex Letter,
     IReadOnlyList<string> Suffixes,
     string Prefixes,
-    Regex? Vowels);
+    Regex? Vowels,
+    string SingleLetters = "");
 
 public static class Languages
 {
@@ -28,7 +29,8 @@ public static class Languages
         Letter: new Regex("[a-z]", Opts),
         Suffixes: new[] { "'s", "s", "es", "ed", "d", "ing", "ly", "'ll", "'re", "'ve", "n't", "er", "est", "ies" },
         Prefixes: "",
-        Vowels: new Regex("[aeiouy]", Opts));
+        Vowels: new Regex("[aeiouy]", Opts),
+        SingleLetters: "a");
 
     public static readonly LanguageSpec Hebrew = new(
         "he", IsLatin: false, "he",
@@ -46,7 +48,8 @@ public static class Languages
         Letter: new Regex("[а-яё]", Opts),
         Suffixes: Array.Empty<string>(), // the word list already holds inflected forms
         Prefixes: "",
-        Vowels: null);
+        Vowels: null,
+        SingleLetters: "вускиаоя");
 
     // Letters ء..غ and ف..ي (no tatweel, no diacritics). أ إ آ are Shift keys on the Arabic layout.
     public static readonly LanguageSpec Arabic = new(
