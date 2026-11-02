@@ -3,7 +3,7 @@
   <!-- Shared by every desktop project. The version must match extension/package.json and
        extension/static/manifest.json (enforced in CI by extension/scripts/check-version.mjs). -->
   <PropertyGroup>
-    <Version>0.1.0</Version>
+    <Version>0.2.0</Version>
     <Product>KeyFlip</Product>
     <Company>KeyFlip</Company>
     <Copyright>Copyright 2026 Diamond Rubinny. Licensed under Apache-2.0.</Copyright>
