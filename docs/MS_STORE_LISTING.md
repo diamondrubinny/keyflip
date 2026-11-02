@@ -23,12 +23,17 @@
 **Product name:** KeyFlip
 
 **Short description (≤ 270 chars – used for Windows/Xbox in some views):**
-Typed `akuo` instead of `שלום`? KeyFlip fixes words typed in the wrong keyboard layout – Hebrew ↔ English – right after you press Space. Everything runs locally; nothing leaves your PC.
+Typed `akuo` instead of `שלום`, or `ghbdtn` instead of `привет`? KeyFlip fixes words typed in the wrong keyboard layout – Hebrew, Russian or Arabic ↔ English – right after you press Space. Everything runs locally.
 
 **Description:**
-KeyFlip fixes text typed in the wrong keyboard layout between Hebrew and English.
+KeyFlip fixes text typed in the wrong keyboard layout: Hebrew, Russian or Arabic ↔ English.
 
 Forgot to switch the language and typed `akuo jcrho`? KeyFlip turns it into `שלום חברים` as soon as you finish the word. Typed `יקךךם` instead of `hello`? Fixed too.
+
+LANGUAGES
+• Hebrew ↔ English: always on.
+• Russian ↔ English (`ghbdtn` → привет) and Arabic ↔ English (`Hkh` → أنا): turned on automatically when the Russian or Arabic keyboard is installed in Windows.
+• Short words in a sentence (`kt tck` → לא אבל) and words missing from the dictionary are recognised too.
 
 HOW IT WORKS
 • Automatic: after each word (Space), KeyFlip checks whether it was typed in the wrong layout and fixes it.
@@ -51,7 +56,7 @@ GOOD TO KNOW
 Much better detection: words missing from the dictionary, short words like "לא" and "את" in a sentence, and words that are valid in both languages are now fixed (unseen words: 57% -> 91% for Hebrew, 13% -> 88% for English). New: Russian and Arabic, turned on automatically when their keyboard is installed in Windows.
 
 **Product features (each ≤ 200 chars):**
-1. Automatically fixes Hebrew ↔ English words typed in the wrong keyboard layout
+1. Automatically fixes Hebrew, Russian and Arabic ↔ English words typed in the wrong keyboard layout
 2. Undo any fix instantly with Ctrl+Alt+Space
 3. Convert selected text or the last typed words with one shortcut
 4. 100% local – no internet, no analytics, no account
@@ -59,7 +64,7 @@ Much better detection: words missing from the dictionary, short words like "לא
 6. Option to start with Windows; lightweight tray app
 7. Free and open source
 
-**Search terms (≤ 7):** Hebrew keyboard · wrong layout · keyboard layout · Hebrew English · typing fix · language switcher · Hebrew typing
+**Search terms (≤ 7):** Hebrew keyboard · Russian keyboard · Arabic keyboard · wrong layout · keyboard layout · typing fix · language switcher
 
 **Copyright and trademark info:** © 2026 Diamond Rubinny. Licensed under Apache-2.0.
 
@@ -74,12 +79,17 @@ Much better detection: words missing from the dictionary, short words like "לא
 **Product name:** KeyFlip
 
 **תיאור קצר:**
-הקלדתם `akuo` במקום `שלום`? KeyFlip מתקן מילים שהוקלדו בשפה הלא נכונה – עברית ↔ אנגלית – מיד אחרי רווח. הכול רץ מקומית, שום מידע לא יוצא מהמחשב.
+הקלדתם `akuo` במקום `שלום`? KeyFlip מתקן מילים שהוקלדו בשפה הלא נכונה – עברית, רוסית או ערבית ↔ אנגלית – מיד אחרי רווח. הכול רץ מקומית, שום מידע לא יוצא מהמחשב.
 
 **תיאור:**
-KeyFlip מתקן טקסט שהוקלד בפריסת המקלדת הלא נכונה, בין עברית לאנגלית.
+KeyFlip מתקן טקסט שהוקלד בפריסת המקלדת הלא נכונה: עברית, רוסית או ערבית ↔ אנגלית.
 
 שכחתם להחליף שפה והקלדתם `akuo jcrho`? KeyFlip הופך את זה ל-`שלום חברים` ברגע שסיימתם את המילה. הקלדתם `יקךךם` במקום `hello`? גם זה מתוקן.
+
+שפות
+• עברית ↔ אנגלית: תמיד פעיל.
+• רוסית ↔ אנגלית (`ghbdtn` ← привет) וערבית ↔ אנגלית (`Hkh` ← أنا): נדלקות אוטומטית כשהמקלדת הרוסית או הערבית מותקנת ב-Windows.
+• גם מילים קצרות בתוך משפט (`kt tck` ← לא אבל) ומילים שאינן במילון מזוהות.
 
 איך זה עובד
 • אוטומטי: אחרי כל מילה (רווח) KeyFlip בודק אם היא הוקלדה בשפה הלא נכונה ומתקן אותה.
@@ -95,14 +105,14 @@ KeyFlip מתקן טקסט שהוקלד בפריסת המקלדת הלא נכונ
 
 כדאי לדעת
 • לא פועל בחלונות שרצים כמנהל מערכת.
-• הזיהוי מבוסס מילון; מילים נדירות מאוד עלולות לעיתים לא להיות מזוהות או להיות מתוקנות בטעות – הביטול במרחק קיצור אחד.
+• הזיהוי משלב מילונים ומודל סטטיסטי; מילים נדירות מאוד עלולות לעיתים לא להיות מזוהות או להיות מתוקנות בטעות – הביטול במרחק קיצור אחד.
 • קוד פתוח (Apache-2.0): https://github.com/diamondrubinny/keyflip
 
 **מה חדש בגרסה (0.2.0):**
 זיהוי משופר בהרבה: מילים שלא במילון, מילים קצרות כמו "לא" ו"את" בתוך משפט, ומילים שתקינות בשתי השפות מתוקנות עכשיו (מילים לא מוכרות: 57% ← 91% בעברית, 13% ← 88% באנגלית). חדש: רוסית וערבית, שנדלקות אוטומטית כשהמקלדת שלהן מותקנת ב-Windows.
 
 **תכונות:**
-1. תיקון אוטומטי של מילים שהוקלדו בשפה הלא נכונה (עברית ↔ אנגלית)
+1. תיקון אוטומטי של מילים שהוקלדו בשפה הלא נכונה (עברית, רוסית וערבית ↔ אנגלית)
 2. ביטול מיידי של כל תיקון עם Ctrl+Alt+Space
 3. המרת טקסט מסומן או המילים האחרונות בקיצור אחד
 4. 100% מקומי – בלי אינטרנט, בלי אנליטיקה, בלי חשבון
@@ -110,19 +120,19 @@ KeyFlip מתקן טקסט שהוקלד בפריסת המקלדת הלא נכונ
 6. אפשרות הפעלה עם Windows; תוכנת מגש קלה
 7. חינמי וקוד פתוח
 
-**מילות חיפוש:** מקלדת עברית · שפה שגויה · החלפת שפה · עברית אנגלית · תיקון הקלדה · KeyFlip · תיקון שפה
+**מילות חיפוש:** מקלדת עברית · מקלדת רוסית · מקלדת ערבית · שפה שגויה · החלפת שפה · תיקון הקלדה · KeyFlip
 
 **זכויות יוצרים:** © 2026 Diamond Rubinny. ברישיון Apache-2.0.
 
 ---
 
-## Screenshots (חובה – לפחות 1, PNG, 1366×768 ומעלה; מומלץ 3–4)
-לצלם ב-Windows אחרי התקנת ה-MSIX (Win+Shift+S):
-1. Notepad עם `akuo jcrho` → `שלום חברים` (לפני/אחרי, או אחרי בלבד)
-2. תפריט המגש פתוח (לחיצה ימנית על האייקון)
-3. חלון "פרטיות ומידע"
-4. Word/Outlook עם תיקון באנגלית (`יקךךם` → `hello`)
-כיתוב מוצע: "Fixes wrong-layout words as you type" / "Everything stays on your PC" / "Simple tray menu".
+## Screenshots (חובה – לפחות 1, PNG, 1366×768 ומעלה; מומלץ 4–5)
+לצלם ב-Windows אחרי התקנת גרסה 0.2.0 (Win+Shift+S). ב-Notepad, עם המקלדת האנגלית פעילה:
+1. `akuo jcrho ` ← `שלום חברים` (עדיף לפני/אחרי). כיתוב: "Fixes wrong-layout words as you type"
+2. `kt tck ` ← `לא אבל` (מילים קצרות בתוך משפט). כיתוב: "Even short words in a sentence"
+3. **חדש – רוסית** (צריך להוסיף מקלדת רוסית ב-Windows: הגדרות ← זמן ושפה ← שפה ואזור ← הוספת שפה ← Русский): `ghbdtn rfr ltkf ` ← `привет как дела`. כיתוב: "Russian ↔ English"
+4. **חדש – ערבית** (להוסיף מקלדת ערבית באותה דרך): `Hkh lvpfh ` ← `أنا مرحبا`. כיתוב: "Arabic ↔ English"
+5. תפריט המגש פתוח (לחיצה ימנית על האייקון). כיתוב: "Simple tray menu – everything stays on your PC"
 
 Store logo (אופציונלי): `store-icon-300.png` (1:1, 300×300).
 
