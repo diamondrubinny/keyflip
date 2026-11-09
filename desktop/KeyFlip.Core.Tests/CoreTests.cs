@@ -109,14 +109,26 @@ public class CoreTests
 
     private static readonly Dictionary<string, Detector> DetectorsByLanguages = new();
 
-    private static Detector DetectorFor(JsonElement languages)
+    private static Detector DetectorFor(JsonElement testCase)
     {
-        string[] ids = languages.EnumerateArray().Select(l => l.GetString()!).ToArray();
-        string key = string.Join(',', ids);
+        string[] ids = testCase.GetProperty("languages").EnumerateArray().Select(l => l.GetString()!).ToArray();
+        string latinLayout = testCase.TryGetProperty("latinLayout", out JsonElement ll) ? ll.GetString()! : "us";
+        string key = $"{latinLayout}:{string.Join(',', ids)}";
         lock (DetectorsByLanguages)
         {
-            if (!DetectorsByLanguages.TryGetValue(key, out Detector? d)) DetectorsByLanguages[key] = d = Detector.Create(ids);
+            if (!DetectorsByLanguages.TryGetValue(key, out Detector? d)) DetectorsByLanguages[key] = d = Detector.Create(ids, latinLayout);
             return d;
+        }
+    }
+
+    [Fact]
+    public void ConvertLayouts_SharedCases()
+    {
+        foreach (JsonElement c in Cases("convertLayouts").EnumerateArray())
+        {
+            Layout from = Layouts.Get(c.GetProperty("from").GetString()!), to = Layouts.Get(c.GetProperty("to").GetString()!);
+            string input = c.GetProperty("input").GetString()!;
+            Assert.Equal(c.GetProperty("expected").GetString(), from.ConvertTo(input, to));
         }
     }
 
@@ -138,7 +150,7 @@ public class CoreTests
             string token = c.GetProperty("token").GetString()!;
             int streak = c.TryGetProperty("streak", out JsonElement st) ? st.GetInt32() : 0;
             bool sandwich = c.TryGetProperty("sandwich", out JsonElement sw) && sw.GetBoolean();
-            Fix? actual = DetectorFor(c.GetProperty("languages")).FixToken(token, streak, sandwich);
+            Fix? actual = DetectorFor(c).FixToken(token, streak, sandwich);
             JsonElement expected = c.GetProperty("fix");
             string label = $"{c.GetProperty("languages")}: '{token}'";
             if (expected.ValueKind == JsonValueKind.Null)
@@ -159,7 +171,7 @@ public class CoreTests
     {
         foreach (JsonElement c in Cases("manualConvert").EnumerateArray())
         {
-            Detector d = DetectorFor(c.GetProperty("languages"));
+            Detector d = DetectorFor(c);
             Assert.Equal(c.GetProperty("expected").GetString(), ManualConverter.Convert(c.GetProperty("input").GetString()!, d));
         }
     }

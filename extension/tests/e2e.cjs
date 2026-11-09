@@ -102,6 +102,36 @@ const PAGE = `<!doctype html><meta charset=utf-8><body>
     assert.equal(await val('#inp'), 'hello لا مرحبا x'); // caret stayed at the end
     await worker.evaluate(() => chrome.storage.local.remove('languages'));
   });
+  await check('french enabled (QWERTY keyboard): French typed in Hebrew mode, elision and digit-row letters', async () => {
+    await worker.evaluate(() => chrome.storage.local.set({ languages: ['en', 'he', 'fr'], latinLayout: 'us' }));
+    await page.reload(); await page.click('#inp'); await page.waitForTimeout(3000); // a fresh content script warms up the new language set (loads data/fr.txt)
+    await type('#inp', 'נםמחםור ב,קדא ');
+    assert.equal(await val('#inp'), "bonjour c'est ");
+    await page.fill('#inp', ''); await type('#inp', 'hello world akuo ');
+    assert.equal(await val('#inp'), 'hello world שלום ');
+    await worker.evaluate(() => chrome.storage.local.remove(['languages', 'latinLayout']));
+  });
+  await check('french keyboard (AZERTY): Hebrew typed on AZERTY and accents from the digit row', async () => {
+    await worker.evaluate(() => chrome.storage.local.set({ languages: ['en', 'he', 'fr'], latinLayout: 'fr' }));
+    await page.reload(); await page.click('#inp'); await page.waitForTimeout(3000);
+    await type('#inp', 'qkuo jcrho ');
+    assert.equal(await val('#inp'), 'שלום חברים ');
+    await page.fill('#inp', ''); await type('#inp', '2א2 ');
+    assert.equal(await val('#inp'), 'été ');
+    await page.fill('#inp', 'qkuo');
+    await page.click('#inp'); await page.keyboard.press('End');
+    await worker.evaluate(async () => { const [t] = await chrome.tabs.query({ active: true }); await chrome.tabs.sendMessage(t.id, { type: 'convert' }); });
+    await page.waitForTimeout(500);
+    assert.equal(await val('#inp'), 'שלום');
+    await worker.evaluate(() => chrome.storage.local.remove(['languages', 'latinLayout']));
+  });
+  await check('spanish keyboard: dead-key accents (está) and ñ', async () => {
+    await worker.evaluate(() => chrome.storage.local.set({ languages: ['en', 'he', 'es'], latinLayout: 'es' }));
+    await page.reload(); await page.click('#inp'); await page.waitForTimeout(3000); // loads data/es.txt
+    await type('#inp', 'קדא,ש נןקמ שףם ');
+    assert.equal(await val('#inp'), 'está bien año ');
+    await worker.evaluate(() => chrome.storage.local.remove(['languages', 'latinLayout']));
+  });
   await check('disabled host respected', async () => {
     await worker.evaluate(() => chrome.storage.local.set({ disabledHosts: ['127.0.0.1'] }));
     await page.waitForTimeout(300);

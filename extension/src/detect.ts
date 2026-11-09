@@ -1,5 +1,5 @@
-import { LAYOUTS, convertLayout, convertLayoutVariants, type Layout } from './layouts.ts';
-import { LANGUAGES, type LanguageSpec } from './languages.ts';
+import { DEFAULT_LATIN_LAYOUT, LAYOUTS, convertLayout, convertLayoutVariants, unshiftedChars, type Layout } from './layouts.ts';
+import { LANGUAGES, LATIN_LETTER, type LanguageSpec } from './languages.ts';
 import { NgramModel } from './ngram.ts';
 
 /** Frequency-ordered word lists (most frequent first), keyed by language id (see languages.ts). */
@@ -16,6 +16,11 @@ export interface DetectOptions {
   sandwich?: boolean;
   /** Number of consecutive words just corrected in the same field. Typing in the wrong layout tends to continue. */
   streak?: number;
+}
+
+export interface DetectorOptions {
+  /** The Latin layout the user types on: 'us' (QWERTY), 'fr' (AZERTY), 'de' (QWERTZ) or 'es'. */
+  latinLayout?: string;
 }
 
 /** Tunable thresholds (see scripts/eval.ts, which measures them on held-out words). */
@@ -75,19 +80,39 @@ function better(a: Candidate, b: Candidate): boolean {
   return a.margin! > b.margin!;
 }
 
+const escapeForClass = (chars: readonly string[]): string => chars.map((c) => c.replace(/[\\\]^-]/g, '\\$&')).join('');
+
+/** A token typed on the layout without Shift may contain any of its unshifted characters (digits excluded). */
+const typedPattern = (layout: Layout): RegExp => new RegExp(`^[${escapeForClass(unshiftedChars(layout))}]+$`);
+
 export class Detector {
   private readonly langs: Lang[];
+  /** The layout all Latin languages are typed on (US QWERTY unless the user has an AZERTY, QWERTZ or Spanish keyboard). */
+  readonly latinLayout: Layout;
+  /** A token typed on the Latin layout without Shift: its letters plus the punctuation keys that are letters elsewhere. */
+  private readonly latinTyped: RegExp;
+  /** The same for each other layout: its letters plus what it types on keys that are letters or dead keys on the Latin layout. */
+  private readonly typedOn = new Map<string, RegExp>();
+  /** The Latin layout types letters on the digit row (French é è ç à), so digits in a token typed elsewhere may be letters. */
+  private readonly digitLetters: boolean;
   /** Uppercase Latin letters that are Shift keys of an enabled layout (Arabic H = أ), not capitals. */
   private readonly shiftLetters: Set<string>;
   /** Single Latin keys that type a whole word on an enabled layout (Arabic b = لا, "no"). */
   private readonly wordKeys: Set<string>;
 
-  constructor(dicts: Dictionaries) {
+  constructor(dicts: Dictionaries, options: DetectorOptions = {}) {
+    this.latinLayout = LAYOUTS[options.latinLayout ?? DEFAULT_LATIN_LAYOUT] ?? LAYOUTS[DEFAULT_LATIN_LAYOUT]!;
+    this.latinTyped = typedPattern(this.latinLayout);
+    this.digitLetters = [...'1234567890'].some((d) => {
+      const out = this.latinLayout.toChar.get(d);
+      return out !== undefined && out !== d;
+    });
     this.langs = Object.values(LANGUAGES)
       .filter((spec) => dicts[spec.id] !== undefined)
       .map((spec) => {
         const words = dicts[spec.id]!;
-        return { spec, layout: LAYOUTS[spec.layout]!, words, ranks: new Map(words.map((w, i) => [w, i])) };
+        const layout = spec.side === 'latin' ? this.latinLayout : LAYOUTS[spec.layout!]!;
+        return { spec, layout, words, ranks: new Map(words.map((w, i) => [w, i])) };
       });
     this.shiftLetters = new Set(
       this.langs
@@ -113,7 +138,7 @@ export class Detector {
     return Number.POSITIVE_INFINITY;
   }
 
-  /** Dictionary lookup with the language's inflection suffixes and stacked one-letter prefixes. */
+  /** Dictionary lookup with the language's inflection suffixes, elisions and stacked one-letter prefixes. */
   private lookup(lang: Lang, word: string): Hit | undefined {
     const exact = lang.ranks.get(word);
     if (exact !== undefined) return { rank: exact, stripped: 0 };
@@ -121,6 +146,12 @@ export class Detector {
       if (word.length > suffix.length + 2 && word.endsWith(suffix)) {
         const stem = word.slice(0, -suffix.length);
         const r = lang.ranks.get(stem) ?? lang.ranks.get(stem + 'e');
+        if (r !== undefined) return { rank: r, stripped: 0 };
+      }
+    }
+    for (const elision of lang.spec.elisions ?? []) {
+      if (word.length > elision.length + 1 && word.startsWith(elision)) {
+        const r = lang.ranks.get(word.slice(elision.length));
         if (r !== undefined) return { rank: r, stripped: 0 };
       }
     }
@@ -159,14 +190,24 @@ export class Detector {
     );
   }
 
+  private typedOf(lang: Lang): RegExp {
+    let re = this.typedOn.get(lang.layout.id);
+    if (!re) this.typedOn.set(lang.layout.id, (re = typedPattern(lang.layout)));
+    return re;
+  }
+
+  private letterPattern(lang: Lang): RegExp {
+    return lang.spec.side === 'latin' ? LATIN_LETTER : lang.spec.letter;
+  }
+
   /** The script (and so the layout) the token was typed in, or null if it is not a word of any enabled language. */
   private sourceOf(word: string): Source | null {
     const latin = this.langs.filter((l) => l.spec.side === 'latin');
-    if (latin.some((l) => l.spec.typed.test(word) && l.spec.letter.test(word))) {
-      return { langs: latin, layout: latin[0]!.layout, side: 'latin' };
+    if (latin.length > 0 && this.latinTyped.test(word) && LATIN_LETTER.test(word)) {
+      return { langs: latin, layout: this.latinLayout, side: 'latin' };
     }
     for (const lang of this.langs) {
-      if (lang.spec.side === 'other' && lang.spec.typed.test(word) && lang.spec.letter.test(word)) {
+      if (lang.spec.side === 'other' && this.typedOf(lang).test(word) && this.letterPattern(lang).test(word)) {
         return { langs: [lang], layout: lang.layout, side: 'other' };
       }
     }
@@ -187,16 +228,22 @@ export class Detector {
     // One letter is only fixed inside a run of fixes: a key that types a whole word ("b" = لا) or a one-letter word
     // of the target language (Russian "e" = у).
     if (word.length < 2 && !(streak > 0 || sandwich)) return null;
-    if (/[0-9@\\]|:\/\//.test(word)) return null;
+    if (/[@\\]|:\/\//.test(word)) return null;
+    // Digits are never part of a word, unless the Latin layout types letters on the digit row (French é è ç à):
+    // then a digit typed on the other layout may stand for such a letter ("2א2" = été).
+    const hasDigit = /[0-9]/.test(word);
+    if (hasDigit && !this.digitLetters) return null;
+    const probe = hasDigit ? word.replace(/[0-9]/g, '') : word;
     // Capitals mean names, acronyms, sentence starts or camelCase (any script) - except Shift letters of an
     // enabled layout (Arabic أ is Shift+H). For such tokens the model needs a larger margin.
     const capitals = [...word].filter((ch) => /\p{Lu}/u.test(ch));
     if (capitals.some((ch) => !this.shiftLetters.has(ch))) return null;
     const shifted = capitals.length > 0;
 
-    const source = this.sourceOf(shifted ? word.toLowerCase() : word);
+    const source = this.sourceOf(shifted ? probe.toLowerCase() : probe);
     if (!source) return null;
     if (shifted && source.side !== 'latin') return null;
+    if (hasDigit && source.side === 'latin') return null; // no script puts letters where the Latin layout has digits
     const typedHit = this.bestLookup(source.langs, word) ?? (shifted ? this.bestLookup(source.langs, word.toLowerCase()) : undefined);
 
     const candidates: Candidate[] = [];
@@ -276,9 +323,16 @@ export class Detector {
 
   /**
    * Picks among corrections into different target languages (e.g. Latin letters that could be Hebrew or Russian).
-   * Dictionary readings beat model-only ones; a reading must clearly beat the runner-up, otherwise nothing is changed.
+   * Readings with the same text (English and French share the Latin layout) count once. Dictionary readings beat
+   * model-only ones; a reading must clearly beat the runner-up, otherwise nothing is changed.
    */
-  private choose(candidates: Candidate[]): string | null {
+  private choose(all: Candidate[]): string | null {
+    const byText = new Map<string, Candidate>();
+    for (const c of all) {
+      const prev = byText.get(c.text);
+      if (!prev || better(c, prev)) byText.set(c.text, c);
+    }
+    const candidates = [...byText.values()];
     if (candidates.length <= 1) return candidates[0]?.text ?? null;
     const dict = candidates.filter((c) => c.rank !== undefined).sort((a, b) => a.rank! - b.rank!);
     if (dict.length === 1) return dict[0]!.text;
@@ -292,12 +346,11 @@ export class Detector {
    * by how many of the converted words are in each dictionary, then by how word-like they look.
    */
   pickTarget(latinWords: readonly string[]): { id: string; layout: Layout } | null {
-    const latin = this.langs.find((l) => l.spec.side === 'latin');
     const targets = this.langs.filter((l) => l.spec.side === 'other');
-    if (!latin || targets.length === 0) return null;
+    if (!this.langs.some((l) => l.spec.side === 'latin') || targets.length === 0) return null;
     if (targets.length === 1) return { id: targets[0]!.spec.id, layout: targets[0]!.layout };
     const converted = (lang: Lang) =>
-      latinWords.map((w) => convertLayout(w.toLowerCase(), latin.layout, lang.layout)).filter((w) => lang.spec.word.test(w));
+      latinWords.map((w) => convertLayout(w.toLowerCase(), this.latinLayout, lang.layout)).filter((w) => lang.spec.word.test(w));
     const ranked = targets
       .map((lang) => ({ lang, hits: converted(lang).filter((w) => this.lookup(lang, w)).length }))
       .sort((a, b) => b.hits - a.hits);

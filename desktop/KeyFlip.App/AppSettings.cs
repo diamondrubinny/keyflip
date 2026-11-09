@@ -63,6 +63,18 @@ internal sealed class AppSettings
     /// </summary>
     public List<string>? Languages { get; set; }
 
+    /// <summary>
+    /// The Latin keyboard layout the user types on: "us", "fr" (AZERTY), "de" (QWERTZ) or "es". Null means automatic:
+    /// the one such layout installed in Windows besides US/UK, or US QWERTY.
+    /// </summary>
+    public string? LatinLayout { get; set; }
+
+    public string ResolvedLatinLayout()
+    {
+        if (LatinLayout is not null && KeyFlip.Core.Layouts.LatinLayouts.Contains(LatinLayout)) return LatinLayout;
+        return InstalledLayouts.LatinLayoutId();
+    }
+
     public IReadOnlyList<string> EnabledLanguages()
     {
         IEnumerable<string> optional = Languages ?? InstalledLayouts.LanguageIds();

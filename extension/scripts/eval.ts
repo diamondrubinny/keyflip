@@ -2,8 +2,9 @@
 // The dictionary is cut at rank N; words ranked N..N+M are "out of vocabulary" (rare words, names, inflections).
 //   recall: wrongly-typed words that are recovered       false positives: correctly-typed words that get "fixed"
 // Usage: node --experimental-strip-types scripts/eval.ts [N=80000] [M=45000]
-//   TARGET=he|ru                           the non-Latin language paired with English (default he)
-//   ALSO=he,ru                             extra languages enabled at full size, to measure interference between targets
+//   TARGET=he|ru|ar                        the non-Latin language paired with the Latin language (default he)
+//   LATIN=en|fr|de|es                      the Latin language (default en); LATIN_LAYOUT=us|fr|de|es the Latin keyboard (default: us, or the LATIN language's own)
+//   ALSO=he,ru,fr                          extra languages enabled at full size, to measure interference between languages
 //   LEGACY=<path to an older detect.ts>    compare with an older detector
 //   STRESS_EN / STRESS_<TARGET>=<*_full.txt>  also measure false positives on very rare tokens (names, typos, foreign words)
 import { readFileSync } from 'node:fs';
@@ -13,10 +14,13 @@ import { Detector as Current } from '../src/detect.ts';
 
 const read = (n: string) => readFileSync(new URL(`../src/data/${n}`, import.meta.url), 'utf8').split('\n').filter(Boolean);
 const TARGET = process.env.TARGET ?? 'he';
-const ALSO = (process.env.ALSO ?? '').split(',').filter((x) => x && x !== TARGET && x !== 'en');
+const LATIN = process.env.LATIN ?? 'en';
+const LATIN_LAYOUT = process.env.LATIN_LAYOUT ?? (LATIN === 'en' ? 'us' : LATIN);
+const ALSO = (process.env.ALSO ?? '').split(',').filter((x) => x && x !== TARGET && x !== LATIN);
 const T = TARGET.toUpperCase();
 const spec = LANGUAGES[TARGET]!;
-const en = read('en.txt');
+const latinSpec = LANGUAGES[LATIN]!;
+const en = read(`${LATIN}.txt`); // the Latin language's list (named "en" below for history)
 const he = read(`${TARGET}.txt`); // the target language's list (named "he" below for history)
 const N = Number(process.argv[2] ?? 80000);
 const M = Number(process.argv[3] ?? 45000);
@@ -43,7 +47,7 @@ function stressTokens(path: string | undefined, re: RegExp, minLen: number): str
   }
   return out.filter((_, i) => i % 3 === 0).slice(0, 60000);
 }
-const stressEn = stressTokens(process.env.STRESS_EN, /^[a-z]+$/, 4);
+const stressEn = stressTokens(process.env[`STRESS_${LATIN.toUpperCase()}`] ?? process.env.STRESS_EN, latinSpec.word, 4);
 const stressHe = stressTokens(process.env[`STRESS_${T}`], spec.word, 4);
 
 function run(label: string, make: () => Det): void {
@@ -56,21 +60,23 @@ function run(label: string, make: () => Det): void {
     const set = words.filter((w) => w.length >= minLen && w.length <= maxLen).map((w) => [w, toTyped(w)] as const).filter(([w, t]) => t !== w);
     return pct(set.filter(([w, t]) => d.fixToken(t, opts)?.replacement === w).length, set.length);
   };
-  const heTyped = (w: string) => convertLayout(w, LAYOUTS[spec.layout]!, LAYOUTS.us!);
-  const enTyped = (w: string) => convertLayout(w, LAYOUTS.us!, LAYOUTS[spec.layout]!);
+  const latinLayout = LAYOUTS[LATIN_LAYOUT]!;
+  const otherLayout = LAYOUTS[spec.layout!]!;
+  const heTyped = (w: string) => convertLayout(w, otherLayout, latinLayout);
+  const enTyped = (w: string) => convertLayout(w, latinLayout, otherLayout);
   const fp = (words: string[]) => words.filter((w) => d.fixToken(w) !== null);
 
   const fpEn = fp(enOov), fpHe = fp(heOov), fpTech = fp(TECH);
-  console.log(`\n=== ${label}: EN + ${T}${ALSO.length ? ' (also ' + ALSO.join(', ') + ')' : ''} (dict ${N}, build ${build} ms) ===`);
-  console.log(`OOV recall  ${T} typed on EN layout  len3  :`, rec(heOov, heTyped, (t) => t, 3, 3));
-  console.log(`OOV recall  ${T} typed on EN layout  len4  :`, rec(heOov, heTyped, (t) => t, 4, 4));
-  console.log(`OOV recall  ${T} typed on EN layout  len5+ :`, rec(heOov, heTyped, (t) => t, 5));
-  console.log(`OOV recall  EN typed on ${T} layout  len3  :`, rec(enOov.filter((w) => /^[a-z]+$/.test(w)), enTyped, (t) => t, 3, 3));
-  console.log(`OOV recall  EN typed on ${T} layout  len4  :`, rec(enOov.filter((w) => /^[a-z]+$/.test(w)), enTyped, (t) => t, 4, 4));
-  console.log(`OOV recall  EN typed on ${T} layout  len5+ :`, rec(enOov.filter((w) => /^[a-z]+$/.test(w)), enTyped, (t) => t, 5));
+  console.log(`\n=== ${label}: ${LATIN.toUpperCase()} (${LATIN_LAYOUT}) + ${T}${ALSO.length ? ' (also ' + ALSO.join(', ') + ')' : ''} (dict ${N}, build ${build} ms) ===`);
+  console.log(`OOV recall  ${T} typed on ${LATIN_LAYOUT} layout  len3  :`, rec(heOov, heTyped, (t) => t, 3, 3));
+  console.log(`OOV recall  ${T} typed on ${LATIN_LAYOUT} layout  len4  :`, rec(heOov, heTyped, (t) => t, 4, 4));
+  console.log(`OOV recall  ${T} typed on ${LATIN_LAYOUT} layout  len5+ :`, rec(heOov, heTyped, (t) => t, 5));
+  console.log(`OOV recall  ${LATIN.toUpperCase()} typed on ${T} layout  len3  :`, rec(enOov.filter((w) => latinSpec.word.test(w)), enTyped, (t) => t, 3, 3));
+  console.log(`OOV recall  ${LATIN.toUpperCase()} typed on ${T} layout  len4  :`, rec(enOov.filter((w) => latinSpec.word.test(w)), enTyped, (t) => t, 4, 4));
+  console.log(`OOV recall  ${LATIN.toUpperCase()} typed on ${T} layout  len5+ :`, rec(enOov.filter((w) => latinSpec.word.test(w)), enTyped, (t) => t, 5));
   console.log(`in-vocab recall ${T} (top 20k, len3+)      :`, rec(he.slice(0, 20000), heTyped, (t) => t, 3));
-  console.log('in-vocab recall EN (top 20k, len3+)      :', rec(en.slice(0, 20000).filter((w) => /^[a-z]+$/.test(w)), enTyped, (t) => t, 3));
-  console.log('FALSE POSITIVES  OOV English            :', pct(fpEn.length, enOov.length), fpEn.slice(0, 12).join(' '));
+  console.log('in-vocab recall EN (top 20k, len3+)      :', rec(en.slice(0, 20000).filter((w) => latinSpec.word.test(w)), enTyped, (t) => t, 3));
+  console.log(`FALSE POSITIVES  OOV ${LATIN.toUpperCase()}                :`, pct(fpEn.length, enOov.length), fpEn.slice(0, 12).join(' '));
   console.log(`FALSE POSITIVES  OOV ${T}                 :`, pct(fpHe.length, heOov.length), fpHe.slice(0, 12).join(' '));
   console.log('FALSE POSITIVES  tech/brand terms       :', pct(fpTech.length, TECH.length), fpTech.join(' '));
   // Zipf-weighted recall over the whole in-vocabulary range: frequent words matter more.
@@ -80,7 +86,7 @@ function run(label: string, make: () => Det): void {
     return `${((100 * hit) / all).toFixed(2)}%`;
   };
   console.log(`ZIPF-weighted recall ${T} typed on EN layout:`, zipf(he.slice(0, N), heTyped));
-  console.log(`ZIPF-weighted recall EN typed on ${T} layout:`, zipf(en.slice(0, N).filter((w) => /^[a-z]+$/.test(w)), enTyped));
+  console.log(`ZIPF-weighted recall EN typed on ${T} layout:`, zipf(en.slice(0, N).filter((w) => latinSpec.word.test(w)), enTyped));
   if (stressEn.length) {
     const a = fp(stressEn), b = fp(stressHe);
     console.log('STRESS false positives, rare English tokens:', pct(a.length, stressEn.length), a.slice(0, 14).join(' '));
@@ -88,15 +94,15 @@ function run(label: string, make: () => Det): void {
   }
   const heShort = he.slice(0, 400).filter((w) => w.length === 2);
   console.log(`short ${T} 2-letter words in a streak  :`, rec(heShort, heTyped, (t) => t, 2, 2, { streak: 1 }), '| without streak:', rec(heShort, heTyped, (t) => t, 2, 2));
-  const enShort = en.slice(0, 400).filter((w) => w.length === 2 && /^[a-z]+$/.test(w));
+  const enShort = en.slice(0, 400).filter((w) => w.length === 2 && latinSpec.word.test(w));
   const fpShort = [...enShort, ...heShort].filter((w) => d.fixToken(w, { streak: 1 }) !== null);
   console.log('FALSE POSITIVES  valid 2-letter in streak:', pct(fpShort.length, enShort.length + heShort.length), fpShort.join(' '));
 }
 
-const dicts: Record<string, string[]> = { en: en.slice(0, N), [TARGET]: he.slice(0, N) };
+const dicts: Record<string, string[]> = { [LATIN]: en.slice(0, N), [TARGET]: he.slice(0, N) };
 for (const lang of ALSO) dicts[lang] = read(`${lang}.txt`);
 if (process.env.LEGACY) {
   const { Detector: Legacy } = await import(process.env.LEGACY);
-  run('LEGACY', () => new Legacy(dicts));
+  run('LEGACY', () => new Legacy(dicts, { latinLayout: LATIN_LAYOUT }));
 }
-run('CURRENT', () => new Current(dicts));
+run('CURRENT', () => new Current(dicts, { latinLayout: LATIN_LAYOUT }));

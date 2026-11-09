@@ -1,6 +1,6 @@
 // Builds frequency-ordered word lists from FrequencyWords (hermitdave/FrequencyWords, OpenSubtitles 2018, *_full.txt).
 // Usage: node scripts/build-dicts.mjs <lang>=<path to lang_full.txt> [...] [--min-count=20] [--max-words=150000]
-//   e.g. node scripts/build-dicts.mjs en=en_full.txt he=he_full.txt ru=ru_full.txt
+//   e.g. node scripts/build-dicts.mjs en=en_full.txt he=he_full.txt ru=ru_full.txt fr=fr_full.txt
 // Writes src/data/<lang>.txt (one word per line, most frequent first).
 import { readFileSync, writeFileSync } from 'node:fs';
 
@@ -10,6 +10,9 @@ const WORD = {
   he: /^[א-ת]{2,}$/,
   ru: /^[а-яё]{2,}$/,
   ar: /^[\u0621-\u063A\u0641-\u064A]{2,}$/,
+  fr: /^(?:[a-zàâäæçéèêëîïôöœùûüÿ]+')?[a-zàâäæçéèêëîïôöœùûüÿ]+$/, // c'est is "c'" + "est" upstream; aujourd'hui stays whole
+  de: /^[a-zäöüß]+$/,
+  es: /^[a-záéíóúüñ]+$/,
 };
 
 const args = process.argv.slice(2);
