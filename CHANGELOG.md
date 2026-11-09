@@ -3,6 +3,10 @@
 All notable changes are documented here. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/).
 
 ## [Unreleased]
+### Fixed
+- Russian one-letter words (`e` -> у, `d` -> в, `c` -> с, `b` -> и, `f` -> а, `j` -> о, `z` -> я) and English `a` are fixed inside a run of fixes, in the extension and the Windows app (`ghbdtn lhepmz rfr e dfc ltkf` -> привет друзья как у вас дела).
+### Added
+- `extension/scripts/demo-screenshot.cjs` and `docs/screenshots/demo-languages.png`: a real screenshot of the extension fixing Hebrew, English, Russian and Arabic.
 
 ## [0.2.0] - 2026-11-02
 ### Added
