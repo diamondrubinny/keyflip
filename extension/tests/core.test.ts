@@ -112,7 +112,8 @@ import { Detector } from '../src/detect.ts';
 import { manualConvert } from '../src/manual.ts';
 import { LAYOUTS, convertLayout, convertLayoutVariants } from '../src/layouts.ts';
 
-const detectorFor = (langs: string[]) => new Detector(Object.fromEntries(langs.map((l) => [l, read(`${l}.txt`)])));
+const detectorFor = (langs: string[], latinLayout = 'us') =>
+  new Detector(Object.fromEntries(langs.map((l) => [l, read(`${l}.txt`)])), { latinLayout });
 
 test('russian layout: round trip and known words', () => {
   assert.equal(convertLayout('ghbdtn', LAYOUTS.us!, LAYOUTS.ru!), 'привет');
@@ -124,15 +125,15 @@ test('russian layout: round trip and known words', () => {
 test('shared cases: detection with other language sets', () => {
   const cache = new Map<string, Detector>();
   for (const c of shared.detectLanguages) {
-    const key = c.languages.join(',');
-    if (!cache.has(key)) cache.set(key, detectorFor(c.languages));
+    const key = `${c.latinLayout ?? 'us'}:${c.languages.join(',')}`;
+    if (!cache.has(key)) cache.set(key, detectorFor(c.languages, c.latinLayout ?? 'us'));
     const got = cache.get(key)!.fixToken(c.token, { streak: c.streak ?? 0, sandwich: c.sandwich ?? false });
     assert.deepEqual(got, c.fix, `${key}: ${c.token}`);
   }
 });
 
 test('shared cases: manual conversion', () => {
-  for (const c of shared.manualConvert) assert.equal(manualConvert(c.input, detectorFor(c.languages)), c.expected, c.input);
+  for (const c of shared.manualConvert) assert.equal(manualConvert(c.input, detectorFor(c.languages, c.latinLayout ?? 'us')), c.expected, c.input);
 });
 
 test('manual conversion equals convertAuto with Hebrew and English only', () => {
@@ -147,4 +148,18 @@ test('arabic layout: shift letters, lam-alef and its two readings', () => {
   assert.deepEqual(convertLayoutVariants('لاخخن', LAYOUTS.ar!, LAYOUTS.us!), ['book', 'ghook']);
   // Hebrew and Russian keep using their lowercase entries for Shift
   assert.equal(convertLayout('AKUO', LAYOUTS.us!, LAYOUTS.he!), 'שלום');
+});
+
+test('shared cases: conversions between layouts (dead keys, AZERTY, QWERTZ, Spanish)', () => {
+  for (const c of shared.convertLayouts) assert.equal(convertLayout(c.input, LAYOUTS[c.from]!, LAYOUTS[c.to]!), c.expected, `${c.from}->${c.to} ${c.input}`);
+});
+
+test('latin layouts: every letter round-trips through US and back', () => {
+  for (const id of ['fr', 'de', 'es']) {
+    const layout = LAYOUTS[id]!;
+    for (const [key, out] of layout.toChar) {
+      if (!/^\p{L}$/u.test(out)) continue; // punctuation may collide with a US Shift position ('*' is Shift+8 there)
+      assert.equal(convertLayout(convertLayout(out, layout, LAYOUTS.us!), LAYOUTS.us!, layout), out, `${id} key ${key}`);
+    }
+  }
 });

@@ -63,3 +63,36 @@ are read as Arabic letters when Arabic is enabled (with a larger model margin, s
 
 With all four languages on, Hebrew typed on English drops to 86.2% and Russian to 89.1% (unseen, 5+ letters), and about
 1% of rare English words get corrected by mistake, mostly into Hebrew. Optional languages therefore stay off unless used.
+
+## French, German, Spanish (added in 0.3)
+These are Latin languages, so they share the keyboard with English and are never confused with it: KeyFlip only fixes text
+whose *script* is wrong. Two things change with each of them:
+- a **dictionary** (108k French, 100k German, 150k Spanish words), so that French typed in Hebrew mode (`נםמחםור` -> `bonjour`,
+  `ב4קדא` -> `c'est`) is recognised, and valid French/German/Spanish words typed on purpose are left alone;
+- a **Latin keyboard layout** (`shared/layouts/{fr,de,es}.json`: French AZERTY, German QWERTZ, Spanish), because Hebrew,
+  Russian or Arabic typed on such a keyboard comes out differently (`qkuo` on AZERTY is `שלום`). The layouts include the
+  letters on the digit row (`2` in Hebrew mode may be `é`), the dead keys (`´` + `a` = `á`) and the mirrored Hebrew brackets.
+
+`LATIN=fr npm run eval` (the Latin language and its layout replace English and US QWERTY), dictionary cut at 80,000, unseen
+words ranked 80,000-125,000:
+
+| Metric | French (AZERTY) + Hebrew | German (QWERTZ) + Hebrew | Spanish + Hebrew |
+|---|---|---|---|
+| Hebrew typed on the Latin keyboard, unseen, 5+ letters | 93.3% | 92.1% | 93.3% |
+| Latin language typed in Hebrew mode, unseen, 5+ letters | 92.7% | 92.3% | 91.2% |
+| Latin language typed in Hebrew mode, unseen, 4 letters | 73.6% | 60.0% | 58.2% |
+| Frequency-weighted recall (Hebrew / Latin language) | 85.8% / 86.6% | 85.6% / 93.3% | 85.7% / 86.6% |
+| Wrongly "fixed" rare unseen Latin-language / Hebrew words | 0.35% / 0.08% | 0.46% / 0.14% | 0.60% / 0.13% |
+| Stress test, rare French/German/Spanish tokens | 0.20% | 0.29% | 0.48% |
+
+Russian on a French keyboard (`LATIN=fr TARGET=ru`): 96.8% / 96.0% recovered (unseen, 5+ letters), 0.04% / 0.06% wrong.
+
+**Interference.** With English, French, German and Spanish all enabled on US QWERTY (`ALSO=fr,de,es`), Hebrew typed on the
+English layout drops from 90.9% to 89.8% (unseen, 5+ letters) and wrong corrections of rare Hebrew words rise from 0.27% to
+0.41%, because more Latin readings exist. The English numbers improve (a rare English word may be a common French one).
+As with Russian and Arabic, a language is only on when its keyboard is installed (Windows) or it is a browser language.
+
+**Known limits.** On a US QWERTY keyboard French accents cannot be typed at all, so `LATIN=fr LATIN_LAYOUT=us` recovers only
+71% of unseen French words typed in Hebrew mode (the rest contain é, è, ç ...). The Belgian, Swiss, Canadian and Latin
+American keyboards differ from the three layouts shipped and keep US QWERTY until a layout can be chosen in the settings.
+The layout tables were written from the Windows layouts and need checking on a real keyboard before release.

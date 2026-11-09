@@ -1,7 +1,6 @@
-import { LAYOUTS, convertLayout, type Layout } from './layouts.ts';
+import { convertLayout, type Layout } from './layouts.ts';
+import { LATIN_LETTER as LATIN } from './languages.ts';
 import type { Detector } from './detect.ts';
-
-const LATIN = /[A-Za-z]/;
 
 interface Counts {
   latin: number;
@@ -36,8 +35,8 @@ export function manualConvert(text: string, detector: Detector): string {
   if (all.latin === 0 && all.other === 0) return text;
   const tokens = text.split(/(\s+)/);
   const target = all.latin > 0 ? detector.pickTarget(tokens.filter((t) => LATIN.test(t))) : null;
-  const toOther = (t: string) => (target ? convertLayout(t, LAYOUTS.us!, target.layout) : t);
-  const toLatin = (t: string, from: Layout | null) => (from ? convertLayout(t, from, LAYOUTS.us!) : t);
+  const toOther = (t: string) => (target ? convertLayout(t, detector.latinLayout, target.layout) : t);
+  const toLatin = (t: string, from: Layout | null) => (from ? convertLayout(t, from, detector.latinLayout) : t);
 
   return tokens
     .map((token) => {

@@ -1,15 +1,16 @@
 import { loadDictionaries } from './dictionaries.ts';
 import { Detector } from './detect.ts';
 import { manualConvert } from './manual.ts';
+import { LATIN_LETTER } from './languages.ts';
 import { loadSettings } from './settings.ts';
 
 // One detector for the current set of enabled languages; rebuilt when the user changes them.
 let detector: { key: string; value: Promise<Detector> } | null = null;
 async function getDetector(): Promise<Detector> {
-  const { languages } = await loadSettings();
-  const key = languages.join(',');
+  const { languages, latinLayout } = await loadSettings();
+  const key = `${latinLayout}:${languages.join(',')}`;
   if (detector?.key !== key) {
-    detector = { key, value: loadDictionaries(languages).then((dicts) => new Detector(dicts)) };
+    detector = { key, value: loadDictionaries(languages).then((dicts) => new Detector(dicts, { latinLayout })) };
   }
   return detector.value;
 }
@@ -55,7 +56,7 @@ chrome.runtime.onMessage.addListener((msg: unknown, sender, sendResponse) => {
     const fix = (await getDetector()).fixToken(token, { streak, sandwich: fixReq.sandwich === true });
     if (!fix) return sendResponse(null);
     // enToHe: Latin letters typed by mistake -> another script; heToEn: the other way round.
-    const toLatin = /[a-z]/i.test(fix.replacement);
+    const toLatin = LATIN_LETTER.test(fix.replacement);
     if ((!toLatin && !settings.enToHe) || (toLatin && !settings.heToEn)) return sendResponse(null);
     sendResponse(fix);
   })().catch(() => sendResponse(null));

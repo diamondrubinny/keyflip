@@ -1,3 +1,4 @@
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace KeyFlip.Core;
@@ -8,7 +9,8 @@ public sealed record Fix(int Consumed, string Replacement);
 /// <summary>
 /// Decides whether a typed word was written in the wrong layout, using frequency word lists and a character n-gram
 /// model per language. Port of extension/src/detect.ts; thresholds in <see cref="Tuning"/> come from scripts/eval.ts.
-/// Every correction pairs a Latin language with a language in another script.
+/// Every correction pairs a Latin language with a language in another script. All Latin languages are typed on the
+/// user's Latin layout (US QWERTY, French AZERTY, German QWERTZ or Spanish).
 /// </summary>
 public sealed class Detector
 {
@@ -34,7 +36,8 @@ public sealed class Detector
     private const string TrailingPunct = ".,;:!?'\"”’)]}/";
     private const string LeadingPunct = "\"(“‘{";
 
-    private static readonly Regex Forbidden = new(@"[0-9@\\]|://", RegexOptions.Compiled);
+    private static readonly Regex Forbidden = new(@"[@\\]|://", RegexOptions.Compiled);
+    private static readonly Regex Digit = new("[0-9]", RegexOptions.Compiled);
     private static readonly Regex UpperCase = new(@"\p{Lu}", RegexOptions.Compiled);
 
     private sealed class Lang
@@ -55,21 +58,40 @@ public sealed class Detector
 
     private readonly List<Lang> _langs;
 
+    /// <summary>A token typed on the Latin layout without Shift: its letters plus the punctuation keys that are letters elsewhere.</summary>
+    private readonly Regex _latinTyped;
+
+    /// <summary>The same for each other layout: its letters plus what it types on keys that are letters or dead keys on the Latin layout.</summary>
+    private readonly Dictionary<string, Regex> _typedOn = new();
+
+    /// <summary>The Latin layout types letters on the digit row (French é è ç à), so digits in a token typed elsewhere may be letters.</summary>
+    private readonly bool _digitLetters;
+
     /// <summary>Uppercase Latin letters that are Shift keys of an enabled layout (Arabic H = أ), not capitals.</summary>
     private readonly HashSet<char> _shiftLetters;
 
     /// <summary>Single Latin keys that type a whole word on an enabled layout (Arabic b = لا, "no").</summary>
     private readonly HashSet<string> _wordKeys;
 
+    /// <summary>The layout all Latin languages are typed on (US QWERTY unless the user has an AZERTY, QWERTZ or Spanish keyboard).</summary>
+    public Layout LatinLayout { get; }
+
     /// <summary>Word lists (most frequent first) keyed by language id; languages without a list are disabled.</summary>
-    public Detector(IReadOnlyDictionary<string, IReadOnlyList<string>> wordLists)
+    public Detector(IReadOnlyDictionary<string, IReadOnlyList<string>> wordLists, string? latinLayout = null)
     {
+        LatinLayout = Layouts.Get(latinLayout is not null && Layouts.LatinLayouts.Contains(latinLayout) ? latinLayout : Layouts.DefaultLatinLayout);
+        _latinTyped = TypedPattern(LatinLayout);
+        _digitLetters = "1234567890".Any(d =>
+        {
+            string? output = LatinLayout.Output(d.ToString());
+            return output is not null && output != d.ToString();
+        });
         _langs = Languages.All
             .Where(spec => wordLists.ContainsKey(spec.Id))
             .Select(spec => new Lang
             {
                 Spec = spec,
-                Layout = Layouts.Get(spec.Layout),
+                Layout = spec.IsLatin ? LatinLayout : Layouts.Get(spec.Layout!),
                 Words = wordLists[spec.Id],
                 Ranks = Index(wordLists[spec.Id]),
             })
@@ -89,14 +111,14 @@ public sealed class Detector
     public static Detector CreateDefault() => Create(Languages.Always);
 
     /// <summary>Builds a detector for the given language ids (unknown ids are ignored) from the embedded word lists.</summary>
-    public static Detector Create(IEnumerable<string> languageIds)
+    public static Detector Create(IEnumerable<string> languageIds, string? latinLayout = null)
     {
         var lists = new Dictionary<string, IReadOnlyList<string>>();
         foreach (string id in languageIds.Distinct())
         {
             if (Languages.All.Any(l => l.Id == id)) lists[id] = ReadLines($"{id}.txt");
         }
-        return new Detector(lists);
+        return new Detector(lists, latinLayout);
     }
 
     private static List<string> ReadLines(string resource)
@@ -117,6 +139,25 @@ public sealed class Detector
         return map;
     }
 
+    /// <summary>A token typed on the layout without Shift may contain any of its unshifted characters (digits excluded).</summary>
+    private static Regex TypedPattern(Layout layout)
+    {
+        var sb = new StringBuilder("^[");
+        foreach (string ch in layout.UnshiftedChars())
+        {
+            if (ch is "\\" or "]" or "[" or "^" or "-") sb.Append('\\');
+            sb.Append(ch);
+        }
+        sb.Append("]+$");
+        return new Regex(sb.ToString(), RegexOptions.CultureInvariant);
+    }
+
+    private Regex TypedOf(Lang lang)
+    {
+        if (!_typedOn.TryGetValue(lang.Layout.Id, out Regex? re)) _typedOn[lang.Layout.Id] = re = TypedPattern(lang.Layout);
+        return re;
+    }
+
     // The statistical models are only needed for words missing from the dictionaries, so they are built lazily.
     private static NgramModel ModelOf(Lang lang) => lang.Model ??= new NgramModel(lang.Words);
 
@@ -128,7 +169,7 @@ public sealed class Detector
         return double.PositiveInfinity;
     }
 
-    /// <summary>Dictionary lookup with the language's inflection suffixes and stacked one-letter prefixes.</summary>
+    /// <summary>Dictionary lookup with the language's inflection suffixes, elisions and stacked one-letter prefixes.</summary>
     private static Hit? Lookup(Lang lang, string word)
     {
         if (lang.Ranks.TryGetValue(word, out int exact)) return new Hit(exact, 0);
@@ -138,6 +179,14 @@ public sealed class Detector
             {
                 string stem = word[..^suffix.Length];
                 if (lang.Ranks.TryGetValue(stem, out int r) || lang.Ranks.TryGetValue(stem + "e", out r)) return new Hit(r, 0);
+            }
+        }
+        foreach (string elision in lang.Spec.Elisions ?? Array.Empty<string>())
+        {
+            if (word.Length > elision.Length + 1 && word.StartsWith(elision, StringComparison.Ordinal)
+                && lang.Ranks.TryGetValue(word[elision.Length..], out int r))
+            {
+                return new Hit(r, 0);
             }
         }
         string w = word;
@@ -179,13 +228,13 @@ public sealed class Detector
     private Source? SourceOf(string word)
     {
         List<Lang> latin = _langs.Where(l => l.Spec.IsLatin).ToList();
-        if (latin.Any(l => l.Spec.Typed.IsMatch(word) && l.Spec.Letter.IsMatch(word)))
+        if (latin.Count > 0 && _latinTyped.IsMatch(word) && Languages.LatinLetter.IsMatch(word))
         {
-            return new Source(latin, latin[0].Layout, IsLatin: true);
+            return new Source(latin, LatinLayout, IsLatin: true);
         }
         foreach (Lang lang in _langs)
         {
-            if (!lang.Spec.IsLatin && lang.Spec.Typed.IsMatch(word) && lang.Spec.Letter.IsMatch(word))
+            if (!lang.Spec.IsLatin && TypedOf(lang).IsMatch(word) && lang.Spec.Letter.IsMatch(word))
             {
                 return new Source(new[] { lang }, lang.Layout, IsLatin: false);
             }
@@ -201,6 +250,11 @@ public sealed class Detector
         // of the target language (Russian "e" = у).
         if (word.Length < 2 && !(streak > 0 || sandwich)) return null;
         if (Forbidden.IsMatch(word)) return null;
+        // Digits are never part of a word, unless the Latin layout types letters on the digit row (French é è ç à):
+        // then a digit typed on the other layout may stand for such a letter ("2א2" = été).
+        bool hasDigit = Digit.IsMatch(word);
+        if (hasDigit && !_digitLetters) return null;
+        string probe = hasDigit ? Digit.Replace(word, "") : word;
 
         // Capitals mean names, acronyms, sentence starts or camelCase (any script) - except Shift letters of an
         // enabled layout (Arabic أ is Shift+H). For such tokens the model needs a larger margin.
@@ -208,9 +262,10 @@ public sealed class Detector
         if (capitals.Any(ch => !_shiftLetters.Contains(ch))) return null;
         bool shifted = capitals.Count > 0;
 
-        Source? source = SourceOf(shifted ? word.ToLowerInvariant() : word);
+        Source? source = SourceOf(shifted ? probe.ToLowerInvariant() : probe);
         if (source is null) return null;
         if (shifted && !source.IsLatin) return null;
+        if (hasDigit && source.IsLatin) return null; // no script puts letters where the Latin layout has digits
         Hit? typedHit = BestLookup(source.Langs, word) ?? (shifted ? BestLookup(source.Langs, word.ToLowerInvariant()) : null);
 
         var candidates = new List<Candidate>();
@@ -281,10 +336,17 @@ public sealed class Detector
 
     /// <summary>
     /// Picks among corrections into different target languages (e.g. Latin letters that could be Hebrew or Russian).
-    /// Dictionary readings beat model-only ones; a reading must clearly beat the runner-up, otherwise nothing is changed.
+    /// Readings with the same text (English and French share the Latin layout) count once. Dictionary readings beat
+    /// model-only ones; a reading must clearly beat the runner-up, otherwise nothing is changed.
     /// </summary>
-    private static string? Choose(List<Candidate> candidates)
+    private static string? Choose(List<Candidate> all)
     {
+        var byText = new Dictionary<string, Candidate>();
+        foreach (Candidate c in all)
+        {
+            if (!byText.TryGetValue(c.Text, out Candidate? prev) || Better(c, prev)) byText[c.Text] = c;
+        }
+        List<Candidate> candidates = byText.Values.ToList();
         if (candidates.Count <= 1) return candidates.Count == 1 ? candidates[0].Text : null;
         List<Candidate> dict = candidates.Where(c => c.Rank is not null).OrderBy(c => c.Rank).ToList();
         if (dict.Count == 1) return dict[0].Text;
@@ -299,12 +361,11 @@ public sealed class Detector
     /// </summary>
     public (string Id, Layout Layout)? PickTarget(IReadOnlyList<string> latinWords)
     {
-        Lang? latin = _langs.FirstOrDefault(l => l.Spec.IsLatin);
         List<Lang> targets = _langs.Where(l => !l.Spec.IsLatin).ToList();
-        if (latin is null || targets.Count == 0) return null;
+        if (!_langs.Any(l => l.Spec.IsLatin) || targets.Count == 0) return null;
         if (targets.Count == 1) return (targets[0].Spec.Id, targets[0].Layout);
         List<string> Converted(Lang lang) => latinWords
-            .Select(w => latin.Layout.ConvertTo(w.ToLowerInvariant(), lang.Layout))
+            .Select(w => LatinLayout.ConvertTo(w.ToLowerInvariant(), lang.Layout))
             .Where(w => lang.Spec.Word.IsMatch(w))
             .ToList();
         var ranked = targets

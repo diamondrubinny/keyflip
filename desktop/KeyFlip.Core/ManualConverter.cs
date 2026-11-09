@@ -13,7 +13,7 @@ public static class ManualConverter
 {
     private static readonly Regex Whitespace = new(@"(\s+)", RegexOptions.Compiled);
 
-    private static bool IsLatin(char c) => (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
+    private static bool IsLatin(char c) => Languages.LatinLetter.IsMatch(c.ToString());
 
     private readonly record struct Counts(int Latin, int Other, Layout? Layout);
 
@@ -44,8 +44,8 @@ public static class ManualConverter
         if (all.Latin == 0 && all.Other == 0) return text;
         string[] tokens = Whitespace.Split(text);
         var target = all.Latin > 0 ? detector.PickTarget(tokens.Where(t => t.Any(IsLatin)).ToList()) : null;
-        string ToOther(string t) => target is null ? t : Layouts.Us.ConvertTo(t, target.Value.Layout);
-        static string ToLatin(string t, Layout? from) => from is null ? t : from.ConvertTo(t, Layouts.Us);
+        string ToOther(string t) => target is null ? t : detector.LatinLayout.ConvertTo(t, target.Value.Layout);
+        string ToLatin(string t, Layout? from) => from is null ? t : from.ConvertTo(t, detector.LatinLayout);
 
         var sb = new StringBuilder(text.Length);
         foreach (string token in tokens)

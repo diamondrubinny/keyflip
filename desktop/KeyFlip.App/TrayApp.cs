@@ -40,7 +40,7 @@ internal sealed class TrayApp : ApplicationContext
 
     public TrayApp()
     {
-        _detector = Detector.Create(_settings.EnabledLanguages());
+        _detector = Detector.Create(_settings.EnabledLanguages(), _settings.ResolvedLatinLayout());
         _autoItem = new ToolStripMenuItem("תיקון אוטומטי") { CheckOnClick = true, Checked = _settings.Auto };
         _autoItem.CheckedChanged += (_, _) =>
         {
