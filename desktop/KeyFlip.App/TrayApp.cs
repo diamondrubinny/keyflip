@@ -8,7 +8,7 @@ internal sealed class TrayApp : ApplicationContext
 {
     private const int HotkeyId = 0x4B46;
 
-    private sealed record LastFix(string Original, string Retyped, long Epoch, IntPtr Window, DateTime At);
+    private sealed record LastFix(string Original, string Retyped, long Epoch, IntPtr Window, DateTime At, IntPtr PreviousLayout);
 
     private sealed class MessageWindow : NativeWindow, IDisposable
     {
@@ -34,6 +34,7 @@ internal sealed class TrayApp : ApplicationContext
     private readonly ToolStripMenuItem _autoItem;
     private readonly ToolStripMenuItem _startupItem;
     private readonly ToolStripMenuItem _browsersItem;
+    private readonly ToolStripMenuItem _switchLayoutItem;
     private LastFix? _lastFix;
     private bool _busy;
     private bool _syncingStartup;
@@ -60,6 +61,17 @@ internal sealed class TrayApp : ApplicationContext
             }
         };
 
+        _switchLayoutItem = new ToolStripMenuItem("החלף את שפת המקלדת אחרי תיקון") { CheckOnClick = true, Checked = _settings.SwitchLayoutAfterFix };
+        _switchLayoutItem.CheckedChanged += (_, _) =>
+        {
+            _settings.SwitchLayoutAfterFix = _switchLayoutItem.Checked;
+            _settings.Save();
+            if (_switchLayoutItem.Checked)
+            {
+                Notify("אחרי תיקון, המקלדת של החלון תעבור לשפה של המילה המתוקנת (רק אם השפה מותקנת ב-Windows). ביטול התיקון (Ctrl+Alt+Space) מחזיר גם את המקלדת.");
+            }
+        };
+
         var convertItem = new ToolStripMenuItem("המר עכשיו (Ctrl+Alt+Space)");
         convertItem.Click += async (_, _) => await ConvertNowAsync();
 
@@ -83,7 +95,7 @@ internal sealed class TrayApp : ApplicationContext
         _menu = new ContextMenuStrip { RightToLeft = RightToLeft.Yes };
         _menu.Items.AddRange(new ToolStripItem[]
         {
-            _autoItem, _browsersItem, convertItem, languagesItem, _startupItem, new ToolStripSeparator(), aboutItem, exitItem,
+            _autoItem, _browsersItem, convertItem, languagesItem, _switchLayoutItem, _startupItem, new ToolStripSeparator(), aboutItem, exitItem,
         });
 
         _tray = new NotifyIcon
@@ -359,7 +371,10 @@ internal sealed class TrayApp : ApplicationContext
             TextInjector.Backspace(segment.Length);
             TextInjector.Type(newSegment);
             _monitor.Line.ReplaceTail(segment.Length, newSegment);
-            _lastFix = new LastFix(segment, newSegment, _monitor.Epoch, e.Window, DateTime.UtcNow);
+            IntPtr previousLayout = _settings.SwitchLayoutAfterFix
+                ? LayoutSwitcher.SwitchTo(e.Window, _detector.LayoutIdOf(fix.Language ?? ""))
+                : IntPtr.Zero;
+            _lastFix = new LastFix(segment, newSegment, _monitor.Epoch, e.Window, DateTime.UtcNow, previousLayout);
             NoteResult(e.Window, fixedWord: true, e.Word.Length);
         }
         catch (Exception)
@@ -396,6 +411,7 @@ internal sealed class TrayApp : ApplicationContext
                 TextInjector.Backspace(last.Retyped.Length);
                 TextInjector.Type(last.Original);
                 _monitor.Line.ReplaceTail(last.Retyped.Length, last.Original);
+                LayoutSwitcher.Restore(window, last.PreviousLayout); // the user meant that layout after all
                 _lastFix = null;
                 return;
             }
@@ -412,7 +428,11 @@ internal sealed class TrayApp : ApplicationContext
                 if (!string.IsNullOrEmpty(selected))
                 {
                     string converted = ManualConverter.Convert(selected, _detector);
-                    if (converted != selected) TextInjector.Type(converted);
+                    if (converted != selected)
+                    {
+                        TextInjector.Type(converted);
+                        if (_settings.SwitchLayoutAfterFix) LayoutSwitcher.SwitchTo(window, _detector.LayoutIdForText(converted));
+                    }
                     _monitor.Line.Reset();
                     return;
                 }
@@ -428,6 +448,7 @@ internal sealed class TrayApp : ApplicationContext
             TextInjector.Backspace(run.Length);
             TextInjector.Type(fixedRun);
             _monitor.Line.ReplaceTail(run.Length, fixedRun);
+            if (_settings.SwitchLayoutAfterFix) LayoutSwitcher.SwitchTo(window, _detector.LayoutIdForText(fixedRun));
         }
         catch (Exception)
         {

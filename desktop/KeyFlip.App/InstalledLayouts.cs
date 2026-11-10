@@ -26,20 +26,48 @@ internal static class InstalledLayouts
         [0x0c0a] = "es", // Spanish (Spain, international sort)
     };
 
-    private static IReadOnlyList<int> InstalledLangIds()
+    /// <summary>Primary language id of each KeyFlip layout, for finding the matching Windows keyboard.</summary>
+    private static readonly Dictionary<string, int> PrimaryLanguageOfLayout = new()
+    {
+        ["he"] = 0x0d,
+        ["ru"] = 0x19,
+        ["ar"] = 0x01,
+        ["us"] = 0x09,
+        ["fr"] = 0x0c,
+        ["de"] = 0x07,
+        ["es"] = 0x0a,
+    };
+
+    private static IReadOnlyList<IntPtr> InstalledHandles()
     {
         try
         {
             int count = NativeMethods.GetKeyboardLayoutList(0, null);
-            if (count <= 0) return Array.Empty<int>();
+            if (count <= 0) return Array.Empty<IntPtr>();
             var layouts = new IntPtr[count];
             count = NativeMethods.GetKeyboardLayoutList(count, layouts);
-            return layouts.Take(count).Select(hkl => (int)(hkl.ToInt64() & 0xFFFF)).ToList();
+            return layouts.Take(count).ToList();
         }
         catch (Exception)
         {
-            return Array.Empty<int>();
+            return Array.Empty<IntPtr>();
         }
+    }
+
+    private static IReadOnlyList<int> InstalledLangIds() => InstalledHandles().Select(hkl => (int)(hkl.ToInt64() & 0xFFFF)).ToList();
+
+    /// <summary>
+    /// The installed Windows keyboard (HKL) that matches a KeyFlip layout id, or zero when none is installed. For the
+    /// Latin layouts the exact variant is preferred (French (France) for "fr"), then any keyboard of that language.
+    /// </summary>
+    public static IntPtr HandleFor(string layoutId)
+    {
+        if (!PrimaryLanguageOfLayout.TryGetValue(layoutId, out int primary)) return IntPtr.Zero;
+        IReadOnlyList<IntPtr> handles = InstalledHandles();
+        IntPtr exact = handles.FirstOrDefault(hkl =>
+            LatinLayoutByLangId.TryGetValue((int)(hkl.ToInt64() & 0xFFFF), out string? id) && id == layoutId);
+        if (exact != IntPtr.Zero) return exact;
+        return handles.FirstOrDefault(hkl => (hkl.ToInt64() & 0x3FF) == primary);
     }
 
     public static IReadOnlyList<string> LanguageIds() => InstalledLangIds()

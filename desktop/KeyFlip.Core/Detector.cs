@@ -3,8 +3,11 @@ using System.Text.RegularExpressions;
 
 namespace KeyFlip.Core;
 
-/// <summary>Result of an automatic correction: the first <see cref="Consumed"/> chars of the token become <see cref="Replacement"/>.</summary>
-public sealed record Fix(int Consumed, string Replacement);
+/// <summary>
+/// Result of an automatic correction: the first <see cref="Consumed"/> chars of the token become <see cref="Replacement"/>,
+/// which is a word of <see cref="Language"/> (the language id, e.g. "he"; used to switch the keyboard layout afterwards).
+/// </summary>
+public sealed record Fix(int Consumed, string Replacement, string? Language = null);
 
 /// <summary>
 /// Decides whether a typed word was written in the wrong layout, using frequency word lists and a character n-gram
@@ -52,7 +55,7 @@ public sealed class Detector
     private readonly record struct Hit(int Rank, int Stripped);
 
     /// <summary>A possible correction into one target language: a dictionary rank, or a model margin.</summary>
-    private sealed record Candidate(string Text, int? Rank, double Margin);
+    private sealed record Candidate(string Text, int? Rank, double Margin, string Language);
 
     private sealed record Source(IReadOnlyList<Lang> Langs, Layout Layout, bool IsLatin);
 
@@ -244,7 +247,7 @@ public sealed class Detector
 
     private double TypedScore(Source source, string word) => source.Langs.Max(l => ModelOf(l).Score(word));
 
-    private string? FixWord(string word, int streak, bool allowModel, bool sandwich)
+    private Candidate? FixWord(string word, int streak, bool allowModel, bool sandwich)
     {
         // One letter is only fixed inside a run of fixes: a key that types a whole word ("b" = لا) or a one-letter word
         // of the target language (Russian "e" = у).
@@ -302,7 +305,7 @@ public sealed class Detector
     {
         if (word.Length == 1)
         {
-            if (target.Spec.SingleLetters.Contains(converted, StringComparison.Ordinal) && converted.Length == 1) return new Candidate(converted, 0, 0);
+            if (target.Spec.SingleLetters.Contains(converted, StringComparison.Ordinal) && converted.Length == 1) return new Candidate(converted, 0, 0, target.Spec.Id);
             if (!_wordKeys.Contains(word)) return null;
         }
         bool ok = target.Spec.Word.IsMatch(converted);
@@ -316,12 +319,12 @@ public sealed class Detector
                 && typedHit.Value.Rank >= Tuning.DualMinRank && hit.Value.Rank * Tuning.DualRatio < typedHit.Value.Rank;
             bool between = sandwich && word.Length <= 3 && hit is not null && hit.Value.Rank < Tuning.SandwichRank;
             return (clear || between) && IsValid(target, converted, Math.Max(streak, between ? 1 : 0))
-                ? new Candidate(converted, hit!.Value.Rank, 0)
+                ? new Candidate(converted, hit!.Value.Rank, 0, target.Spec.Id)
                 : null;
         }
 
         if (!ok) return null;
-        if (IsValid(target, converted, streak)) return new Candidate(converted, Lookup(target, converted)!.Value.Rank, 0);
+        if (IsValid(target, converted, streak)) return new Candidate(converted, Lookup(target, converted)!.Value.Rank, 0, target.Spec.Id);
         bool abbreviation = source.IsLatin && word.Length <= Tuning.ModelVowelMaxLen
             && !source.Langs.Any(l => l.Spec.Vowels?.IsMatch(word) == true);
         if (allowModel && converted.Length >= Tuning.ModelMinLen && Lookup(target, converted) is null && !abbreviation)
@@ -329,7 +332,7 @@ public sealed class Detector
             double typed = TypedScore(source, word.ToLowerInvariant()); // the models know no capitals (Arabic أ is Shift+H)
             double score = ModelOf(target).Score(converted);
             double margin = word.Any(c => c >= 'A' && c <= 'Z') ? Tuning.ModelShiftMargin : Tuning.ModelMargin;
-            if (ModelSaysFlip(typed, score, margin)) return new Candidate(converted, null, score - typed);
+            if (ModelSaysFlip(typed, score, margin)) return new Candidate(converted, null, score - typed, target.Spec.Id);
         }
         return null;
     }
@@ -339,7 +342,7 @@ public sealed class Detector
     /// Readings with the same text (English and French share the Latin layout) count once. Dictionary readings beat
     /// model-only ones; a reading must clearly beat the runner-up, otherwise nothing is changed.
     /// </summary>
-    private static string? Choose(List<Candidate> all)
+    private static Candidate? Choose(List<Candidate> all)
     {
         var byText = new Dictionary<string, Candidate>();
         foreach (Candidate c in all)
@@ -347,12 +350,32 @@ public sealed class Detector
             if (!byText.TryGetValue(c.Text, out Candidate? prev) || Better(c, prev)) byText[c.Text] = c;
         }
         List<Candidate> candidates = byText.Values.ToList();
-        if (candidates.Count <= 1) return candidates.Count == 1 ? candidates[0].Text : null;
+        if (candidates.Count <= 1) return candidates.Count == 1 ? candidates[0] : null;
         List<Candidate> dict = candidates.Where(c => c.Rank is not null).OrderBy(c => c.Rank).ToList();
-        if (dict.Count == 1) return dict[0].Text;
-        if (dict.Count > 1) return dict[0].Rank!.Value * Tuning.DualRatio < dict[1].Rank!.Value ? dict[0].Text : null;
+        if (dict.Count == 1) return dict[0];
+        if (dict.Count > 1) return dict[0].Rank!.Value * Tuning.DualRatio < dict[1].Rank!.Value ? dict[0] : null;
         List<Candidate> model = candidates.OrderByDescending(c => c.Margin).ToList();
-        return model[0].Margin - model[1].Margin >= Tuning.ModelTieMargin ? model[0].Text : null;
+        return model[0].Margin - model[1].Margin >= Tuning.ModelTieMargin ? model[0] : null;
+    }
+
+    /// <summary>The keyboard layout a language is typed on: the Latin layout for Latin languages, else its own. Null if the language is not enabled.</summary>
+    public string? LayoutIdOf(string languageId)
+    {
+        Lang? lang = _langs.FirstOrDefault(l => l.Spec.Id == languageId);
+        return lang?.Layout.Id;
+    }
+
+    /// <summary>The layout a text continues in: that of the script of its last letter (Hebrew, Cyrillic, Arabic), or the Latin layout.</summary>
+    public string? LayoutIdForText(string text)
+    {
+        for (int i = text.Length - 1; i >= 0; i--)
+        {
+            string ch = text[i].ToString();
+            var other = OtherLanguageOf(ch);
+            if (other is not null) return other.Value.Layout.Id;
+            if (Languages.LatinLetter.IsMatch(ch)) return _langs.Any(l => l.Spec.IsLatin) ? LatinLayout.Id : null;
+        }
+        return null;
     }
 
     /// <summary>
@@ -409,8 +432,8 @@ public sealed class Detector
             while (true)
             {
                 string candidate = body[..end];
-                string? fixedWord = FixWord(candidate, streak, allowModel, sandwich);
-                if (fixedWord is not null) return new Fix(lead + end, token[..lead] + fixedWord);
+                Candidate? fixedWord = FixWord(candidate, streak, allowModel, sandwich);
+                if (fixedWord is not null) return new Fix(lead + end, token[..lead] + fixedWord.Text, fixedWord.Language);
                 if (end <= 1 || !TrailingPunct.Contains(candidate[end - 1])) break;
                 end--;
             }
