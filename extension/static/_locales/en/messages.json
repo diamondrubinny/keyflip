@@ -6,13 +6,13 @@
     "message": "KeyFlip"
   },
   "extDescription": {
-    "message": "Automatically fixes text typed in the wrong keyboard layout (Hebrew ↔ English). Runs locally; no data is sent anywhere."
+    "message": "Automatically fixes text typed in the wrong keyboard layout: Hebrew, English, Russian, Arabic, French, German and Spanish. Runs locally; no data is sent anywhere."
   },
   "commandConvert": {
-    "message": "Convert the selected text (or the last words) Hebrew ↔ English"
+    "message": "Convert the selected text (or the last words) to the right keyboard layout"
   },
   "menuConvert": {
-    "message": "KeyFlip: convert selected text (Hebrew ↔ English)"
+    "message": "KeyFlip: convert selected text to the right layout"
   },
   "noField": {
     "message": "KeyFlip: no active text field to convert"

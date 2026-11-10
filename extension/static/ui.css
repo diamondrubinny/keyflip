@@ -19,6 +19,10 @@ input[type="checkbox"] { width: 20px; height: 20px; }
 fieldset { border: 1px solid var(--border); border-radius: 6px; margin: 0 0 16px; }
 textarea { width: 100%; box-sizing: border-box; font: inherit; background: var(--bg); color: var(--fg); border: 1px solid var(--border); border-radius: 6px; padding: 8px; }
 button { font: inherit; padding: 8px 20px; border-radius: 6px; border: 2px solid var(--accent); background: var(--accent); color: var(--bg); cursor: pointer; min-height: 40px; }
+button.secondary { background: var(--bg); color: var(--accent); }
+select { font: inherit; background: var(--bg); color: var(--fg); border: 1px solid var(--border); border-radius: 6px; padding: 8px; min-height: 40px; max-width: 100%; }
+.field { margin: 12px 0; }
+.field > label { display: block; margin-bottom: 4px; }
 a { color: var(--accent); }
 .hint { color: var(--muted); font-size: 0.875rem; margin: 4px 0; }
 kbd { border: 1px solid var(--border); border-radius: 4px; padding: 0 4px; font-size: 0.85em; }

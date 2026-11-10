@@ -4,6 +4,7 @@ All notable changes are documented here. Format: [Keep a Changelog](https://keep
 
 ## [Unreleased]
 ### Added
+- Language settings (step 4 of `docs/MULTILANG_PLAN.md`): the extension's options page lists the optional languages (Russian, Arabic, French, German, Spanish) and the Latin keyboard (US QWERTY, AZERTY, QWERTZ, Spanish), with a button back to automatic selection; the popup shows the active languages. The Windows app has a "שפות ומקלדת" tray submenu with the same choices ("אוטומטי" follows the keyboards installed in Windows); changes apply without a restart.
 - French, German and Spanish (step 3b of `docs/MULTILANG_PLAN.md`): word lists (`fr`, `de`, `es`) and the French AZERTY, German QWERTZ and Spanish keyboard layouts (`shared/layouts/{fr,de,es}.json`, with the letters on the digit row, dead keys such as `´` + `a` = `á`, and French elisions `c'est` = `c'` + `est`). The detector now takes the user's Latin layout (`latinLayout` in the extension's storage, `LatinLayout` in `settings.json`; default: the one AZERTY/QWERTZ/Spanish layout installed in Windows, or the browser language fr-FR / de-DE / de-AT / es-ES, else US QWERTY). Unseen 5+ letter words: French 92.7% / 93.3%, German 92.3% / 92.1%, Spanish 91.2% / 93.3% recovered with 0.08-0.60% wrong corrections (`docs/ACCURACY.md`). English + Hebrew behaviour is unchanged (same decisions on every shared case and in the evaluation).
 - Layouts list the digit keys and the remaining punctuation keys, and the Hebrew layout mirrors the bracket keys as Windows does.
 ### Fixed

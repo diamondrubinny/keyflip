@@ -1,4 +1,4 @@
-import { isHostDisabled, loadSettings, normalizeHost, saveSettings } from './settings.ts';
+import { LANGUAGE_LABELS, isHostDisabled, loadSettings, normalizeHost, saveSettings } from './settings.ts';
 
 const $ = <T extends HTMLElement>(id: string): T => document.getElementById(id) as T;
 
@@ -7,6 +7,9 @@ async function init(): Promise<void> {
   const auto = $<HTMLInputElement>('auto');
   const site = $<HTMLInputElement>('site');
   auto.checked = settings.auto;
+  // Hebrew names only (the part after the dash), e.g. "שפות: אנגלית, עברית, רוסית".
+  const names = settings.languages.map((id) => (LANGUAGE_LABELS[id] ?? id).split(' – ').pop());
+  $('languages').textContent = `שפות: ${names.join(', ')}`;
 
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
   let host: string | null = null;
