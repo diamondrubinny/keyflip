@@ -132,6 +132,24 @@ const PAGE = `<!doctype html><meta charset=utf-8><body>
     assert.equal(await val('#inp'), 'está bien año ');
     await worker.evaluate(() => chrome.storage.local.remove(['languages', 'latinLayout']));
   });
+  await check('options page: choosing languages and the Latin keyboard is saved; reset returns to automatic', async () => {
+    const id = await worker.evaluate(() => chrome.runtime.id);
+    const opts = await ctx.newPage();
+    await opts.goto(`chrome-extension://${id}/options.html`);
+    await opts.check('#lang-fr'); await opts.check('#lang-ru');
+    await opts.selectOption('#latinLayout', 'fr');
+    await opts.click('#save'); await opts.waitForTimeout(300);
+    const stored = await worker.evaluate(() => chrome.storage.local.get(['languages', 'latinLayout']));
+    assert.deepEqual(stored, { languages: ['en', 'he', 'ru', 'fr'], latinLayout: 'fr' });
+    await opts.reload();
+    assert.equal(await opts.$eval('#latinLayout', (e) => e.value), 'fr');
+    assert.equal(await opts.$eval('#lang-fr', (e) => e.checked), true);
+    await opts.click('#resetLanguages'); await opts.waitForTimeout(300);
+    const after = await worker.evaluate(() => chrome.storage.local.get(['languages', 'latinLayout']));
+    assert.deepEqual(after, {});
+    assert.equal(await opts.$eval('#latinLayout', (e) => e.value), 'us');
+    await opts.close();
+  });
   await check('disabled host respected', async () => {
     await worker.evaluate(() => chrome.storage.local.set({ disabledHosts: ['127.0.0.1'] }));
     await page.waitForTimeout(300);

@@ -3,6 +3,24 @@ import { DEFAULT_LATIN_LAYOUT, LATIN_LAYOUTS, type LatinLayoutId } from './layou
 /** Languages KeyFlip can detect. English (the Latin side) and Hebrew are always on; the rest are optional. */
 export const OPTIONAL_LANGUAGES = ['ru', 'ar', 'fr', 'de', 'es'] as const;
 
+/** Labels for the settings UI: the language's own name, then its Hebrew name. */
+export const LANGUAGE_LABELS: Readonly<Record<string, string>> = {
+  en: 'English – אנגלית',
+  he: 'עברית',
+  ru: 'Русский – רוסית',
+  ar: 'العربية – ערבית',
+  fr: 'Français – צרפתית',
+  de: 'Deutsch – גרמנית',
+  es: 'Español – ספרדית',
+};
+
+export const LATIN_LAYOUT_LABELS: Readonly<Record<LatinLayoutId, string>> = {
+  us: 'English (US) QWERTY – המקלדת הרגילה בישראל',
+  fr: 'Français AZERTY (France)',
+  de: 'Deutsch QWERTZ (Deutschland / Österreich)',
+  es: 'Español (España)',
+};
+
 export interface Settings {
   auto: boolean;
   /** Enabled languages (always includes 'en' and 'he'). */
@@ -71,6 +89,11 @@ export async function loadSettings(): Promise<Settings> {
 
 export async function saveSettings(patch: Partial<Settings>): Promise<void> {
   await chrome.storage.local.set(patch);
+}
+
+/** Back to automatic language and keyboard selection (browser languages). */
+export async function resetLanguageSettings(): Promise<void> {
+  await chrome.storage.local.remove(['languages', 'latinLayout']);
 }
 
 export function isHostDisabled(settings: Settings, host: string): boolean {

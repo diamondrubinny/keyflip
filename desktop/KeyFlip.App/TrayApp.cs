@@ -26,7 +26,7 @@ internal sealed class TrayApp : ApplicationContext
     }
 
     private readonly AppSettings _settings = AppSettings.Load();
-    private readonly Detector _detector;
+    private Detector _detector;
     private readonly KeyboardMonitor _monitor = new();
     private readonly MessageWindow _window = new();
     private readonly NotifyIcon _tray;
@@ -72,6 +72,8 @@ internal sealed class TrayApp : ApplicationContext
             if (result.Message is not null) Notify(result.Message);
         };
 
+        ToolStripMenuItem languagesItem = BuildLanguagesMenu();
+
         var aboutItem = new ToolStripMenuItem("פרטיות ומידע");
         aboutItem.Click += (_, _) => ShowAbout();
 
@@ -81,7 +83,7 @@ internal sealed class TrayApp : ApplicationContext
         _menu = new ContextMenuStrip { RightToLeft = RightToLeft.Yes };
         _menu.Items.AddRange(new ToolStripItem[]
         {
-            _autoItem, _browsersItem, convertItem, _startupItem, new ToolStripSeparator(), aboutItem, exitItem,
+            _autoItem, _browsersItem, convertItem, languagesItem, _startupItem, new ToolStripSeparator(), aboutItem, exitItem,
         });
 
         _tray = new NotifyIcon
@@ -112,6 +114,99 @@ internal sealed class TrayApp : ApplicationContext
             _settings.Welcomed = true;
             _settings.Save();
         }
+    }
+
+    private static readonly (string Id, string Label)[] OptionalLanguageLabels =
+    {
+        ("ru", "Русский – רוסית"),
+        ("ar", "العربية – ערבית"),
+        ("fr", "Français – צרפתית"),
+        ("de", "Deutsch – גרמנית"),
+        ("es", "Español – ספרדית"),
+    };
+
+    private static readonly (string Id, string Label)[] LatinLayoutLabels =
+    {
+        ("us", "English (US) QWERTY"),
+        ("fr", "Français AZERTY"),
+        ("de", "Deutsch QWERTZ"),
+        ("es", "Español"),
+    };
+
+    /// <summary>
+    /// "שפות" submenu: a check item per optional language (English and Hebrew are always on) and the Latin keyboard the
+    /// user types on. "אוטומטי" follows the keyboard layouts installed in Windows.
+    /// </summary>
+    private ToolStripMenuItem BuildLanguagesMenu()
+    {
+        var menu = new ToolStripMenuItem("שפות ומקלדת");
+        var autoItem = new ToolStripMenuItem("אוטומטי לפי המקלדות המותקנות ב-Windows") { CheckOnClick = true };
+        var languageItems = new List<ToolStripMenuItem>();
+        var layoutItems = new List<ToolStripMenuItem>();
+
+        void Refresh()
+        {
+            bool automatic = _settings.Languages is null && _settings.LatinLayout is null;
+            autoItem.Checked = automatic;
+            IReadOnlyList<string> enabled = _settings.EnabledLanguages();
+            string layout = _settings.ResolvedLatinLayout();
+            foreach (ToolStripMenuItem item in languageItems) item.Checked = enabled.Contains((string)item.Tag!);
+            foreach (ToolStripMenuItem item in layoutItems) item.Checked = layout == (string)item.Tag!;
+        }
+
+        void Apply()
+        {
+            _settings.Save();
+            Refresh();
+            // Building the word lists takes a moment; keep correcting with the old detector until the new one is ready.
+            IReadOnlyList<string> languages = _settings.EnabledLanguages();
+            string layout = _settings.ResolvedLatinLayout();
+            _ = Task.Run(() => _detector = Detector.Create(languages, layout));
+        }
+
+        autoItem.CheckedChanged += (_, _) =>
+        {
+            if (!autoItem.Checked || (_settings.Languages is null && _settings.LatinLayout is null)) return;
+            _settings.Languages = null;
+            _settings.LatinLayout = null;
+            Apply();
+        };
+        menu.DropDownItems.Add(autoItem);
+        menu.DropDownItems.Add(new ToolStripSeparator());
+        menu.DropDownItems.Add(new ToolStripMenuItem("אנגלית ועברית תמיד פעילות") { Enabled = false });
+        foreach (var (id, label) in OptionalLanguageLabels)
+        {
+            var item = new ToolStripMenuItem(label) { CheckOnClick = true, Tag = id };
+            item.CheckedChanged += (_, _) =>
+            {
+                var chosen = new List<string>(_settings.EnabledLanguages().Where(l => !KeyFlip.Core.Languages.Always.Contains(l)));
+                if (item.Checked) chosen.Add(id); else chosen.Remove(id);
+                if (chosen.Distinct().OrderBy(x => x).SequenceEqual(_settings.EnabledLanguages().Where(l => !KeyFlip.Core.Languages.Always.Contains(l)).OrderBy(x => x))) return;
+                _settings.Languages = chosen.Distinct().ToList();
+                _settings.LatinLayout ??= _settings.ResolvedLatinLayout();
+                Apply();
+            };
+            languageItems.Add(item);
+            menu.DropDownItems.Add(item);
+        }
+        menu.DropDownItems.Add(new ToolStripSeparator());
+        menu.DropDownItems.Add(new ToolStripMenuItem("המקלדת הלטינית שלי:") { Enabled = false });
+        foreach (var (id, label) in LatinLayoutLabels)
+        {
+            var item = new ToolStripMenuItem(label) { Tag = id };
+            item.Click += (_, _) =>
+            {
+                if (_settings.ResolvedLatinLayout() == id && _settings.LatinLayout is not null) return;
+                _settings.LatinLayout = id;
+                _settings.Languages ??= _settings.EnabledLanguages().Where(l => !KeyFlip.Core.Languages.Always.Contains(l)).ToList();
+                Apply();
+            };
+            layoutItems.Add(item);
+            menu.DropDownItems.Add(item);
+        }
+        menu.DropDownOpening += (_, _) => Refresh();
+        Refresh();
+        return menu;
     }
 
     private async Task RefreshStartupItemAsync() => SetStartupChecked(await StartupRegistration.IsEnabledAsync());
@@ -147,7 +242,7 @@ internal sealed class TrayApp : ApplicationContext
     private static void ShowAbout()
     {
         MessageBox.Show(
-            "KeyFlip מתקן טקסט שהוקלד בשפה שגויה (עברית ↔ אנגלית).\n\n" +
+            "KeyFlip מתקן טקסט שהוקלד בשפה שגויה (עברית, אנגלית, רוסית, ערבית, צרפתית, גרמנית, ספרדית).\n\n" +
             "פרטיות:\n" +
             "• התוכנה עוקבת אחרי המקשים שנלחצים כדי לזהות מילה שהסתיימה, ושומרת רק את השורה הנוכחית בזיכרון (עד 200 תווים).\n" +
             "• שום דבר לא נכתב לדיסק, לא נרשם ביומן ולא נשלח לרשת.\n" +

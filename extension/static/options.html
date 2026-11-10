@@ -13,8 +13,20 @@
     <fieldset>
       <legend>תיקון אוטומטי</legend>
       <label class="row"><input type="checkbox" id="auto"> הפעל תיקון אוטומטי בסיום מילה (רווח)</label>
-      <label class="row"><input type="checkbox" id="enToHe"> אנגלית שהוקלדה בטעות ← עברית</label>
-      <label class="row"><input type="checkbox" id="heToEn"> עברית שהוקלדה בטעות ← אנגלית</label>
+      <label class="row"><input type="checkbox" id="enToHe"> אותיות לטיניות שהוקלדו בטעות ← עברית / רוסית / ערבית</label>
+      <label class="row"><input type="checkbox" id="heToEn"> עברית / רוסית / ערבית שהוקלדו בטעות ← אותיות לטיניות</label>
+    </fieldset>
+
+    <fieldset>
+      <legend>שפות</legend>
+      <p class="hint" id="languagesHelp">אנגלית ועברית תמיד פעילות. סמנו שפות נוספות שאתם מקלידים בהן; כל שפה נוספת מגדילה מעט את הסיכוי לתיקון שגוי.</p>
+      <div id="languages" role="group" aria-labelledby="languagesHelp"></div>
+      <div class="field">
+        <label for="latinLayout">המקלדת הלטינית שלי</label>
+        <select id="latinLayout" aria-describedby="latinLayoutHelp"></select>
+        <p id="latinLayoutHelp" class="hint">המקלדת שבה אתם מקלידים אנגלית / צרפתית / גרמנית / ספרדית. במקלדת AZERTY, למשל, "שלום" שהוקלד בטעות יוצא <bdi>qkuo</bdi> ולא <bdi>akuo</bdi>.</p>
+      </div>
+      <p><button type="button" id="resetLanguages" class="secondary">בחירה אוטומטית לפי שפות הדפדפן</button></p>
     </fieldset>
 
     <div class="field">

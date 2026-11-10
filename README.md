@@ -36,7 +36,7 @@ These links always point to the newest build ([`latest-preview`](https://github.
 
 **Automatic:** type a word and press Space. If it was clearly typed in the wrong layout, it is replaced; `Ctrl+Z` undoes it.
 **Manual:** select text (or leave the caret after the words) and press `Alt+Shift+Z`, or use the context menu. Change the shortcut at `chrome://extensions/shortcuts`.
-**Settings:** the toolbar popup (on/off, disable per site) and the options page (directions, list of disabled sites).
+**Settings:** the toolbar popup (on/off, disable per site, active languages) and the options page (directions, languages, your Latin keyboard – US QWERTY / AZERTY / QWERTZ / Spanish –, list of disabled sites).
 
 Privacy and permissions:
 - No network access, analytics or cookies. Detection uses word lists bundled in the extension.
@@ -53,7 +53,7 @@ Requires Windows 10/11 x64. The self-contained `.exe` runs as is; the smaller `n
 
 - **Automatic:** after each word (Space) the word is checked and fixed if typed in the wrong layout. `Ctrl+Alt+Space` right after a fix undoes it.
 - **Manual:** `Ctrl+Alt+Space` converts the selected text, or the last words typed on the line.
-- **Privacy:** a keyboard hook detects word ends. Only the current line (max. 200 characters) is kept in memory – never on disk, in logs or on the network. Nothing at all is recorded in ignored applications (password managers, terminals, remote-desktop tools, code editors/IDEs) or while a password field has focus (classic Win32 check + UI Automation for Electron/WPF/UWP apps). Browsers are skipped by default (the extension handles them) and can be enabled from the tray menu. The list of ignored applications is in `%APPDATA%\KeyFlip\settings.json`.
+- **Privacy:** a keyboard hook detects word ends. Only the current line (max. 200 characters) is kept in memory – never on disk, in logs or on the network. Nothing at all is recorded in ignored applications (password managers, terminals, remote-desktop tools, code editors/IDEs) or while a password field has focus (classic Win32 check + UI Automation for Electron/WPF/UWP apps). Browsers are skipped by default (the extension handles them) and can be enabled from the tray menu. Languages and your Latin keyboard are chosen in the tray menu ("שפות ומקלדת"; automatic = the keyboards installed in Windows). The list of ignored applications is in `%APPDATA%\KeyFlip\settings.json`.
 - **Clipboard:** converting *selected* text copies it with `Ctrl+C` and restores your previous text clipboard. KeyFlip's own clipboard writes are excluded from Clipboard History and cloud sync, but the copy made by the target application may appear in Clipboard History (`Win+V`).
 - **Limits:** does not work in windows running as administrator; apps that block synthetic input work partially; non-text clipboard content disables the selected-text path; antivirus products may flag keyboard hooks (false positive) – code signing is planned.
 - **Uninstall:** exit from the tray menu, untick "Start with Windows", delete the `.exe` and `%APPDATA%\KeyFlip`.
