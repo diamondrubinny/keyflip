@@ -3,15 +3,17 @@
 All notable changes are documented here. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [SemVer](https://semver.org/).
 
 ## [Unreleased]
+
+## [0.3.0] - 2026-11-10
 ### Added
 - Windows app: optional keyboard switch after a fix (step 5 of `docs/MULTILANG_PLAN.md`, tray menu "החלף את שפת המקלדת אחרי תיקון", off by default). The window's layout changes to the language of the corrected text (automatic fixes and manual conversion), only when that layout is installed in Windows; undoing a fix restores the previous layout. The detector now reports the language of each fix (`Fix.Language`, C# only).
 - Language settings (step 4 of `docs/MULTILANG_PLAN.md`): the extension's options page lists the optional languages (Russian, Arabic, French, German, Spanish) and the Latin keyboard (US QWERTY, AZERTY, QWERTZ, Spanish), with a button back to automatic selection; the popup shows the active languages. The Windows app has a "שפות ומקלדת" tray submenu with the same choices ("אוטומטי" follows the keyboards installed in Windows); changes apply without a restart.
 - French, German and Spanish (step 3b of `docs/MULTILANG_PLAN.md`): word lists (`fr`, `de`, `es`) and the French AZERTY, German QWERTZ and Spanish keyboard layouts (`shared/layouts/{fr,de,es}.json`, with the letters on the digit row, dead keys such as `´` + `a` = `á`, and French elisions `c'est` = `c'` + `est`). The detector now takes the user's Latin layout (`latinLayout` in the extension's storage, `LatinLayout` in `settings.json`; default: the one AZERTY/QWERTZ/Spanish layout installed in Windows, or the browser language fr-FR / de-DE / de-AT / es-ES, else US QWERTY). Unseen 5+ letter words: French 92.7% / 93.3%, German 92.3% / 92.1%, Spanish 91.2% / 93.3% recovered with 0.08-0.60% wrong corrections (`docs/ACCURACY.md`). English + Hebrew behaviour is unchanged (same decisions on every shared case and in the evaluation).
 - Layouts list the digit keys and the remaining punctuation keys, and the Hebrew layout mirrors the bracket keys as Windows does.
+- `extension/scripts/demo-screenshot.cjs` and `docs/screenshots/demo-languages.png`: a real screenshot of the extension fixing Hebrew, English, Russian and Arabic; `docs/icons/` and `docs/store-images/` (per-language icons and Store display images).
+- `docs/AMHARIC_FEASIBILITY.md`: Amharic researched (step 3c); not built, see the report.
 ### Fixed
 - Russian one-letter words (`e` -> у, `d` -> в, `c` -> с, `b` -> и, `f` -> а, `j` -> о, `z` -> я) and English `a` are fixed inside a run of fixes, in the extension and the Windows app (`ghbdtn lhepmz rfr e dfc ltkf` -> привет друзья как у вас дела).
-### Added
-- `extension/scripts/demo-screenshot.cjs` and `docs/screenshots/demo-languages.png`: a real screenshot of the extension fixing Hebrew, English, Russian and Arabic.
 
 ## [0.2.0] - 2026-11-02
 ### Added
