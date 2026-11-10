@@ -49,6 +49,12 @@ internal sealed class AppSettings
 
     public bool Auto { get; set; } = true;
 
+    /// <summary>
+    /// After a correction, switch the window's keyboard layout to the language of the corrected text (only if that
+    /// layout is installed in Windows), so the following words come out right. Off by default.
+    /// </summary>
+    public bool SwitchLayoutAfterFix { get; set; }
+
     /// <summary>When true the desktop app also corrects text typed in browsers (use it if the extension is not installed).</summary>
     public bool IncludeBrowsers { get; set; }
 

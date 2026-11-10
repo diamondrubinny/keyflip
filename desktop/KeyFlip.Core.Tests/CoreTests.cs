@@ -122,6 +122,26 @@ public class CoreTests
     }
 
     [Fact]
+    public void Fix_ReportsLanguageAndLayout()
+    {
+        Detector d = SharedDetector.Value;
+        Assert.Equal("he", d.FixToken("akuo")!.Language);
+        Assert.Equal("en", d.FixToken("יקךךם")!.Language);
+        Assert.Equal("he", d.LayoutIdOf("he"));
+        Assert.Equal("us", d.LayoutIdOf("en"));
+        Assert.Null(d.LayoutIdOf("ru"));
+        Assert.Equal("he", d.LayoutIdForText("hello שלום,"));
+        Assert.Equal("us", d.LayoutIdForText("שלום hello"));
+        Assert.Null(d.LayoutIdForText("123"));
+
+        Detector fr = Detector.Create(new[] { "en", "he", "fr" }, "fr");
+        Fix? bonjour = fr.FixToken("נםמחםור");
+        Assert.Equal("fr", bonjour!.Language);
+        Assert.Equal("fr", fr.LayoutIdOf(bonjour.Language!));
+        Assert.Equal("he", fr.FixToken("qkuo")!.Language);
+    }
+
+    [Fact]
     public void ConvertLayouts_SharedCases()
     {
         foreach (JsonElement c in Cases("convertLayouts").EnumerateArray())
